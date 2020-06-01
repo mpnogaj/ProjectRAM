@@ -1,0 +1,43 @@
+﻿<Window x:Class="RAMEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RAMEditor"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <DockPanel Dock="Top" LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="New File" Click="{x:Static local:ButtonLogic.NewFlieClick}"/>
+                <Separator/>
+                <MenuItem Header="Open File" Click="{x:Static local:ButtonLogic.OpenFileClick}"/>
+                <Separator/>
+                <MenuItem Header="Save File"/>
+                <MenuItem Header="Save File As"></MenuItem>
+                <Separator/>
+                <MenuItem Header="Exit" Click="{x:Static local:ButtonLogic.CloseClick}"/>
+            </MenuItem>
+            <MenuItem Header="View"/>
+            <MenuItem Header="Program"/>
+            <MenuItem Header="Data"/>
+            <MenuItem Header="Tools"/>
+            <MenuItem Header="Help"/>
+        </Menu>
+        <ToolBar DockPanel.Dock="Top" ForceCursor="True">
+            <Button Content="Save"/>
+        </ToolBar>
+
+        <Grid>
+            <TabControl x:Name="Files" DockPanel.Dock="Top"/>
+        </Grid>
+    </DockPanel>
+</Window>

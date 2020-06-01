@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RamMachineConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "test.MRAMCode input.txt"
+    }
+  }
+}
