@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Specialized;
 using System.IO;
-using System.Text;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using Common;
 
 namespace RAMEditor.CustomControls
 {
     /// <summary>
     /// Logika interakcji dla klasy Host.xaml
     /// </summary>
-    public partial class Host : UserControl
+    public partial class Host
     {
         private string _path;
         public string CodeFilePath 
@@ -25,7 +18,7 @@ namespace RAMEditor.CustomControls
             get => _path;
             set
             {
-                if(_path == string.Empty)
+                if(_path == null)
                 {
                     _path = value;
                 }
@@ -50,9 +43,34 @@ namespace RAMEditor.CustomControls
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    code.Text += line + "\n";
+                    Code.Text += line + "\n";
                 }
             }
+        }
+
+        private void Code_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.Key == Key.Add || e.Key == Key.OemPlus) && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                Logic.ChangeZoom(Code, 1);
+            }
+            else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                Logic.ChangeZoom(Code, -1);
+            }
+        }
+
+        public StringCollection GetText()
+        {
+            StringCollection lines = new StringCollection();
+
+            // lineCount may be -1 if TextBox layout info is not up-to-date.
+            int lineCount = Code.LineCount;
+
+            for (int line = 0; line < lineCount; line++)
+                lines.Add(Code.GetLineText(line));
+
+            return lines;
         }
     }
 }

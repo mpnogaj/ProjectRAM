@@ -2,6 +2,8 @@
     Plik zawierający deklaracje przydatnych klas i enumeratorów
 */
 
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace Common
@@ -25,6 +27,9 @@ namespace Common
         Halt
     }
 
+    /// <summary>
+    /// Typ argumentu
+    /// </summary>
     public enum ArgumentType
     {
         Label,
@@ -56,7 +61,7 @@ namespace Common
     /// <summary>
     /// Klasa reprezentującą komórkę pamięci
     /// </summary>
-    public class Cell
+    public class Cell : IComparable<Cell>
     {
         public string Value { get; set; }
         public BigInteger Index { get; }
@@ -66,5 +71,8 @@ namespace Common
             Value = v;
             Index = i;
         }
+
+        public int CompareTo([AllowNull] Cell other) =>
+            other == null ? 1 : Index.CompareTo(other.Index);
     }
 }

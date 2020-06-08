@@ -4,9 +4,73 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RAMEditor.CustomControls"
+             xmlns:root="clr-namespace:RAMEditor"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <DockPanel>
-        <TextBlock x:Name="code" DockPanel.Dock="Top"/>
-    </DockPanel>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" MinWidth="150"/>
+            <ColumnDefinition Width="4"/>
+            <ColumnDefinition Width="8*" MinWidth="400"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" MaxHeight="50"/>
+                <RowDefinition Height="9*"/>
+                <RowDefinition Height="50" MinHeight="50"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Memory" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="Memory"  Orientation="Vertical">
+                    <Grid>
+                        <Grid.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="Background" Value="PaleGoldenrod"/>
+                            </Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="FontSize" Value="14"/>
+                                <Setter Property="Margin" Value="0, 0, 7, 0"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0">
+                            <TextBlock Text="Address"/>
+                        </Border>
+                        <Border Grid.Column="1">
+                            <TextBlock Text="Value"/>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+        <GridSplitter ResizeDirection="Columns" Grid.Column="1" Height="Auto" Width="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0"/>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.5*" MinHeight="125"/>
+                <RowDefinition Height="8*"/>
+                <RowDefinition Height="1.5*" MinHeight="125"/>
+            </Grid.RowDefinitions>
+            <!--Input tape-->
+            <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Bottom" Margin="0, 0, 0, 15">
+                <TextBlock Margin="0, 10, 0, 0" HorizontalAlignment="Center" Text="Input tape" FontSize="25" FontWeight="Bold"/>
+                <TextBox x:Name="InputTape" Margin="0, 10, 0, 0" FontSize="25" HorizontalScrollBarVisibility="Visible"/>
+            </StackPanel>
+            <!--Code-->
+            <DockPanel Grid.Row="1" LastChildFill="True">
+                <TextBox x:Name="Code" FontSize="16" AcceptsReturn="True" AcceptsTab="True" DockPanel.Dock="Top" Background="White" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" KeyDown="Code_KeyDown"/>
+            </DockPanel>
+            <!--Output tape-->
+            <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Top" Margin="0, 15, 0, 0">
+                <TextBox x:Name="OutputTape" Margin="0, 0, 0, 10" IsReadOnly="True" FontSize="25" HorizontalScrollBarVisibility="Visible"/>
+                <TextBlock Margin="0, 0, 0, 10" HorizontalAlignment="Center" Text="Output tape" FontSize="25" FontWeight="Bold"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
 </UserControl>
