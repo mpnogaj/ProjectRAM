@@ -11,5 +11,14 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="FileDependent" TargetType="MenuItem">
+        <Setter Property="IsEnabled" Value="True"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding SelectedIndex, ElementName=Files}" Value="-1">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>

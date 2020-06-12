@@ -9,6 +9,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!--Global styles - to develop-->
                 <ResourceDictionary Source="Resources/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -21,53 +22,57 @@
                 <Separator/>
                 <MenuItem Header="Open File" Click="{x:Static local:ButtonLogic.OpenFileClick}"/>
                 <Separator/>
-                <MenuItem Header="Save File" Click="{x:Static local:ButtonLogic.SaveFileClick}"/>
-                <MenuItem Header="Save File As"  Click="{x:Static local:ButtonLogic.SaveAsClick}"></MenuItem>
+                <MenuItem Header="Save File" Style="{StaticResource FileDependent}" Click="{x:Static local:ButtonLogic.SaveFileClick}" />
+                <MenuItem Header="Save File As" Style="{StaticResource FileDependent}" Click="{x:Static local:ButtonLogic.SaveAsClick}"></MenuItem>
                 <Separator/>
                 <MenuItem Header="Exit" Click="{x:Static local:ButtonLogic.CloseClick}"/>
             </MenuItem>
-            <MenuItem Header="View">
+            <MenuItem Header="View" Style="{StaticResource FileDependent}">
                 <MenuItem Header="Zoom in" InputGestureText="Ctrl +" Click="{x:Static local:ButtonLogic.ZoomInClick}"/>
                 <MenuItem Header="Zoom out" InputGestureText="Ctrl -" Click="{x:Static local:ButtonLogic.ZoomOutClick}"/>
                 <Separator/>
                 <MenuItem Header="Undo" InputGestureText="Ctrl + Z" Click="{x:Static local:ButtonLogic.UndoClick}"/>
                 <MenuItem Header="Redo" InputGestureText="Ctrl + Y" Click="{x:Static local:ButtonLogic.RedoClick}"/>
             </MenuItem>
-            <MenuItem Header="Program">
+            <MenuItem Header="Program" Style="{StaticResource FileDependent}">
                 <MenuItem Header="Verify program" Click="{x:Static local:ButtonLogic.VerifyClick}"/>
                 <Separator/>
                 <MenuItem Header="Run program" Click="{x:Static local:ButtonLogic.RunClick}"/>
             </MenuItem>
-            <MenuItem Header="Data">
+            <MenuItem Header="Data" Style="{StaticResource FileDependent}">
                 <MenuItem Header="Memory">
                     <MenuItem Header="Clear" Click="{x:Static local:ButtonLogic.ClearMemoryClick}"/>
                     <Separator/>
-                    <MenuItem Header="Export to file"/>
-                    <MenuItem Header="Import from file"/>
+                    <MenuItem Header="Export to file" Click="{x:Static local:ButtonLogic.MemoryExportClick}"/>
+                    <MenuItem Header="Import from file" Click="{x:Static local:ButtonLogic.MemoryImportClick}"/>
                 </MenuItem>
+                <Separator/>
                 <MenuItem Header="Input Tape">
                     <MenuItem Header="Clear" Click="{x:Static local:ButtonLogic.ClearInputTapeClick}"/>
                     <Separator/>
-                    <MenuItem Header="Export to file"/>
-                    <MenuItem Header="Import from file"/>
+                    <MenuItem Header="Export to file" Click="{x:Static local:ButtonLogic.InputTapeExportClick}"/>
+                    <MenuItem Header="Import from file" Click="{x:Static local:ButtonLogic.InputTapeImportClick}"/>
                 </MenuItem>
                 <MenuItem Header="Output Tape">
                     <MenuItem Header="Clear" Click="{x:Static local:ButtonLogic.ClearOutputTapeClick}"/>
                     <Separator/>
-                    <MenuItem Header="Export to file"/>
+                    <MenuItem Header="Export to file" Click="{x:Static local:ButtonLogic.OutputTapeExportClick}"/>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Tools"/>
+            <MenuItem Header="Tools">
+                <MenuItem Header="Options" Click="{x:Static local:ButtonLogic.OptionsClick}"/>
+            </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="About RAM Machine" Click="{x:Static local:ButtonLogic.AboutClick}"/>
             </MenuItem>
         </Menu>
-        <ToolBar DockPanel.Dock="Top" ForceCursor="True">
+        <ToolBar DockPanel.Dock="Top">
             <Button Content="Save" Click="{x:Static local:ButtonLogic.SaveFileClick}"/>
         </ToolBar>
 
-        <Grid>
+        <Grid Margin="10, 0, 10, 10">
             <TabControl x:Name="Files" DockPanel.Dock="Top" Background="BlanchedAlmond"/>
         </Grid>
+
     </DockPanel>
 </Window>

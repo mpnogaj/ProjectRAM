@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 using Common;
+using Microsoft.Win32;
 using RAMEditor.CustomControls;
 using RAMEditor.Windows;
 using static Common.Interpreter;
@@ -12,6 +13,14 @@ namespace RAMEditor
 {
     public static class Logic
     {
+        /// <summary>
+        /// Show Options window
+        /// </summary>
+        public static void ShowOptionsWindow()
+        {
+            new Options().ShowDialog();
+        }
+
         /// <summary>
         /// Show About window
         /// </summary>
@@ -139,26 +148,63 @@ namespace RAMEditor
             return ((ContentControl)((ContextMenu)mi.Parent).PlacementTarget).Parent as TabItem;
         }
 
-        public static TabItem GetSelectedTab(TabControl parent)
+        /// <summary>
+        /// Gets selected tab
+        /// </summary>
+        /// <param name="parent">Parent tab control</param>
+        /// <returns>Selected tab item object</returns>
+        public static TabItem GetSelectedTab(TabControl parent) { return parent.SelectedItem as TabItem; }
+
+        /// <summary>
+        /// Clears memory
+        /// </summary>
+        public static void ClearMemory() { GetHost().Memory.Children.Clear(); }
+
+        /// <summary>
+        /// Clears input tape
+        /// </summary>
+        public static void ClearInputTape() { GetHost().InputTape.Text = string.Empty; }
+
+        /// <summary>
+        /// Clears output tape
+        /// </summary>
+        public static void ClearOutputTape() { GetHost().OutputTape.Text = string.Empty; }
+
+        /// <summary>
+        /// Creates SaveFileDialog object
+        /// </summary>
+        /// <param name="t">Window title</param>
+        /// <param name="f">Filter</param>
+        /// <returns>SaveFileDialog object</returns>
+        public static SaveFileDialog PrepareSaveFileDialog(string t, string f)
         {
-            return parent.SelectedItem as TabItem;
+            return new SaveFileDialog
+            {
+                Title = t,
+                Filter = f
+            };
         }
 
-        public static void ClearMemory()
+        /// <summary>
+        /// Creates OpenFileDialog object
+        /// </summary>
+        /// <param name="t">Window title</param>
+        /// <param name="f">Filter</param>
+        /// <returns>OpenFileDialog object</returns>
+        public static OpenFileDialog PrepareOpenFileDialog(string t, string f)
         {
-            GetHost().Memory.Children.Clear();
+            return new OpenFileDialog
+            {
+                Multiselect = false,
+                Title = t,
+                Filter = f
+            };
         }
 
-        public static void ClearInputTape()
-        {
-            GetHost().InputTape.Text = string.Empty;
-        }
-
-        public static void ClearOutputTape()
-        {
-            GetHost().OutputTape.Text = string.Empty;
-        }
-
+        /// <summary>
+        /// Runs a program
+        /// </summary>
+        /// <param name="parent">Host control where the program is written in</param>
         public static void RunProgram(Host parent)
         {
             parent.OutputTape.Text = string.Empty;
@@ -171,9 +217,6 @@ namespace RAMEditor
             {
                 parent.OutputTape.Text += $"{output.Dequeue()} ";
             }
-            UIElement header = parent.Memory.Children[0];
-            parent.Memory.Children.Clear();
-            parent.Memory.Children.Add(header);
             foreach (Cell mem in memory)
             {
                 parent.Memory.Children.Add(new MemoryGrid(mem));
