@@ -146,7 +146,6 @@ namespace RAMEditor
 
         private static void Run_Click(object sender, RoutedEventArgs e)
         {
-            Verify_Click(sender, e);
             Logic.RunProgram(Logic.GetHost());
         }
 

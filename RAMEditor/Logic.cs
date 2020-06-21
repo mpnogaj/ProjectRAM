@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Shapes;
 using Common;
 using Microsoft.Win32;
 using RAMEditor.CustomControls;
@@ -18,7 +21,10 @@ namespace RAMEditor
         /// </summary>
         public static void ShowOptionsWindow()
         {
-            new Options().ShowDialog();
+            new Options
+            {
+                Owner = Application.Current.MainWindow
+            }.ShowDialog();
         }
 
         /// <summary>
@@ -26,7 +32,10 @@ namespace RAMEditor
         /// </summary>
         public static void ShowAboutWindow()
         {
-            new About().ShowDialog();
+            new About
+            {
+                Owner = Application.Current.MainWindow
+            }.ShowDialog();
         }
 
         /// <summary>
@@ -208,8 +217,11 @@ namespace RAMEditor
         public static void RunProgram(Host parent)
         {
             parent.OutputTape.Text = string.Empty;
+            parent.Memory.Children.Clear();
+            StringCollection sc = new StringCollection();
+            sc = Settings.Default.TextEditor ? parent.GetText() : parent.SimpleEditor.ConvertToStringCollection();
             Tuple<Queue<string>, List<Cell>> result = 
-            RunCommands(CreateCommandList(parent.GetText()), CreateInputTapeFromString(parent.InputTape.Text));
+            RunCommands(CreateCommandList(sc), CreateInputTapeFromString(parent.InputTape.Text));
             Queue<string> output = result.Item1;
             List<Cell> memory = result.Item2;
             memory.Sort();
@@ -221,6 +233,42 @@ namespace RAMEditor
             {
                 parent.Memory.Children.Add(new MemoryGrid(mem));
             }
+        }
+
+        /// <summary>
+        /// Get List of CodeLine objects
+        /// </summary>
+        /// <returns>List of CodeLine objects</returns>
+        public static ObservableCollection<CodeLine> GetSimpleEditorLines()
+        {
+            return GetHost().SimpleEditor.vm.Lines;
+        }
+
+        public static bool CheckIfValid(ObservableCollection<CodeLine> cl)
+        {
+            foreach (CodeLine codeLine in cl)
+            {
+                if (codeLine.Label == String.Empty &&
+                    codeLine.Command == String.Empty &&
+                    codeLine.Value == String.Empty &&
+                    codeLine.Comment == String.Empty)
+                    continue;
+                if (codeLine.Command == String.Empty ||
+                    codeLine.Value == String.Empty)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static bool CheckIfValid(StringCollection code)
+        {
+            foreach (string s in code)
+            {
+                //TODO
+                //Funkcja sprawdzająca poprawność kodu
+            }
+            return true;
         }
     }
 }

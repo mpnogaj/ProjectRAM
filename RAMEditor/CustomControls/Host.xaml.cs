@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -27,24 +28,57 @@ namespace RAMEditor.CustomControls
         public Host()
         {
             InitializeComponent();
+            if (Settings.Default.TextEditor)
+            {
+                Code.Visibility = Visibility.Visible;
+                SimpleEditor.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                Code.Visibility = Visibility.Collapsed;
+                SimpleEditor.Visibility = Visibility.Visible;
+            }
         }
 
         public Host(string path)
         {
             InitializeComponent();
             CodeFilePath = path;
+            if (Settings.Default.TextEditor)
+            {
+                Code.Visibility = Visibility.Visible;
+                SimpleEditor.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                Code.Visibility = Visibility.Collapsed;
+                SimpleEditor.Visibility = Visibility.Visible;
+            }
             FillWithCode();
         }
 
         private void FillWithCode()
         {
-            using(StreamReader sr = new StreamReader(_path))
+            StringCollection sc = new StringCollection();
+            using (StreamReader sr = new StreamReader(_path))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    Code.Text += line + "\n";
+                    sc.Add(line);
                 }
+            }
+            if (Settings.Default.TextEditor)
+            {
+                foreach (string s in sc)
+                {
+                    Code.Text += s + "\n";
+                }
+            }
+            else
+            {
+                SimpleEditor.vm.Lines = SimpleEditor.ConvertToCode(sc);
+                SimpleEditor.UpdateLineNumber();
             }
         }
 

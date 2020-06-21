@@ -4,6 +4,8 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Reflection.Emit;
+using System.Text.RegularExpressions;
 
 namespace Common
 {
@@ -20,7 +22,7 @@ namespace Common
             int i = 0;
             foreach (Command command in c)
             {
-                if (command.Label == lbl + ':')
+                if (command.Label == lbl)
                 {
                     //w pętli for znowu zwięszke 'i' więc się wyrówna.
                     return i - 1;
@@ -131,7 +133,9 @@ namespace Common
                             word = string.Empty;
                         }
                     }
-                    commands.Add(new Command(GetCommandType(command), arg, lbl, comm));
+                    commands.Add(new Command(GetCommandType(command),
+                    Regex.Replace(arg, @"\t|\n|\r", ""), lbl,
+                    Regex.Replace(comm, @"\t|\n|\r", "")));
                 }
             }
             return commands;
@@ -155,24 +159,25 @@ namespace Common
                         if (word == string.Empty)
                             continue;
                         if (word.EndsWith(':'))
-                            lbl = word;
+                            lbl = word.Substring(0, word.Length - 1);
                         else if (word.StartsWith('#'))
-                            comm = word;
+                            comm = word.Substring(1);
                         else
                         {
                             if (command == string.Empty)
                                 command = word;
-                            else
+                            else if (arg == string.Empty)
                                 arg = word;
+                            else
+                                comm += ' ' + word;
                         }
-
                         word = string.Empty;
                     }
                 }
-
-                commands.Add(new Command(GetCommandType(command), arg, lbl, comm));
+                commands.Add(new Command(GetCommandType(command), 
+                    Regex.Replace(arg, @"\t|\n|\r", ""), lbl, 
+                    Regex.Replace(comm, @"\t|\n|\r", "")));
             }
-
             return commands;
         }
 

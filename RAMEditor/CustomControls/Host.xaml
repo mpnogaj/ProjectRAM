@@ -64,9 +64,22 @@
                 <TextBox x:Name="InputTape" Margin="0, 10, 0, 0" FontSize="25" HorizontalScrollBarVisibility="Visible"/>
             </StackPanel>
             <!--Code-->
-            <TextBox IsReadOnly="True" x:Name="Code" FontSize="16" AcceptsReturn="True" AcceptsTab="True" DockPanel.Dock="Top" Background="White" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" KeyDown="Code_KeyDown"/>
+            
             <DockPanel Grid.Row="1" LastChildFill="True">
-                <local:SimpleEditor/>
+                <local:SimpleEditor x:Name="SimpleEditor" Visibility="Visible"/>
+                <TextBox IsReadOnly="False" 
+                                 x:Name="Code" 
+                                 Background="{Binding Source={x:Static root:Settings.Default}, Path=TBBackground}"
+                                 FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=TBFont}"
+                                 FontSize="{Binding Source={x:Static root:Settings.Default}, Path=TBFontSize}" 
+                                 Foreground="{Binding Source={x:Static root:Settings.Default}, Path=TBFontColor}"
+                                 AcceptsReturn="True" 
+                                 AcceptsTab="True" 
+                                 DockPanel.Dock="Top"
+                                 Visibility="Collapsed"
+                                 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                 KeyDown="Code_KeyDown"/>
+                
             </DockPanel>
             
             <!--Output tape-->

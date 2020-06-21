@@ -4,9 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RAMEditor.Windows"
+        xmlns:ramEditor="clr-namespace:RAMEditor"
         mc:Ignorable="d"
-        Title="Options" Height="450" Width="800">
+        Title="Options" Height="450" Width="800" WindowStartupLocation="CenterOwner"
+        Background="{Binding Source={x:Static ramEditor:Settings.Default}, Path=MainBackground}"
+        Foreground="{Binding Source={x:Static ramEditor:Settings.Default}, Path=MainForeground}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
         <TabControl>
             <TabItem Header="General">
                 <StackPanel Orientation="Vertical" Margin="10">
@@ -17,13 +24,55 @@
                             <ComboBoxItem Content="Polski" Tag="pl_PL"/>
                         </ComboBox>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="16" Text="Use simple editor" Margin="5"/>
+                        <CheckBox x:Name="EditorBox" VerticalAlignment="Center" Margin="10, 5, 5, 5"/>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Colours">
+                <ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" MinHeight="200"/>
+                            <RowDefinition Height="*" MinHeight="200"/>
+                            <RowDefinition Height="*" MinHeight="200"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="General">
+                            <StackPanel Orientation="Vertical" Margin="10">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontSize="16" Text="Background" Margin="5"/>
+                                    <TextBox x:Name="GBackColorBox" Width="150"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontSize="16" Text="Text" Margin="5"/>
+                                    <TextBox x:Name="GForeColorBox" Width="150"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontSize="16" Text="Tab background" Margin="5"/>
+                                    <TextBox x:Name="TabBackColorBox" Width="150"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontSize="16" Text="Tab text" Margin="5"/>
+                                    <TextBox x:Name="TabForeColorBox" Width="150"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="Text Editor">
+
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="2" Header="Simple Editor">
+
+                        </GroupBox>
+                    </Grid>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="Font">
                 
             </TabItem>
         </TabControl>
+        <Button Grid.Row="1" x:Name="okBtn" Content="Ok" Click="okBtn_Click" HorizontalAlignment="Right" 
+                MinWidth="75" Margin="0, 0, 20, 10" MaxHeight="30"/>
     </Grid>
 </Window>

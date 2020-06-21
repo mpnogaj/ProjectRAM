@@ -71,7 +71,7 @@
         </ToolBar>
 
         <Grid Margin="10, 0, 10, 10">
-            <TabControl x:Name="Files" DockPanel.Dock="Top" Background="BlanchedAlmond"/>
+            <TabControl x:Name="Files" DockPanel.Dock="Top" Background="{Binding Source={x:Static local:Settings.Default}, Path=TCBackground}"/>
         </Grid>
 
     </DockPanel>

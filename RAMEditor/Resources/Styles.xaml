@@ -2,6 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:root="clr-namespace:RAMEditor">
 
+    <root:Settings x:Key="Settings"/>
+
     <Style TargetType="TabControl" x:Key="FileTabControl">
         <Setter Property="ContextMenu">
             <Setter.Value>

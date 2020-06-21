@@ -4,8 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RAMEditor.Windows"
+        xmlns:ramEditor="clr-namespace:RAMEditor"
         mc:Ignorable="d"
-        Title="About" Height="275" Width="430" WindowStartupLocation="CenterOwner">
+        Title="About" Height="275" Width="430" WindowStartupLocation="CenterOwner"
+        Background="{Binding Source={x:Static ramEditor:Settings.Default}, Path=MainBackground}"
+        Foreground="{Binding Source={x:Static ramEditor:Settings.Default}, Path=MainForeground}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
