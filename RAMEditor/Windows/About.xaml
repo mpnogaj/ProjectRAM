@@ -6,9 +6,7 @@
         xmlns:local="clr-namespace:RAMEditor.Windows"
         xmlns:ramEditor="clr-namespace:RAMEditor"
         mc:Ignorable="d"
-        Title="About" Height="275" Width="430" WindowStartupLocation="CenterOwner"
-        Background="{Binding Source={x:Static ramEditor:Settings.Default}, Path=MainBackground}"
-        Foreground="{Binding Source={x:Static ramEditor:Settings.Default}, Path=MainForeground}">
+        Title="About" Height="275" Width="430" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>

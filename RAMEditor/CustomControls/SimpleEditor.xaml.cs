@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 
 //Źle przekształca polecenia na kod
@@ -117,7 +118,7 @@ namespace RAMEditor.CustomControls
             if (e.Key == Key.Enter && uiElement != null)
             {
                 e.Handled = true;
-                vm.Lines.Insert(Editor.SelectedIndex + 1, new CodeLine());
+                vm.Lines.Insert(Editor.Items.IndexOf(Editor.CurrentCell.Item) + 1, new CodeLine());
                 UpdateLineNumber();
             }
         }
@@ -135,20 +136,19 @@ namespace RAMEditor.CustomControls
             UpdateLineNumber();
         }
 
-        private void EventSetter_OnHandler(object sender, RoutedEventArgs e)
-        {
-            Type sourceT = e.OriginalSource.GetType();
-            if (sourceT == typeof(DataGridCell))
-            {
-                this.Editor.BeginEdit(e);
-            }
-        }
-
         public void UpdateLineNumber()
         {
             for (int i = 0; i < vm.Lines.Count; i++)
             {
                 vm.Lines[i].Line = i + 1;
+            }
+        }
+
+        private void Editor_Selected(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource.GetType() == typeof(DataGridCell))
+            {
+                Editor.BeginEdit(e);
             }
         }
     }

@@ -19,7 +19,15 @@
                 <RowDefinition Height="9*"/>
                 <RowDefinition Height="50" MinHeight="50"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="Memory" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock 
+                Grid.Row="0" 
+                Text="Memory" 
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" 
+                FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=HDFontFamily}"
+                FontSize="{Binding Source={x:Static root:Settings.Default}, Path=HDFontSize}" 
+                FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=HDFontWeight}"
+                Foreground="{Binding Source={x:Static root:Settings.Default}, Path=HDFontColor}"/>
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <Grid>
                     <Grid.Resources>
@@ -46,7 +54,7 @@
                         <TextBlock Text="Value"/>
                     </Border>
                 </Grid>
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel x:Name="Memory"  Orientation="Vertical"/>
                 </ScrollViewer>
             </StackPanel>
@@ -60,32 +68,62 @@
             </Grid.RowDefinitions>
             <!--Input tape-->
             <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Bottom" Margin="0, 0, 0, 15">
-                <TextBlock Margin="0, 10, 0, 0" HorizontalAlignment="Center" Text="Input tape" FontSize="25" FontWeight="Bold"/>
-                <TextBox x:Name="InputTape" Margin="0, 10, 0, 0" FontSize="25" HorizontalScrollBarVisibility="Visible"/>
+                <TextBlock 
+                    Margin="0, 10, 0, 0" 
+                    HorizontalAlignment="Center" 
+                    Text="Input tape" 
+                    FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=HDFontFamily}"
+                    FontSize="{Binding Source={x:Static root:Settings.Default}, Path=HDFontSize}" 
+                    FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=HDFontWeight}"
+                    Foreground="{Binding Source={x:Static root:Settings.Default}, Path=HDFontColor}"/>
+                <TextBox 
+                    x:Name="InputTape" 
+                    Margin="0, 10, 0, 0" 
+                    HorizontalScrollBarVisibility="Visible"
+                    FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=ITFontFamily}"
+                    FontSize="{Binding Source={x:Static root:Settings.Default}, Path=ITFontSize}" 
+                    FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=ITFontWeight}"
+                    Foreground="{Binding Source={x:Static root:Settings.Default}, Path=ITFontColor}"
+                    Background="{Binding Source={x:Static root:Settings.Default}, Path=ITBackground}"/>
             </StackPanel>
             <!--Code-->
-            
             <DockPanel Grid.Row="1" LastChildFill="True">
                 <local:SimpleEditor x:Name="SimpleEditor" Visibility="Visible"/>
-                <TextBox IsReadOnly="False" 
-                                 x:Name="Code" 
-                                 Background="{Binding Source={x:Static root:Settings.Default}, Path=TBBackground}"
-                                 FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=TBFont}"
-                                 FontSize="{Binding Source={x:Static root:Settings.Default}, Path=TBFontSize}" 
-                                 Foreground="{Binding Source={x:Static root:Settings.Default}, Path=TBFontColor}"
-                                 AcceptsReturn="True" 
-                                 AcceptsTab="True" 
-                                 DockPanel.Dock="Top"
-                                 Visibility="Collapsed"
-                                 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                                 KeyDown="Code_KeyDown"/>
-                
+                <TextBox
+                    x:Name="Code" 
+                    Background="{Binding Source={x:Static root:Settings.Default}, Path=TBBackground}"
+                    FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=TBFontFamily}"
+                    FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=TBFontWeight}"
+                    FontSize="{Binding Source={x:Static root:Settings.Default}, Path=TBFontSize}" 
+                    Foreground="{Binding Source={x:Static root:Settings.Default}, Path=TBFontColor}"
+                    AcceptsReturn="True" 
+                    AcceptsTab="True" 
+                    DockPanel.Dock="Top"
+                    Visibility="Collapsed"
+                    VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                    KeyDown="Code_KeyDown"/>
             </DockPanel>
             
             <!--Output tape-->
             <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Top" Margin="0, 15, 0, 0">
-                <TextBox x:Name="OutputTape" Margin="0, 0, 0, 10" IsReadOnly="True" FontSize="25" HorizontalScrollBarVisibility="Visible"/>
-                <TextBlock Margin="0, 0, 0, 10" HorizontalAlignment="Center" Text="Output tape" FontSize="25" FontWeight="Bold"/>
+                <TextBox 
+                    x:Name="OutputTape" 
+                    Margin="0, 0, 0, 10" 
+                    IsReadOnly="True" 
+                    HorizontalScrollBarVisibility="Visible"
+                    FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=OTFontFamily}"
+                    FontSize="{Binding Source={x:Static root:Settings.Default}, Path=OTFontSize}" 
+                    FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=OTFontWeight}"
+                    Foreground="{Binding Source={x:Static root:Settings.Default}, Path=OTFontColor}"
+                    Background="{Binding Source={x:Static root:Settings.Default}, Path=OTBackground}"/>
+                <TextBlock 
+                    Margin="0, 0, 0, 10" 
+                    HorizontalAlignment="Center" 
+                    Text="Output tape" 
+                    FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=HDFontFamily}"
+                    FontSize="{Binding Source={x:Static root:Settings.Default}, Path=HDFontSize}" 
+                    FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=HDFontWeight}"
+                    Foreground="{Binding Source={x:Static root:Settings.Default}, Path=HDFontColor}"/>
             </StackPanel>
         </Grid>
     </Grid>

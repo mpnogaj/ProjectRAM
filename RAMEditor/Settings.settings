@@ -2,32 +2,86 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RAMEditor" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="MainBackground" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
-    </Setting>
-    <Setting Name="MainForeground" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#000000</Value>
+    <Setting Name="TextEditor" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="TCBackground" Type="System.String" Scope="User">
       <Value Profile="(Default)">#FFDD99</Value>
     </Setting>
-    <Setting Name="TCForeground" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#000000</Value>
+    <Setting Name="ITBackground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="OTBackground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
     <Setting Name="TBBackground" Type="System.String" Scope="User">
       <Value Profile="(Default)">#000000</Value>
     </Setting>
-    <Setting Name="TBFontSize" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">16</Value>
+    <Setting Name="SERow1Back" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="SERow2Back" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="SERow3Back" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="SERow4Back" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="SERow5Back" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="SEBack" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
     <Setting Name="TBFontColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
-    <Setting Name="TBFont" Type="System.String" Scope="User">
+    <Setting Name="TBFontFamily" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
     </Setting>
-    <Setting Name="TextEditor" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+    <Setting Name="TBFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">16</Value>
+    </Setting>
+    <Setting Name="TBFontWeight" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="ITFontColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="ITFontFamily" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Consolas</Value>
+    </Setting>
+    <Setting Name="ITFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">16</Value>
+    </Setting>
+    <Setting Name="ITFontWeight" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="OTFontColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="OTFontFamily" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Consolas</Value>
+    </Setting>
+    <Setting Name="OTFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">16</Value>
+    </Setting>
+    <Setting Name="OTFontWeight" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="HDFontColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="HDFontFamily" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Consolas</Value>
+    </Setting>
+    <Setting Name="HDFontSize" Type="System.String" Scope="User">
+      <Value Profile="(Default)">16</Value>
+    </Setting>
+    <Setting Name="HDFontWeight" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
     </Setting>
   </Settings>
 </SettingsFile>

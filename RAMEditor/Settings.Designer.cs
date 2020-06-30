@@ -25,25 +25,13 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
-        public string MainBackground {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TextEditor {
             get {
-                return ((string)(this["MainBackground"]));
+                return ((bool)(this["TextEditor"]));
             }
             set {
-                this["MainBackground"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
-        public string MainForeground {
-            get {
-                return ((string)(this["MainForeground"]));
-            }
-            set {
-                this["MainForeground"] = value;
+                this["TextEditor"] = value;
             }
         }
         
@@ -61,13 +49,25 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
-        public string TCForeground {
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string ITBackground {
             get {
-                return ((string)(this["TCForeground"]));
+                return ((string)(this["ITBackground"]));
             }
             set {
-                this["TCForeground"] = value;
+                this["ITBackground"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string OTBackground {
+            get {
+                return ((string)(this["OTBackground"]));
+            }
+            set {
+                this["OTBackground"] = value;
             }
         }
         
@@ -85,13 +85,73 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("16")]
-        public uint TBFontSize {
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SERow1Back {
             get {
-                return ((uint)(this["TBFontSize"]));
+                return ((string)(this["SERow1Back"]));
             }
             set {
-                this["TBFontSize"] = value;
+                this["SERow1Back"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SERow2Back {
+            get {
+                return ((string)(this["SERow2Back"]));
+            }
+            set {
+                this["SERow2Back"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SERow3Back {
+            get {
+                return ((string)(this["SERow3Back"]));
+            }
+            set {
+                this["SERow3Back"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SERow4Back {
+            get {
+                return ((string)(this["SERow4Back"]));
+            }
+            set {
+                this["SERow4Back"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SERow5Back {
+            get {
+                return ((string)(this["SERow5Back"]));
+            }
+            set {
+                this["SERow5Back"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SEBack {
+            get {
+                return ((string)(this["SEBack"]));
+            }
+            set {
+                this["SEBack"] = value;
             }
         }
         
@@ -110,24 +170,180 @@ namespace RAMEditor {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
-        public string TBFont {
+        public string TBFontFamily {
             get {
-                return ((string)(this["TBFont"]));
+                return ((string)(this["TBFontFamily"]));
             }
             set {
-                this["TBFont"] = value;
+                this["TBFontFamily"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool TextEditor {
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int TBFontSize {
             get {
-                return ((bool)(this["TextEditor"]));
+                return ((int)(this["TBFontSize"]));
             }
             set {
-                this["TextEditor"] = value;
+                this["TBFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string TBFontWeight {
+            get {
+                return ((string)(this["TBFontWeight"]));
+            }
+            set {
+                this["TBFontWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string ITFontColor {
+            get {
+                return ((string)(this["ITFontColor"]));
+            }
+            set {
+                this["ITFontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string ITFontFamily {
+            get {
+                return ((string)(this["ITFontFamily"]));
+            }
+            set {
+                this["ITFontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int ITFontSize {
+            get {
+                return ((int)(this["ITFontSize"]));
+            }
+            set {
+                this["ITFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string ITFontWeight {
+            get {
+                return ((string)(this["ITFontWeight"]));
+            }
+            set {
+                this["ITFontWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string OTFontColor {
+            get {
+                return ((string)(this["OTFontColor"]));
+            }
+            set {
+                this["OTFontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string OTFontFamily {
+            get {
+                return ((string)(this["OTFontFamily"]));
+            }
+            set {
+                this["OTFontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int OTFontSize {
+            get {
+                return ((int)(this["OTFontSize"]));
+            }
+            set {
+                this["OTFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string OTFontWeight {
+            get {
+                return ((string)(this["OTFontWeight"]));
+            }
+            set {
+                this["OTFontWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string HDFontColor {
+            get {
+                return ((string)(this["HDFontColor"]));
+            }
+            set {
+                this["HDFontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string HDFontFamily {
+            get {
+                return ((string)(this["HDFontFamily"]));
+            }
+            set {
+                this["HDFontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public string HDFontSize {
+            get {
+                return ((string)(this["HDFontSize"]));
+            }
+            set {
+                this["HDFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string HDFontWeight {
+            get {
+                return ((string)(this["HDFontWeight"]));
+            }
+            set {
+                this["HDFontWeight"] = value;
             }
         }
     }

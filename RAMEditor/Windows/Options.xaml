@@ -3,12 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RAMEditor.Windows"
-        xmlns:ramEditor="clr-namespace:RAMEditor"
+        xmlns:root="clr-namespace:RAMEditor"
         mc:Ignorable="d"
-        Title="Options" Height="450" Width="800" WindowStartupLocation="CenterOwner"
-        Background="{Binding Source={x:Static ramEditor:Settings.Default}, Path=MainBackground}"
-        Foreground="{Binding Source={x:Static ramEditor:Settings.Default}, Path=MainForeground}">
+        Title="Options" Height="450" Width="800" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Text" Value="AaBbYyZz"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="6*"/>
@@ -18,14 +28,14 @@
             <TabItem Header="General">
                 <StackPanel Orientation="Vertical" Margin="10">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontSize="16" Text="Language" Margin="5"/>
+                        <TextBlock Text="Language" Margin="5"/>
                         <ComboBox FontSize="16" SelectedIndex="0" Margin="45, 5, 5, 5">
                             <ComboBoxItem Content="English" Tag="en_EN"/>
                             <ComboBoxItem Content="Polski" Tag="pl_PL"/>
                         </ComboBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontSize="16" Text="Use simple editor" Margin="5"/>
+                        <TextBlock Text="Use simple editor" Margin="5"/>
                         <CheckBox x:Name="EditorBox" VerticalAlignment="Center" Margin="10, 5, 5, 5"/>
                     </StackPanel>
                 </StackPanel>
@@ -34,45 +44,332 @@
                 <ScrollViewer>
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*" MinHeight="200"/>
-                            <RowDefinition Height="*" MinHeight="200"/>
-                            <RowDefinition Height="*" MinHeight="200"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <Style x:Key="PickBtn" TargetType="Button">
+                                <Setter Property="Content" Value="..."/>
+                                <Setter Property="Width" Value="25"/>
+                                <Setter Property="Height" Value="25"/>
+                                <Setter Property="Margin" Value="5"/>
+                            </Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Height" Value="25"/>
+                                <Setter Property="Width" Value="50"/>
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="Margin" Value="5"/>
+                            </Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontSize" Value="16"/>
+                            </Style>
+                        </Grid.Resources>
                         <GroupBox Grid.Row="0" Header="General">
-                            <StackPanel Orientation="Vertical" Margin="10">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontSize="16" Text="Background" Margin="5"/>
-                                    <TextBox x:Name="GBackColorBox" Width="150"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="230"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Grid.Column" Value="0"/>
+                                        <Setter Property="FontSize" Value="16"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Grid.Column" Value="1"/>
+                                        <Setter Property="Orientation" Value="Horizontal"/>
+                                    </Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource PickBtn}">
+                                        <EventSetter Event="Click" Handler="PickColor"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <!--Headers-->
+                                <TextBlock Grid.Row="0" Text="Background" Margin="5"/>
+                                <TextBlock Grid.Row="1" Text="Input tape background" Margin="5"/>
+                                <TextBlock Grid.Row="2" Text="Output tape background" Margin="5"/>
+                                <!--Border and picker-->
+                                <StackPanel Grid.Row="0">
+                                    <Border x:Name="GBackColorBox"/>
+                                    <Button/>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontSize="16" Text="Text" Margin="5"/>
-                                    <TextBox x:Name="GForeColorBox" Width="150"/>
+                                <StackPanel Grid.Row="1">
+                                    <Border x:Name="ItBackColorBox"/>
+                                    <Button/>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontSize="16" Text="Tab background" Margin="5"/>
-                                    <TextBox x:Name="TabBackColorBox" Width="150"/>
+                                <StackPanel Grid.Row="2">
+                                    <Border x:Name="OtBackColorBox"/>
+                                    <Button/>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontSize="16" Text="Tab text" Margin="5"/>
-                                    <TextBox x:Name="TabForeColorBox" Width="150"/>
-                                </StackPanel>
-                            </StackPanel>
+                            </Grid>
                         </GroupBox>
                         <GroupBox Grid.Row="1" Header="Text Editor">
-
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="230"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Grid.Column" Value="0"/>
+                                        <Setter Property="FontSize" Value="16"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Grid.Column" Value="1"/>
+                                        <Setter Property="Orientation" Value="Horizontal"/>
+                                    </Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource PickBtn}">
+                                        <EventSetter Event="Click" Handler="PickColor"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <!--Headers-->
+                                <TextBlock Grid.Row="0" Text="Text editor background" Margin="5"/>
+                                <!--Border and picker-->
+                                <StackPanel Grid.Row="0">
+                                    <Border x:Name="TbBackColorBox"/>
+                                    <Button/>
+                                </StackPanel>
+                            </Grid>
                         </GroupBox>
 
                         <GroupBox Grid.Row="2" Header="Simple Editor">
-
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="230"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Grid.Column" Value="0"/>
+                                        <Setter Property="FontSize" Value="16"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Grid.Column" Value="1"/>
+                                        <Setter Property="Orientation" Value="Horizontal"/>
+                                    </Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource PickBtn}">
+                                        <EventSetter Event="Click" Handler="PickColor"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <!--Headers-->
+                                <TextBlock Grid.Row="0" Text="Backgorund" Margin="5"/>
+                                <TextBlock Grid.Row="1" Text="First column background" Margin="5"/>
+                                <TextBlock Grid.Row="2" Text="Second column background" Margin="5"/>
+                                <TextBlock Grid.Row="3" Text="Third column background" Margin="5"/>
+                                <TextBlock Grid.Row="4" Text="Fourth column background" Margin="5"/>
+                                <TextBlock Grid.Row="5" Text="Fifth column background" Margin="5"/>
+                                <!--Border and picker-->
+                                <StackPanel Grid.Row="0">
+                                    <Border x:Name="SeBackBox"/>
+                                    <Button/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1">
+                                    <Border x:Name="Se1BackBox"/>
+                                    <Button/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2">
+                                    <Border x:Name="Se2BackBox"/>
+                                    <Button/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="3">
+                                    <Border x:Name="Se3BackBox"/>
+                                    <Button/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="4">
+                                    <Border x:Name="Se4BackBox"/>
+                                    <Button/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="5">
+                                    <Border x:Name="Se5BackBox"/>
+                                    <Button/>
+                                </StackPanel>
+                            </Grid>
                         </GroupBox>
                     </Grid>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Font">
-                
+                <ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <Style x:Key="PickBtn" TargetType="Button">
+                                <Setter Property="Content" Value="..."/>
+                                <Setter Property="Width" Value="25"/>
+                                <Setter Property="Height" Value="25"/>
+                                <Setter Property="Margin" Value="5"/>
+                            </Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Height" Value="25"/>
+                                <Setter Property="Width" Value="50"/>
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="Margin" Value="5"/>
+                            </Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontSize" Value="16"/>
+                            </Style>
+                        </Grid.Resources>
+                        <GroupBox Grid.Row="0" Header="General">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="230"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Grid.Column" Value="0"/>
+                                        <Setter Property="FontSize" Value="16"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Grid.Column" Value="1"/>
+                                        <Setter Property="Orientation" Value="Horizontal"/>
+                                    </Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource PickBtn}">
+                                        <EventSetter Event="Click" Handler="PickFont"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <!--Headers-->
+                                <TextBlock Grid.Row="0" Text="Input tape font" Margin="5"/>
+                                <TextBlock Grid.Row="1" Text="Output tape font" Margin="5"/>
+                                <!--Border and picker-->
+                                <StackPanel Grid.Row="0">
+                                    <Button/>
+                                    <TextBox x:Name="ItFontBox"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1">
+                                    <Button/>
+                                    <TextBox x:Name="OtFontBox"/>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="Text Editor">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="230"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Grid.Column" Value="0"/>
+                                        <Setter Property="FontSize" Value="16"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Grid.Column" Value="1"/>
+                                        <Setter Property="Orientation" Value="Horizontal"/>
+                                    </Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource PickBtn}">
+                                        <EventSetter Event="Click" Handler="PickFont"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <!--Headers-->
+                                <TextBlock Grid.Row="0" Text="Text editor font" Margin="5"/>
+                                <!--Border and picker-->
+                                <StackPanel Grid.Row="0">
+                                    <Button/>
+                                    <TextBox x:Name="TeFontBox"/>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="2" Header="Simple Editor">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="230"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Grid.Column" Value="0"/>
+                                        <Setter Property="FontSize" Value="16"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Grid.Column" Value="1"/>
+                                        <Setter Property="Orientation" Value="Horizontal"/>
+                                    </Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource PickBtn}">
+                                        <EventSetter Event="Click" Handler="PickFont"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <!--Headers-->
+                                <TextBlock Grid.Row="0" Text="First column font" Margin="5"/>
+                                <TextBlock Grid.Row="1" Text="Second column font" Margin="5"/>
+                                <TextBlock Grid.Row="2" Text="Third column font" Margin="5"/>
+                                <TextBlock Grid.Row="3" Text="Fourth column font" Margin="5"/>
+                                <TextBlock Grid.Row="4" Text="Fifth column font" Margin="5"/>
+                                <!--Border and picker-->
+                                <StackPanel Grid.Row="0">
+                                    <Button/>
+                                    <TextBox x:Name="Se1FontBox"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1">
+                                    <Button/>
+                                    <TextBox x:Name="Se2FontBox"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2">
+                                    <Button/>
+                                    <TextBox x:Name="Se3FontBox"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="3">
+                                    <Button/>
+                                    <TextBox x:Name="Se4FontBox"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="4">
+                                    <Button/>
+                                    <TextBox x:Name="Se5FontBox"/>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
-        <Button Grid.Row="1" x:Name="okBtn" Content="Ok" Click="okBtn_Click" HorizontalAlignment="Right" 
+        <Button Grid.Row="1" x:Name="OkBtn" Content="Ok" Click="okBtn_Click" HorizontalAlignment="Right" 
                 MinWidth="75" Margin="0, 0, 20, 10" MaxHeight="30"/>
     </Grid>
 </Window>

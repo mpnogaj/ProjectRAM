@@ -2,9 +2,9 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
-
 using Common;
+
+using Microsoft.Win32;
 
 using RAMEditor.CustomControls;
 using System.Security.Policy;
@@ -12,6 +12,9 @@ using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Net;
+
+using ColorDialog = System.Windows.Forms.ColorDialog;
+using DialogResult = System.Windows.Forms.DialogResult;
 
 namespace RAMEditor
 {
