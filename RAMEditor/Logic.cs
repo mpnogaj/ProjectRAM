@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Shapes;
-using Common;
+﻿using Common;
 using Microsoft.Win32;
 using RAMEditor.CustomControls;
 using RAMEditor.Windows;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
 using static Common.Interpreter;
 
 namespace RAMEditor
@@ -214,25 +213,37 @@ namespace RAMEditor
         /// Runs a program
         /// </summary>
         /// <param name="parent">Host control where the program is written in</param>
-        public static void RunProgram(Host parent)
+        public static void RunProgram(Host parent, CancellationToken token)
         {
-            parent.OutputTape.Text = string.Empty;
-            parent.Memory.Children.Clear();
             StringCollection sc = new StringCollection();
-            sc = Settings.Default.TextEditor ? parent.GetText() : parent.SimpleEditor.ConvertToStringCollection();
-            Tuple<Queue<string>, List<Cell>> result = 
-            RunCommands(CreateCommandList(sc), CreateInputTapeFromString(parent.InputTape.Text));
+            List<Command> cl = new List<Command>();
+            Queue<string> input = new Queue<string>();
+            parent.Dispatcher.Invoke(() =>
+            {
+                parent.OutputTape.Text = string.Empty;
+                parent.Memory.Children.Clear();
+                sc = Settings.Default.TextEditor ? parent.GetText() : parent.SimpleEditor.ConvertToStringCollection();
+                cl = CreateCommandList(sc);
+                input = CreateInputTapeFromString(parent.InputTape.Text);
+            });
+
+            token.ThrowIfCancellationRequested();
+            Tuple<Queue<string>, List<Cell>> result = RunCommands(cl, input, token);
+            token.ThrowIfCancellationRequested();
             Queue<string> output = result.Item1;
             List<Cell> memory = result.Item2;
             memory.Sort();
-            while (output.Count > 0)
+            parent.Dispatcher.Invoke(() =>
             {
-                parent.OutputTape.Text += $"{output.Dequeue()} ";
-            }
-            foreach (Cell mem in memory)
-            {
-                parent.Memory.Children.Add(new MemoryGrid(mem));
-            }
+                while (output.Count > 0)
+                {
+                    parent.OutputTape.Text += $"{output.Dequeue()} ";
+                }
+                foreach (Cell mem in memory)
+                {
+                    parent.Memory.Children.Add(new MemoryGrid(mem));
+                }
+            });
         }
 
         /// <summary>

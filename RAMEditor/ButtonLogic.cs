@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Numerics;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Common;
@@ -7,19 +10,14 @@ using Common;
 using Microsoft.Win32;
 
 using RAMEditor.CustomControls;
-using System.Security.Policy;
-using System.Collections.Specialized;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Net;
 
-using ColorDialog = System.Windows.Forms.ColorDialog;
-using DialogResult = System.Windows.Forms.DialogResult;
 
 namespace RAMEditor
 {
     public static class ButtonLogic
     {
+        private static CancellationTokenSource _tokenSource = null;
+        #region Handlers
         public static RoutedEventHandler CloseClick => Close_Click;
         public static RoutedEventHandler CloseTabClick => CloseTab_Click;
         public static RoutedEventHandler NewFileClick => NewFile_Click;
@@ -32,8 +30,10 @@ namespace RAMEditor
         public static RoutedEventHandler OptionsClick => Options_Click;
         public static RoutedEventHandler UndoClick => Undo_Click;
         public static RoutedEventHandler RedoClick => Redo_Click;
+        //Program
         public static RoutedEventHandler VerifyClick => Verify_Click;
         public static RoutedEventHandler RunClick => Run_Click;
+        public static RoutedEventHandler CancelClick => Cancel_Click;
         //Memory
         public static RoutedEventHandler ClearMemoryClick => ClearMemory_Click;
         public static RoutedEventHandler MemoryExportClick => MemoryExport_Click;
@@ -45,7 +45,7 @@ namespace RAMEditor
         //Output tape
         public static RoutedEventHandler ClearOutputTapeClick => ClearOutputTape_Click;
         public static RoutedEventHandler OutputTapeExportClick => OutputTapeExport_Click;
-
+        #endregion
         private static void Options_Click(object sender, RoutedEventArgs e)
         {
             Logic.ShowOptionsWindow();
@@ -147,9 +147,27 @@ namespace RAMEditor
             Logic.ClearOutputTape();
         }
 
-        private static void Run_Click(object sender, RoutedEventArgs e)
+        private static void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            Logic.RunProgram(Logic.GetHost());
+            if(_tokenSource != null)
+                _tokenSource.Cancel();
+        }
+
+        private static async void Run_Click(object sender, RoutedEventArgs e)
+        {
+            _tokenSource = new CancellationTokenSource();
+            Host parent = Logic.GetHost();
+            try
+            {
+                await Task.Run(() => { Logic.RunProgram(parent, _tokenSource.Token); });
+            }
+            catch (OperationCanceledException) { /*Ignore*/}
+            catch (RamInterpreterException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (_tokenSource != null)
+                    _tokenSource.Cancel();
+            }
         }
 
         private static void Verify_Click(object sender, RoutedEventArgs e)

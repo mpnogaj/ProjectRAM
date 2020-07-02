@@ -39,6 +39,7 @@
                 <MenuItem Header="Verify program" Click="{x:Static local:ButtonLogic.VerifyClick}"/>
                 <Separator/>
                 <MenuItem Header="Run program" Click="{x:Static local:ButtonLogic.RunClick}"/>
+                <MenuItem Header="Stop program" Click="{x:Static local:ButtonLogic.CancelClick}"/>
             </MenuItem>
             <MenuItem Header="Data" Style="{StaticResource FileDependent}">
                 <MenuItem Header="Memory">

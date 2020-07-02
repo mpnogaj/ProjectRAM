@@ -326,9 +326,9 @@ namespace RAMEditor {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("16")]
-        public string HDFontSize {
+        public int HDFontSize {
             get {
-                return ((string)(this["HDFontSize"]));
+                return ((int)(this["HDFontSize"]));
             }
             set {
                 this["HDFontSize"] = value;
@@ -344,6 +344,246 @@ namespace RAMEditor {
             }
             set {
                 this["HDFontWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SE1FontColor {
+            get {
+                return ((string)(this["SE1FontColor"]));
+            }
+            set {
+                this["SE1FontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string SE1FontFamily {
+            get {
+                return ((string)(this["SE1FontFamily"]));
+            }
+            set {
+                this["SE1FontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int SE1FontSize {
+            get {
+                return ((int)(this["SE1FontSize"]));
+            }
+            set {
+                this["SE1FontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string SE1FontWeight {
+            get {
+                return ((string)(this["SE1FontWeight"]));
+            }
+            set {
+                this["SE1FontWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SE2FontColor {
+            get {
+                return ((string)(this["SE2FontColor"]));
+            }
+            set {
+                this["SE2FontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string SE2FontFamily {
+            get {
+                return ((string)(this["SE2FontFamily"]));
+            }
+            set {
+                this["SE2FontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int SE2FontSize {
+            get {
+                return ((int)(this["SE2FontSize"]));
+            }
+            set {
+                this["SE2FontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string SE2FontWeight {
+            get {
+                return ((string)(this["SE2FontWeight"]));
+            }
+            set {
+                this["SE2FontWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SE3FontColor {
+            get {
+                return ((string)(this["SE3FontColor"]));
+            }
+            set {
+                this["SE3FontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string SE3FontFamily {
+            get {
+                return ((string)(this["SE3FontFamily"]));
+            }
+            set {
+                this["SE3FontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int SE3FontSize {
+            get {
+                return ((int)(this["SE3FontSize"]));
+            }
+            set {
+                this["SE3FontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string SE3FontWeight {
+            get {
+                return ((string)(this["SE3FontWeight"]));
+            }
+            set {
+                this["SE3FontWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SE4FontColor {
+            get {
+                return ((string)(this["SE4FontColor"]));
+            }
+            set {
+                this["SE4FontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string SE4FontFamily {
+            get {
+                return ((string)(this["SE4FontFamily"]));
+            }
+            set {
+                this["SE4FontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int SE4FontSize {
+            get {
+                return ((int)(this["SE4FontSize"]));
+            }
+            set {
+                this["SE4FontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string SE4FontWeight {
+            get {
+                return ((string)(this["SE4FontWeight"]));
+            }
+            set {
+                this["SE4FontWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string SE5FontColor {
+            get {
+                return ((string)(this["SE5FontColor"]));
+            }
+            set {
+                this["SE5FontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string SE5FontFamily {
+            get {
+                return ((string)(this["SE5FontFamily"]));
+            }
+            set {
+                this["SE5FontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int SE5FontSize {
+            get {
+                return ((int)(this["SE5FontSize"]));
+            }
+            set {
+                this["SE5FontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string SE5FontWeight {
+            get {
+                return ((string)(this["SE5FontWeight"]));
+            }
+            set {
+                this["SE5FontWeight"] = value;
             }
         }
     }

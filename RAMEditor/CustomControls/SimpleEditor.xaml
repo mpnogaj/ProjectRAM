@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RAMEditor.CustomControls"
-             xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
              xmlns:root="clr-namespace:RAMEditor"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -37,7 +36,10 @@
                 <DataGridTextColumn.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="Background" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow1Back}"/>
-                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow1Fore}"/>
+                        <Setter Property="FontFamily" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE1FontFamily}"/>
+                        <Setter Property="FontSize" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE1FontSize}"/>
+                        <Setter Property="FontWeight" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE1FontWeight}"/>
+                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE1FontColor}"/>
                     </Style>
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
@@ -45,7 +47,10 @@
                 <DataGridTextColumn.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="Background" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow2Back}"/>
-                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow2Fore}"/>
+                        <Setter Property="FontFamily" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE2FontFamily}"/>
+                        <Setter Property="FontSize" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE2FontSize}"/>
+                        <Setter Property="FontWeight" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE2FontWeight}"/>
+                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE2FontColor}"/>
                     </Style>
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
@@ -55,7 +60,10 @@
                 <DataGridComboBoxColumn.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="Background" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow3Back}"/>
-                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow3Fore}"/>
+                        <Setter Property="FontFamily" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE3FontFamily}"/>
+                        <Setter Property="FontSize" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE3FontSize}"/>
+                        <Setter Property="FontWeight" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE3FontWeight}"/>
+                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE3FontColor}"/>
                     </Style>
                 </DataGridComboBoxColumn.CellStyle>
             </DataGridComboBoxColumn>
@@ -63,7 +71,10 @@
                 <DataGridTextColumn.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="Background" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow4Back}"/>
-                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow4Fore}"/>
+                        <Setter Property="FontFamily" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE4FontFamily}"/>
+                        <Setter Property="FontSize" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE4FontSize}"/>
+                        <Setter Property="FontWeight" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE4FontWeight}"/>
+                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE4FontColor}"/>
                     </Style>
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
@@ -71,7 +82,10 @@
                 <DataGridTextColumn.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="Background" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow5Back}"/>
-                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow5Fore}"/>
+                        <Setter Property="FontFamily" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE5FontFamily}"/>
+                        <Setter Property="FontSize" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE5FontSize}"/>
+                        <Setter Property="FontWeight" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE5FontWeight}"/>
+                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE5FontColor}"/>
                     </Style>
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>

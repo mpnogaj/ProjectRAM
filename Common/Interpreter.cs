@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Reflection.Emit;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Common
 {
@@ -17,7 +16,7 @@ namespace Common
         /// <param name="c">Lista komend</param>
         /// <param name="lbl">Etykieta do wyszukania</param>
         /// <returns>Indeks komendy do której skoczyć</returns>
-        private static int Jump(List<Command> c, string lbl)
+        private static int Jump(List<Command> c, string lbl, int line)
         {
             int i = 0;
             foreach (Command command in c)
@@ -28,8 +27,8 @@ namespace Common
                     return i - 1;
                 }
                 i++;
-            } 
-            throw new LabelDoesntExistExcpetion();
+            }
+            throw new LabelDoesntExistExcpetion(line);
         }
 
         /// <summary>
@@ -106,7 +105,7 @@ namespace Common
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    if(string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrWhiteSpace(line))
                         continue;
                     string lbl = string.Empty, command = string.Empty, arg = string.Empty, comm = string.Empty;
                     string word = string.Empty;
@@ -116,7 +115,7 @@ namespace Common
                             word += line[i];
                         else
                         {
-                            if(word == string.Empty)
+                            if (word == string.Empty)
                                 continue;
                             if (word.EndsWith(':'))
                                 lbl = word;
@@ -174,8 +173,8 @@ namespace Common
                         word = string.Empty;
                     }
                 }
-                commands.Add(new Command(GetCommandType(command), 
-                    Regex.Replace(arg, @"\t|\n|\r", ""), lbl, 
+                commands.Add(new Command(GetCommandType(command),
+                    Regex.Replace(arg, @"\t|\n|\r", ""), lbl,
                     Regex.Replace(comm, @"\t|\n|\r", "")));
             }
             return commands;
@@ -200,8 +199,10 @@ namespace Common
 
         public static Queue<string> CreateInputTapeFromString(string line)
         {
+            if (line == string.Empty)
+                return null;
             return new Queue<string>(line.Split(' '));
-        } 
+        }
 
         /// <summary>
         /// Funkcja symulująca wykonanie wszystkich poleceń
@@ -209,7 +210,7 @@ namespace Common
         /// <param name="commands">Lista komend do wykonania</param>
         /// <param name="inputTape">Taśma wejściowa</param>
         /// <returns>Taśmę wyjścia</returns>
-        public static Tuple<Queue<string>, List<Cell>> RunCommands(List<Command> commands, Queue<string> inputTape)
+        public static Tuple<Queue<string>, List<Cell>> RunCommands(List<Command> commands, Queue<string> inputTape, CancellationToken token)
         {
             //Syf panie, syf
             //Przeorganizować to kiedyś
@@ -218,8 +219,12 @@ namespace Common
             memory.Add(new Cell(string.Empty, 0));
             //Taśma wyjścia
             Queue<string> outputTape = new Queue<string>();
-            for(int i = 0; i < commands.Count; i++)
+            for (int i = 0; i < commands.Count; i++)
+            {
+                token.ThrowIfCancellationRequested();
                 if (RunCommand(commands[i], commands, inputTape, outputTape, memory, ref i)) break;
+            }
+
             return new Tuple<Queue<string>, List<Cell>>(outputTape, memory);
         }
 
@@ -270,46 +275,46 @@ namespace Common
             switch (command.CommandType)
             {
                 case CommandType.Halt:
-                {
-                    return true;
-                }
+                    {
+                        return true;
+                    }
                 case CommandType.Jump:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType != ArgumentType.Label)
-                        throw new ArgumentIsNotValidException();
+                        throw new ArgumentIsNotValidException(i);
 
                     #endregion
 
-                    i = Jump(commands, argStr);
+                    i = Jump(commands, argStr, i);
                     break;
                 case CommandType.Jgtz:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType != ArgumentType.Label)
-                        throw new ArgumentIsNotValidException();
+                        throw new ArgumentIsNotValidException(i);
 
                     #endregion
 
                     if (akumulator.Value != "" &&
                         akumulator.Value[0] != '-' &&
                         akumulator.Value != "0")
-                        i = Jump(commands, argStr);
+                        i = Jump(commands, argStr, i);
                     break;
                 case CommandType.Jzero:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType != ArgumentType.Label)
-                        throw new ArgumentIsNotValidException();
+                        throw new ArgumentIsNotValidException(i);
 
                     #endregion
 
                     if (akumulator.Value != "" &&
                         akumulator.Value == "0")
-                        i = Jump(commands, argStr);
+                        i = Jump(commands, argStr, i);
                     break;
                 case CommandType.Read:
 
@@ -317,12 +322,11 @@ namespace Common
 
                     if (command.ArgumentType != ArgumentType.DirectAddress &&
                         command.ArgumentType != ArgumentType.IndirectAddress)
-                        throw new ArgumentIsNotValidException();
-                    if (inputTape.Count <= 0)
-                        throw new InputTapeEmptyException();
+                        throw new ArgumentIsNotValidException(i);
+                    if (inputTape == null || inputTape.Count <= 0)
+                        throw new InputTapeEmptyException(i);
 
                     #endregion
-
                     index = GetMemoryIndex(memory, argInt);
                     string val = inputTape.Dequeue();
 
@@ -341,7 +345,7 @@ namespace Common
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException();
+                        throw new ArgumentIsNotValidException(i);
 
                     #endregion
 
@@ -353,7 +357,7 @@ namespace Common
                     {
                         index = GetMemoryIndex(memory, argInt);
                         if (index == -1)
-                            throw new CellDoesntExistException();
+                            throw new CellDoesntExistException(i);
                         outputTape.Enqueue(memory[index].Value);
                     }
 
@@ -364,7 +368,7 @@ namespace Common
 
                     if (command.ArgumentType == ArgumentType.Const ||
                         command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException();
+                        throw new ArgumentIsNotValidException(i);
 
                     #endregion
 
@@ -379,7 +383,7 @@ namespace Common
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException();
+                        throw new ArgumentIsNotValidException(i);
 
                     #endregion
 
@@ -391,7 +395,7 @@ namespace Common
                     {
                         index = GetMemoryIndex(memory, argInt);
                         if (index == -1)
-                            throw new CellDoesntExistException();
+                            throw new CellDoesntExistException(i);
                         akumulator.Value = memory[index].Value;
                     }
 
@@ -401,7 +405,7 @@ namespace Common
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException();
+                        throw new ArgumentIsNotValidException(i);
 
                     #endregion
 
@@ -413,19 +417,19 @@ namespace Common
                     {
                         index = GetMemoryIndex(memory, argInt);
                         if (index == -1)
-                            throw new CellDoesntExistException();
+                            throw new CellDoesntExistException(i);
                         value = BigInteger.Parse(memory[index].Value);
                     }
 
                     akumulator.Value = BigInteger
-                        .Add(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException()), value).ToString();
+                        .Add(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException(i)), value).ToString();
                     break;
                 case CommandType.Sub:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException();
+                        throw new ArgumentIsNotValidException(i);
 
                     #endregion
 
@@ -437,19 +441,19 @@ namespace Common
                     {
                         index = GetMemoryIndex(memory, argInt);
                         if (index == -1)
-                            throw new CellDoesntExistException();
+                            throw new CellDoesntExistException(i);
                         value = BigInteger.Parse(memory[index].Value);
                     }
 
                     akumulator.Value = BigInteger
-                        .Subtract(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException()), value).ToString();
+                        .Subtract(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException(i)), value).ToString();
                     break;
                 case CommandType.Mult:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException();
+                        throw new ArgumentIsNotValidException(i);
 
                     #endregion
 
@@ -461,19 +465,19 @@ namespace Common
                     {
                         index = GetMemoryIndex(memory, argInt);
                         if (index == -1)
-                            throw new CellDoesntExistException();
+                            throw new CellDoesntExistException(i);
                         value = BigInteger.Parse(memory[index].Value);
                     }
 
                     akumulator.Value = BigInteger
-                        .Multiply(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException()), value).ToString();
+                        .Multiply(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException(i)), value).ToString();
                     break;
                 case CommandType.Div:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException();
+                        throw new ArgumentIsNotValidException(i);
 
                     #endregion
 
@@ -485,12 +489,12 @@ namespace Common
                     {
                         index = GetMemoryIndex(memory, argInt);
                         if (index == -1)
-                            throw new CellDoesntExistException();
+                            throw new CellDoesntExistException(i);
                         value = BigInteger.Parse(memory[index].Value);
                     }
 
                     akumulator.Value = BigInteger
-                        .Divide(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException()), value).ToString();
+                        .Divide(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException(i)), value).ToString();
                     break;
             }
 

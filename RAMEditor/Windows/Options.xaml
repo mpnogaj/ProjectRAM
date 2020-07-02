@@ -264,6 +264,7 @@
                                 <!--Headers-->
                                 <TextBlock Grid.Row="0" Text="Input tape font" Margin="5"/>
                                 <TextBlock Grid.Row="1" Text="Output tape font" Margin="5"/>
+                                <TextBlock Grid.Row="2" Text="Headers font" Margin="5"/>
                                 <!--Border and picker-->
                                 <StackPanel Grid.Row="0">
                                     <Button/>
@@ -272,6 +273,10 @@
                                 <StackPanel Grid.Row="1">
                                     <Button/>
                                     <TextBox x:Name="OtFontBox"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2">
+                                    <Button/>
+                                    <TextBox x:Name="HdFontBox"/>
                                 </StackPanel>
                             </Grid>
                         </GroupBox>

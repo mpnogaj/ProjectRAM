@@ -7,21 +7,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ColorFont" x:Class="ColorFont.ColorFontChooser" 
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-             xmlns:sysCollection="clr-namespace:System.Collections;assembly=mscorlib"
              mc:Ignorable="d" d:DesignWidth="582" Height="320">
     <Grid>
         <Grid.Resources>
             <DataTemplate x:Key="fontFamilyData">
                 <TextBlock Text="{Binding Source}"/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type FamilyTypeface}">
-                <WrapPanel>
-                    <TextBlock Text="{Binding Style}"/>
-                    <TextBlock Text="-"/>
-                    <TextBlock Text="{Binding Weight}" />
-                    <TextBlock Text="-"/>
-                    <TextBlock Text="{Binding Stretch}" />
-                </WrapPanel>
             </DataTemplate>
             <CollectionViewSource Source="{Binding Source={x:Static Fonts.SystemFontFamilies}}" x:Key="familyCollection">
                 <CollectionViewSource.SortDescriptions>
@@ -55,7 +45,8 @@
 
             <!--Family Typefaces (Style, weight, stretch) -->
             <GroupBox Grid.Row="0" Grid.Column="1" Header="Style Weight Stretch" Margin="5">
-                <ListBox x:Name="lstTypefaces" ItemsSource="{Binding FamilyTypefaces}" Margin="5">
+                <ListBox x:Name="lstTypefaces" 
+                         ItemsSource="{Binding SelectedItem.FamilyTypefaces, ElementName=lstFamily}" DisplayMemberPath="AdjustedFaceNames[en-US]" Margin="5">
                     <ListBox.Resources>
                         <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}">LightBlue</SolidColorBrush>
                     </ListBox.Resources>
