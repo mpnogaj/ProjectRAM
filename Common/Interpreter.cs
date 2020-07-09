@@ -28,7 +28,7 @@ namespace Common
                 }
                 i++;
             }
-            throw new LabelDoesntExistExcpetion(line);
+            throw new LabelDoesntExistExcpetion(line, lbl);
         }
 
         /// <summary>
@@ -54,45 +54,37 @@ namespace Common
         private static CommandType GetCommandType(string switcher)
         {
             //Tymczasowe
-            CommandType t = CommandType.Add;
+            CommandType t;
             switch (switcher.ToUpper())
             {
                 case "ADD":
-                    t = CommandType.Add;
-                    break;
+                    return CommandType.Add;
                 case "SUB":
-                    t = CommandType.Sub;
-                    break;
+                    return CommandType.Sub;
                 case "MULT":
-                    t = CommandType.Mult;
-                    break;
+                    return CommandType.Mult;
                 case "DIV":
-                    t = CommandType.Div;
-                    break;
+                    return CommandType.Div;
                 case "LOAD":
-                    t = CommandType.Load;
-                    break;
+                    return CommandType.Load;
                 case "STORE":
-                    t = CommandType.Store;
-                    break;
+                    return CommandType.Store;
                 case "READ":
                     t = CommandType.Read;
                     break;
                 case "WRITE":
-                    t = CommandType.Write;
-                    break;
+                    return CommandType.Write;
                 case "JUMP":
                     t = CommandType.Jump;
                     break;
                 case "JGTZ":
-                    t = CommandType.Jgtz;
-                    break;
+                    return CommandType.Jgtz;
                 case "JZERO":
-                    t = CommandType.Jzero;
-                    break;
+                    return CommandType.Jzero;
                 case "HALT":
-                    t = CommandType.Halt;
-                    break;
+                    return CommandType.Halt;
+                default:
+                    return CommandType.Unknown;
             }
             return t;
         }
@@ -246,9 +238,21 @@ namespace Common
             //argument
             string argStr = command.Argument;
             //argument w formie liczby
-            BigInteger argInt;
+            BigInteger argInt = BigInteger.Zero, value;
 
-            BigInteger value;
+            if (command.ArgumentType != ArgumentType.Label)
+            {
+                if (command.ArgumentType == ArgumentType.DirectAddress)
+                    BigInteger.TryParse(argStr, out argInt);
+                else
+                {
+                    BigInteger.TryParse(argStr.Substring(1), out argInt);
+                    if (command.ArgumentType == ArgumentType.IndirectAddress)
+                        BigInteger.TryParse(memory[GetMemoryIndex(memory, argInt)].Value, out argInt);
+                }
+            }
+            
+            /*
             if (!BigInteger.TryParse(argStr, out argInt))
             {
                 if (argStr.StartsWith('^'))
@@ -270,7 +274,7 @@ namespace Common
             else
             {
                 command.ArgumentType = ArgumentType.DirectAddress;
-            }
+            }*/
 
             switch (command.CommandType)
             {

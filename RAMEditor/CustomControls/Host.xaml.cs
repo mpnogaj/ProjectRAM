@@ -86,11 +86,11 @@ namespace RAMEditor.CustomControls
         {
             if ((e.Key == Key.Add || e.Key == Key.OemPlus) && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                Logic.ChangeZoom(Code, 1);
+                Logic.ChangeZoom(1);
             }
             else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                Logic.ChangeZoom(Code, -1);
+                Logic.ChangeZoom(-1);
             }
         }
 

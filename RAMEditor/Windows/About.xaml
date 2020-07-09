@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RAMEditor.Windows"
-        xmlns:ramEditor="clr-namespace:RAMEditor"
+        xmlns:root="clr-namespace:RAMEditor"
         mc:Ignorable="d"
         Title="About" Height="275" Width="430" WindowStartupLocation="CenterOwner">
     <Grid>
@@ -20,7 +20,11 @@
                 <RowDefinition Height="25"/>
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="RAM Machine 2020" FontSize="20" FontWeight="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="0" Text="RAM Machine 2020" VerticalAlignment="Center" HorizontalAlignment="Center"
+                       FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=HDFontFamily}"
+                FontSize="{Binding Source={x:Static root:Settings.Default}, Path=HDFontSize}" 
+                FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=HDFontWeight}"
+                Foreground="{Binding Source={x:Static root:Settings.Default}, Path=HDFontColor}"/>
             <TextBlock Grid.Row="1" Text="Author: Marcin Nogaj" FontSize="15" VerticalAlignment="Center"/>
             <TextBlock Grid.Row="2" Text="email: mpnogaj@gmail.com" FontSize="15" VerticalAlignment="Center"/>
             <TextBlock Grid.Row="3" Text="website: examplewebsite.com" FontSize="15" VerticalAlignment="Center"/>

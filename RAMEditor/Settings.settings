@@ -15,7 +15,7 @@
       <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
     <Setting Name="TBBackground" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#000000</Value>
+      <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
     <Setting Name="SERow1Back" Type="System.String" Scope="User">
       <Value Profile="(Default)">#FFFFFF</Value>
@@ -36,7 +36,7 @@
       <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
     <Setting Name="TBFontColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="TBFontFamily" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
@@ -48,7 +48,7 @@
       <Value Profile="(Default)">Normal</Value>
     </Setting>
     <Setting Name="ITFontColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="ITFontFamily" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
@@ -60,7 +60,7 @@
       <Value Profile="(Default)">Normal</Value>
     </Setting>
     <Setting Name="OTFontColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="OTFontFamily" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
@@ -72,7 +72,7 @@
       <Value Profile="(Default)">Normal</Value>
     </Setting>
     <Setting Name="HDFontColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="HDFontFamily" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
@@ -84,7 +84,7 @@
       <Value Profile="(Default)">Normal</Value>
     </Setting>
     <Setting Name="SE1FontColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="SE1FontFamily" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
@@ -96,7 +96,7 @@
       <Value Profile="(Default)">Normal</Value>
     </Setting>
     <Setting Name="SE2FontColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="SE2FontFamily" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
@@ -108,7 +108,7 @@
       <Value Profile="(Default)">Normal</Value>
     </Setting>
     <Setting Name="SE3FontColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="SE3FontFamily" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
@@ -120,7 +120,7 @@
       <Value Profile="(Default)">Normal</Value>
     </Setting>
     <Setting Name="SE4FontColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="SE4FontFamily" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
@@ -132,7 +132,7 @@
       <Value Profile="(Default)">Normal</Value>
     </Setting>
     <Setting Name="SE5FontColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="SE5FontFamily" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>

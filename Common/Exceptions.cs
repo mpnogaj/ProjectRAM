@@ -3,14 +3,15 @@
 namespace Common
 {
     public class RamInterpreterException : Exception { }
+
     //Nie ma takiej etykiety
     public class LabelDoesntExistExcpetion : RamInterpreterException
     {
         private string _message;
 
-        public LabelDoesntExistExcpetion(int line)
+        public LabelDoesntExistExcpetion(int line, string label)
         {
-            _message = $"Label not found. An error occured in line: {line + 1}";
+            _message = $"Label '{label}' not found. An error occured in line: {line + 1}";
         }
 
         public override string Message 
@@ -20,6 +21,7 @@ namespace Common
     }
 
     //Taśma wejścia pusta
+    //Runtime exception
     public class InputTapeEmptyException : RamInterpreterException
     {
         private string _message;
@@ -36,6 +38,7 @@ namespace Common
     }
 
     //Nie ma takiej komórki
+    //Runtime exception
     public class CellDoesntExistException : RamInterpreterException
     {
         private string _message;
@@ -52,6 +55,7 @@ namespace Common
     }
 
     //Akumulator pusty
+    //Runtime exception
     public class AcumulatorEmptyException : RamInterpreterException
     {
         private string _message;
@@ -74,7 +78,7 @@ namespace Common
 
         public ArgumentIsNotValidException(int line)
         {
-            _message = $"The given argument does not match . An error occured in line: {line + 1}";
+            _message = $"The given argument does not match the command. An error occured in line: {line + 1}";
         }
 
         public override string Message
@@ -82,5 +86,21 @@ namespace Common
             get => _message;
         }
 
+    }
+
+    //Linia jest nieprawidlowa (brak komendy lub argumentu)
+    public class LineIsEmptyException : RamInterpreterException
+    {
+        private string _message;
+
+        public LineIsEmptyException(int line)
+        {
+            _message = $"The line is invalid. Check if a command or argument is missing. An error occured in line: {line + 1}";
+        }
+
+        public override string Message
+        {
+            get => _message;
+        }
     }
 }

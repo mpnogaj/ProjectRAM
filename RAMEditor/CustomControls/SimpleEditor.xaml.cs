@@ -5,11 +5,6 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-
-
-//Źle przekształca polecenia na kod
-//NAPRAWIĆ
 
 namespace RAMEditor.CustomControls
 {
@@ -120,6 +115,23 @@ namespace RAMEditor.CustomControls
                 e.Handled = true;
                 vm.Lines.Insert(Editor.Items.IndexOf(Editor.CurrentCell.Item) + 1, new CodeLine());
                 UpdateLineNumber();
+            }
+            else if (e.Key == Key.Delete)
+            {
+                //sprawdzic czy zaznaczony numer lini lub tekst jest pusty lub combobox jest showany i pusty
+                //if (!(uiElement is DataGridCell)) return;
+                try
+                {
+                    if (((ComboBox)uiElement).IsDropDownOpen) return;
+                }
+                catch
+                {
+                    try
+                    {
+                        if (((TextBox)uiElement).Text != string.Empty) return;
+                    }
+                    catch {}
+                }
             }
         }
 

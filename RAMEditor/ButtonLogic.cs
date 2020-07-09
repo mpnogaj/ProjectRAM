@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +19,7 @@ namespace RAMEditor
     public static class ButtonLogic
     {
         private static CancellationTokenSource _tokenSource = null;
+
         #region Handlers
         public static RoutedEventHandler CloseClick => Close_Click;
         public static RoutedEventHandler CloseTabClick => CloseTab_Click;
@@ -46,6 +49,7 @@ namespace RAMEditor
         public static RoutedEventHandler ClearOutputTapeClick => ClearOutputTape_Click;
         public static RoutedEventHandler OutputTapeExportClick => OutputTapeExport_Click;
         #endregion
+
         private static void Options_Click(object sender, RoutedEventArgs e)
         {
             Logic.ShowOptionsWindow();
@@ -164,7 +168,7 @@ namespace RAMEditor
             catch (OperationCanceledException) { /*Ignore*/}
             catch (RamInterpreterException ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Logic.ShowErrorMessage("Error", ex.Message);
                 if (_tokenSource != null)
                     _tokenSource.Cancel();
             }
@@ -174,22 +178,15 @@ namespace RAMEditor
         {
             try
             {
-                Interpreter.CreateCommandList(Logic.GetHost().GetText());
+                List<RamInterpreterException> ex = Logic.CheckIfValid();
+                foreach(RamInterpreterException exception in ex)
+                {
+                    Logic.ShowErrorMessage("Error", exception.Message);
+                }
             }
             catch
             {
-                return;
-            }
-            if (Logic.GetHost().InputTape.Text != string.Empty)
-            {
-                try
-                {
-                    Interpreter.CreateInputTapeFromString(Logic.GetHost().InputTape.Text);
-                }
-                catch
-                {
-                    return;
-                }
+                Logic.ShowErrorMessage("Error", "Unknown error.");
             }
         }
 
@@ -210,12 +207,12 @@ namespace RAMEditor
 
         private static void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            Logic.ChangeZoom(Logic.GetHost().Code, -1);
+            Logic.ChangeZoom(-1);
         }
 
         private static void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            Logic.ChangeZoom(Logic.GetHost().Code, 1);
+            Logic.ChangeZoom(1);
         }
 
         private static void SaveFile_Click(object sender, RoutedEventArgs e)
@@ -226,9 +223,13 @@ namespace RAMEditor
                 SaveAs_Click(sender, e);
                 return;
             }
-            using (StreamWriter sw = new StreamWriter(h.CodeFilePath, append: false))
+            if (Logic.bUsingTextEditor())
             {
-                sw.WriteAsync(h.Code.Text);
+                File.WriteAllTextAsync(h.CodeFilePath, h.Code.Text);
+            }
+            else
+            {
+                File.WriteAllLines(h.CodeFilePath, h.SimpleEditor.ConvertToStringCollection().Cast<string>());
             }
         }
 
@@ -238,9 +239,13 @@ namespace RAMEditor
             TabItem ti = Logic.GetMainWindow().Files.SelectedItem as TabItem;
             SaveFileDialog sfd = Logic.PrepareSaveFileDialog("Save RAM Code", "RAM Code files (*.RAMCode)|*.RAMCode");
             if (sfd.ShowDialog() != true) return;
-            using (StreamWriter sw = new StreamWriter(sfd.FileName))
+            if (Logic.bUsingTextEditor())
             {
-                sw.WriteAsync(h.Code.Text);
+                File.WriteAllTextAsync(sfd.FileName, h.Code.Text);
+            }
+            else
+            {
+                File.WriteAllLines(sfd.FileName, h.SimpleEditor.ConvertToStringCollection().Cast<string>());
             }
             Logic.ChangeHeaderPage(ti, Path.GetFileNameWithoutExtension(sfd.FileName));
             h.CodeFilePath = sfd.FileName;

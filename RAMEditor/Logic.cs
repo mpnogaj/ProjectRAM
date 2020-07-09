@@ -122,10 +122,37 @@ namespace RAMEditor
         /// </summary>
         /// <param name="tb">Reference to TextBox control</param>
         /// <param name="offset">Value to add to current font size</param>
-        public static void ChangeZoom(TextBox tb, int offset)
+        public static void ChangeZoom(int offset)
         {
-            if (tb.FontSize <= 1 && offset < 0) return;
-            tb.FontSize += offset;
+            if (bUsingTextEditor())
+            {
+                TextBox tb = GetHost().Code;
+                if (tb.FontSize <= 1 && offset < 0) return;
+                tb.FontSize += offset;
+            }
+            else
+            {
+                if (Settings.Default.SE1FontSize > 1 || offset >= 0)
+                {
+                    Settings.Default.SE1FontSize += offset;
+                }
+                if (Settings.Default.SE2FontSize > 1 || offset >= 0)
+                {
+                    Settings.Default.SE2FontSize += offset;
+                }
+                if (Settings.Default.SE3FontSize > 1 || offset >= 0)
+                {
+                    Settings.Default.SE3FontSize += offset;
+                }
+                if (Settings.Default.SE4FontSize > 1 || offset >= 0)
+                {
+                    Settings.Default.SE4FontSize += offset;
+                }
+                if (Settings.Default.SE5FontSize > 1 || offset >= 0)
+                {
+                    Settings.Default.SE5FontSize += offset;
+                }
+            }
         }
 
         /// <summary>
@@ -255,31 +282,27 @@ namespace RAMEditor
             return GetHost().SimpleEditor.vm.Lines;
         }
 
-        public static bool CheckIfValid(ObservableCollection<CodeLine> cl)
+        public static List<RamInterpreterException> CheckIfValid()
         {
-            foreach (CodeLine codeLine in cl)
-            {
-                if (codeLine.Label == String.Empty &&
-                    codeLine.Command == String.Empty &&
-                    codeLine.Value == String.Empty &&
-                    codeLine.Comment == String.Empty)
-                    continue;
-                if (codeLine.Command == String.Empty ||
-                    codeLine.Value == String.Empty)
-                    return false;
-            }
-
-            return true;
+            Host parent = GetHost();
+            StringCollection sc;
+            if (parent.SimpleEditor.Visibility == Visibility.Visible)
+                sc = parent.SimpleEditor.ConvertToStringCollection();
+            else
+                sc = parent.GetText();
+            return Validator.ValidateProgram(Interpreter.CreateCommandList(sc));
         }
 
-        public static bool CheckIfValid(StringCollection code)
+        public static void ShowErrorMessage(string header, string error)
         {
-            foreach (string s in code)
-            {
-                //TODO
-                //Funkcja sprawdzająca poprawność kodu
-            }
-            return true;
+            MessageBox.Show(error, header, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public static bool bUsingTextEditor()
+        {
+            if (GetHost().Code.Visibility == Visibility.Visible)
+                return true;
+            return false;
         }
     }
 }

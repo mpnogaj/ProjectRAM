@@ -73,7 +73,7 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
         public string TBBackground {
             get {
                 return ((string)(this["TBBackground"]));
@@ -157,7 +157,7 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string TBFontColor {
             get {
                 return ((string)(this["TBFontColor"]));
@@ -205,7 +205,7 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string ITFontColor {
             get {
                 return ((string)(this["ITFontColor"]));
@@ -253,7 +253,7 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string OTFontColor {
             get {
                 return ((string)(this["OTFontColor"]));
@@ -301,7 +301,7 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string HDFontColor {
             get {
                 return ((string)(this["HDFontColor"]));
@@ -349,7 +349,7 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string SE1FontColor {
             get {
                 return ((string)(this["SE1FontColor"]));
@@ -397,7 +397,7 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string SE2FontColor {
             get {
                 return ((string)(this["SE2FontColor"]));
@@ -445,7 +445,7 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string SE3FontColor {
             get {
                 return ((string)(this["SE3FontColor"]));
@@ -493,7 +493,7 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string SE4FontColor {
             get {
                 return ((string)(this["SE4FontColor"]));
@@ -541,7 +541,7 @@ namespace RAMEditor {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string SE5FontColor {
             get {
                 return ((string)(this["SE5FontColor"]));

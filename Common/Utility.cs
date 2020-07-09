@@ -24,7 +24,8 @@ namespace Common
         Jump,
         Jgtz,
         Jzero,
-        Halt
+        Halt,
+        Unknown
     }
 
     /// <summary>
@@ -35,7 +36,8 @@ namespace Common
         Label,
         DirectAddress,
         IndirectAddress,
-        Const
+        Const,
+        None
     }
 
     /// <summary>
@@ -55,6 +57,26 @@ namespace Common
             this.Argument = a;
             this.Label = l;
             this.Comment = c;
+
+            if (t == CommandType.Halt)
+            {
+                this.ArgumentType = ArgumentType.None;
+            }
+            else
+            {
+                BigInteger b;
+                if (!BigInteger.TryParse(a, out b))
+                {
+                    if (a.StartsWith('^'))
+                        this.ArgumentType = ArgumentType.IndirectAddress;
+                    else if (a.StartsWith('='))
+                        this.ArgumentType = ArgumentType.Const;
+                    else
+                        this.ArgumentType = ArgumentType.Label;
+                }
+                else
+                    this.ArgumentType = ArgumentType.DirectAddress;
+            }
         }
     }
 

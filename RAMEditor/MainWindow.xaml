@@ -31,9 +31,6 @@
             <MenuItem Header="View" Style="{StaticResource FileDependent}">
                 <MenuItem Header="Zoom in" InputGestureText="Ctrl +" Click="{x:Static local:ButtonLogic.ZoomInClick}"/>
                 <MenuItem Header="Zoom out" InputGestureText="Ctrl -" Click="{x:Static local:ButtonLogic.ZoomOutClick}"/>
-                <Separator/>
-                <MenuItem Header="Undo" InputGestureText="Ctrl + Z" Click="{x:Static local:ButtonLogic.UndoClick}"/>
-                <MenuItem Header="Redo" InputGestureText="Ctrl + Y" Click="{x:Static local:ButtonLogic.RedoClick}"/>
             </MenuItem>
             <MenuItem Header="Program" Style="{StaticResource FileDependent}">
                 <MenuItem Header="Verify program" Click="{x:Static local:ButtonLogic.VerifyClick}"/>
