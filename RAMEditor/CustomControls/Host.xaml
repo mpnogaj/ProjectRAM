@@ -60,11 +60,12 @@
             </StackPanel>
         </Grid>
         <GridSplitter ResizeDirection="Columns" Grid.Column="1" Height="Auto" Width="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0"/>
-        <Grid Grid.Column="2">
+        <Grid x:Name="LeftColumn" Grid.Column="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="1.5*" MinHeight="125"/>
+                <RowDefinition Height="1.5*" MinHeight="100"/>
                 <RowDefinition Height="8*"/>
-                <RowDefinition Height="1.5*" MinHeight="125"/>
+                <RowDefinition Height="1.5*" MinHeight="100"/>
+                <RowDefinition Height="auto" MaxHeight="400"/>
             </Grid.RowDefinitions>
             <!--Input tape-->
             <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Bottom" Margin="0, 0, 0, 15">
@@ -125,6 +126,8 @@
                     FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=HDFontWeight}"
                     Foreground="{Binding Source={x:Static root:Settings.Default}, Path=HDFontColor}"/>
             </StackPanel>
+
+            <local:BottomDock x:Name="BottomDock" Grid.Row="3" Visibility="Collapsed"/>
         </Grid>
     </Grid>
 </UserControl>

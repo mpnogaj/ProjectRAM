@@ -304,5 +304,19 @@ namespace RAMEditor
                 return true;
             return false;
         }
+
+        public static void HideBottomDock()
+        {
+            var host = GetHost();
+            host.BottomDock.Visibility = Visibility.Collapsed;
+            GetHost().LeftColumn.RowDefinitions[3].Height = new GridLength(1, GridUnitType.Auto);
+        }
+
+        public static void ShowBottomDock()
+        {
+            var host = GetHost();
+            host.BottomDock.Visibility = Visibility.Visible;
+            host.LeftColumn.RowDefinitions[3].Height = new GridLength(5, GridUnitType.Star);
+        }
     }
 }

@@ -48,7 +48,14 @@ namespace RAMEditor
         //Output tape
         public static RoutedEventHandler ClearOutputTapeClick => ClearOutputTape_Click;
         public static RoutedEventHandler OutputTapeExportClick => OutputTapeExport_Click;
+        //Bottom bar
+        public static RoutedEventHandler HideBottomTabControlCick => HideBottomTabControl_Cick;
         #endregion
+
+        private static void HideBottomTabControl_Cick(object sender, RoutedEventArgs e)
+        {
+            Logic.HideBottomDock();
+        }
 
         private static void Options_Click(object sender, RoutedEventArgs e)
         {
@@ -179,10 +186,16 @@ namespace RAMEditor
             try
             {
                 List<RamInterpreterException> ex = Logic.CheckIfValid();
-                foreach(RamInterpreterException exception in ex)
+                if (ex.Count == 0)
                 {
-                    Logic.ShowErrorMessage("Error", exception.Message);
+                    MessageBox.Show("Wszystko dobrze");
+                    Logic.GetHost().BottomDock.ValidationRaport.SetExceptions(null);
+                    return;
                 }
+                Logic.ShowBottomDock();
+                var dock = Logic.GetHost().BottomDock;
+                dock.TabControl.SelectedItem = dock.ProblemsPage;
+                dock.ValidationRaport.SetExceptions(ex);
             }
             catch
             {

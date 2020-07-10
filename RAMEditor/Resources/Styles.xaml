@@ -14,6 +14,16 @@
         </Setter>
     </Style>
 
+    <Style TargetType="TabControl" x:Key="HideTabControl">
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu>
+                    <MenuItem Header="Hide" Click="{x:Static root:ButtonLogic.HideBottomTabControlCick}"/>
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="FileDependent" TargetType="MenuItem">
         <Setter Property="IsEnabled" Value="True"/>
         <Style.Triggers>
