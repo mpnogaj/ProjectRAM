@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 using Common;
+using RAMEditor.Properties;
 
 namespace RAMEditor.CustomControls
 {

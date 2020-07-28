@@ -1,0 +1,79 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+
+    <system:String x:Key="ok">Ok</system:String>
+    <system:String x:Key="cancel">Cancel</system:String>
+    <system:String x:Key="close">Close</system:String>
+    <system:String x:Key="author">Author</system:String>
+    <system:String x:Key="website">Website</system:String>
+    <system:String x:Key="email">Email</system:String>
+    <system:String x:Key="about">About program</system:String>
+    <system:String x:Key="settings">Settings</system:String>
+    <system:String x:Key="help">Help</system:String>
+    <system:String x:Key="tools">Tools</system:String>
+    <system:String x:Key="data">Data</system:String>
+    <system:String x:Key="program">Program</system:String>
+    <system:String x:Key="view">View</system:String>
+    <system:String x:Key="file">File</system:String>
+    <system:String x:Key="memory">Memory</system:String>
+    <system:String x:Key="inputTape">Input tape</system:String>
+    <system:String x:Key="outputTape">Output tape</system:String>
+    <system:String x:Key="clear">Clear</system:String>
+    <system:String x:Key="exportToFile">Export to file</system:String>
+    <system:String x:Key="importFromFile">Import from file</system:String>
+    <system:String x:Key="verifyProgram">Verify program</system:String>
+    <system:String x:Key="runProgram">Run program</system:String>
+    <system:String x:Key="stopProgram">Stop program</system:String>
+    <system:String x:Key="zoomIn">Zoom in</system:String>
+    <system:String x:Key="zoomOut">Zoom out</system:String>
+    <system:String x:Key="newFile">New file</system:String>
+    <system:String x:Key="openFile">Open file</system:String>
+    <system:String x:Key="saveFile">Save file</system:String>
+    <system:String x:Key="saveFileAs">Save file as</system:String>
+    <system:String x:Key="exit">Exit</system:String>
+
+    <system:String x:Key="address">Address</system:String>
+    <system:String x:Key="value">Value</system:String>
+
+    <system:String x:Key="line">Line</system:String>
+    <system:String x:Key="label">Label</system:String>
+    <system:String x:Key="command">Command</system:String>
+    <system:String x:Key="comment">Comment</system:String>
+
+    <system:String x:Key="revertToDefault">Revert to default settings</system:String>
+
+    <system:String x:Key="general">General</system:String>
+
+    <system:String x:Key="textEditor">Text editor</system:String>
+    <system:String x:Key="simpleEditor">Simple editor</system:String>
+
+    <system:String x:Key="language">Language</system:String>
+    <system:String x:Key="useSimpleEditor">Use simple editor</system:String>
+
+    <system:String x:Key="color">Color</system:String>
+    <system:String x:Key="font">Font</system:String>
+
+    <system:String x:Key="generalBackground">General background</system:String>
+    <system:String x:Key="inputTapeBackground">Input tape background</system:String>
+    <system:String x:Key="outputTapeBackground">Output tape background</system:String>
+
+    <system:String x:Key="firstColumnBackground">First column background</system:String>
+    <system:String x:Key="secondColumnBackground">Second column background</system:String>
+    <system:String x:Key="thirdColumnBackground">Thrid column background</system:String>
+    <system:String x:Key="fourthColumnBackground">Fourth column background</system:String>
+    <system:String x:Key="fifthColumnBackground">Fifth column background</system:String>
+
+    <system:String x:Key="inputTapeFont">Input tape font</system:String>
+    <system:String x:Key="outputTapeFont">Output tape font</system:String>
+    <system:String x:Key="headerFont">Header font</system:String>
+
+    <system:String x:Key="generalFont">General font</system:String>
+
+    <system:String x:Key="firstColumnFont">First column font</system:String>
+    <system:String x:Key="secondColumnFont">Second column font</system:String>
+    <system:String x:Key="thirdColumnFont">Third column font</system:String>
+    <system:String x:Key="fourthColumnFont">Fourth column font</system:String>
+    <system:String x:Key="fifthColumnFont">Fifth column font</system:String>
+
+</ResourceDictionary>

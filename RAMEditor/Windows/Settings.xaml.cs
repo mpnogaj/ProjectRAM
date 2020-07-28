@@ -1,14 +1,12 @@
-﻿using System;
-using System.Globalization;
+﻿using ColorFont;
+using RAMEditor.Properties;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Navigation;
 using Color = System.Drawing.Color;
 using ColorDialog = System.Windows.Forms.ColorDialog;
-using FontDialog = System.Windows.Forms.FontDialog;
 using MColor = System.Windows.Media.Color;
-using ColorFont;
 
 namespace RAMEditor.Windows
 {
@@ -18,6 +16,7 @@ namespace RAMEditor.Windows
     public partial class Options
     {
         private int[] _customColors = new int[16];
+
         public Options()
         {
             InitializeComponent();
@@ -55,6 +54,15 @@ namespace RAMEditor.Windows
             SetFont(Se5FontBox, Settings.Default.SE5FontFamily, Settings.Default.SE5FontSize,
                 Settings.Default.SE5FontWeight, Settings.Default.SE5FontColor);
             #endregion
+            string langCode = Settings.Default.Language;
+            foreach (ComboBoxItem item in SelectedLanguage.Items)
+            {
+                if (item.Tag.ToString() == langCode)
+                {
+                    SelectedLanguage.SelectedItem = item;
+                    break;
+                }
+            }
         }
 
         private void okBtn_Click(object sender, RoutedEventArgs e)
@@ -120,6 +128,7 @@ namespace RAMEditor.Windows
             Settings.Default.SE5FontColor = GetStringFromBrush(Se5FontBox.Foreground);
 
             #endregion
+            Settings.Default.Language = ((ComboBoxItem)SelectedLanguage.SelectedItem).Tag.ToString();
             Settings.Default.Save();
             this.Close();
         }
@@ -166,14 +175,14 @@ namespace RAMEditor.Windows
                 _customColors = cd.CustomColors;
                 if (((Button)sender).Parent is StackPanel sp)
                 {
-                    ((Border) sp.Children[0]).Background = new SolidColorBrush(ColorToMColor(cd.Color));
+                    ((Border)sp.Children[0]).Background = new SolidColorBrush(ColorToMColor(cd.Color));
                 }
             }
         }
 
         private void PickFont(object sender, RoutedEventArgs e)
         {
-            TextBox box = ((StackPanel) ((Button) sender).Parent).Children[1] as TextBox;
+            TextBox box = ((StackPanel)((Button)sender).Parent).Children[1] as TextBox;
             ColorFontDialog fd = new ColorFontDialog
             {
                 Owner = this,
@@ -182,6 +191,24 @@ namespace RAMEditor.Windows
             if (fd.ShowDialog() == true)
             {
                 FontInfo.ApplyFont(box, fd.Font);
+            }
+        }
+
+        private void CancelBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void RevertToDefault_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dialog = MessageBox.Show(
+                "Are you sure you want to restore the default settings. This cannot be undone!",
+                "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (dialog == MessageBoxResult.Yes)
+            {
+                Settings.Default.Reset();
+                Settings.Default.Save();
+                this.Close();
             }
         }
     }

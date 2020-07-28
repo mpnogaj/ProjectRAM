@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:root="clr-namespace:RAMEditor"
         mc:Ignorable="d"
-        Title="Options" Height="450" Width="800" WindowStartupLocation="CenterOwner">
+        Title="{StaticResource settings}" Height="450" Width="800" WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -25,22 +25,22 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <TabControl>
-            <TabItem Header="General">
+            <TabItem Header="{StaticResource general}">
                 <StackPanel Orientation="Vertical" Margin="10">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Language" Margin="5"/>
-                        <ComboBox FontSize="16" SelectedIndex="0" Margin="45, 5, 5, 5">
-                            <ComboBoxItem Content="English" Tag="en_EN"/>
-                            <ComboBoxItem Content="Polski" Tag="pl_PL"/>
+                        <TextBlock Text="{StaticResource language}" Margin="5"/>
+                        <ComboBox x:Name="SelectedLanguage" FontSize="16" SelectedIndex="0" Margin="45, 5, 5, 5">
+                            <ComboBoxItem Content="English" Tag="en-GB"/>
+                            <ComboBoxItem Content="Polski" Tag="pl-PL"/>
                         </ComboBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Use simple editor" Margin="5"/>
+                        <TextBlock Text="{StaticResource useSimpleEditor}" Margin="5"/>
                         <CheckBox x:Name="EditorBox" VerticalAlignment="Center" Margin="10, 5, 5, 5"/>
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Colours">
+            <TabItem Header="{StaticResource color}">
                 <ScrollViewer>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -67,7 +67,7 @@
                                 <Setter Property="FontSize" Value="16"/>
                             </Style>
                         </Grid.Resources>
-                        <GroupBox Grid.Row="0" Header="General">
+                        <GroupBox Grid.Row="0" Header="{StaticResource general}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="230"/>
@@ -93,9 +93,9 @@
                                     </Style>
                                 </Grid.Resources>
                                 <!--Headers-->
-                                <TextBlock Grid.Row="0" Text="Background" Margin="5"/>
-                                <TextBlock Grid.Row="1" Text="Input tape background" Margin="5"/>
-                                <TextBlock Grid.Row="2" Text="Output tape background" Margin="5"/>
+                                <TextBlock Grid.Row="0" Text="{StaticResource generalBackground}" Margin="5"/>
+                                <TextBlock Grid.Row="1" Text="{StaticResource inputTapeBackground}" Margin="5"/>
+                                <TextBlock Grid.Row="2" Text="{StaticResource outputTapeBackground}" Margin="5"/>
                                 <!--Border and picker-->
                                 <StackPanel Grid.Row="0">
                                     <Border x:Name="GBackColorBox"/>
@@ -111,7 +111,7 @@
                                 </StackPanel>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Grid.Row="1" Header="Text Editor">
+                        <GroupBox Grid.Row="1" Header="{StaticResource textEditor}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="230"/>
@@ -135,7 +135,7 @@
                                     </Style>
                                 </Grid.Resources>
                                 <!--Headers-->
-                                <TextBlock Grid.Row="0" Text="Text editor background" Margin="5"/>
+                                <TextBlock Grid.Row="0" Text="{StaticResource generalBackground}" Margin="5"/>
                                 <!--Border and picker-->
                                 <StackPanel Grid.Row="0">
                                     <Border x:Name="TbBackColorBox"/>
@@ -143,8 +143,7 @@
                                 </StackPanel>
                             </Grid>
                         </GroupBox>
-
-                        <GroupBox Grid.Row="2" Header="Simple Editor">
+                        <GroupBox Grid.Row="2" Header="{StaticResource simpleEditor}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="230"/>
@@ -173,12 +172,12 @@
                                     </Style>
                                 </Grid.Resources>
                                 <!--Headers-->
-                                <TextBlock Grid.Row="0" Text="Backgorund" Margin="5"/>
-                                <TextBlock Grid.Row="1" Text="First column background" Margin="5"/>
-                                <TextBlock Grid.Row="2" Text="Second column background" Margin="5"/>
-                                <TextBlock Grid.Row="3" Text="Third column background" Margin="5"/>
-                                <TextBlock Grid.Row="4" Text="Fourth column background" Margin="5"/>
-                                <TextBlock Grid.Row="5" Text="Fifth column background" Margin="5"/>
+                                <TextBlock Grid.Row="0" Text="{StaticResource generalBackground}" Margin="5"/>
+                                <TextBlock Grid.Row="1" Text="{StaticResource firstColumnBackground}" Margin="5"/>
+                                <TextBlock Grid.Row="2" Text="{StaticResource secondColumnBackground}" Margin="5"/>
+                                <TextBlock Grid.Row="3" Text="{StaticResource thirdColumnBackground}" Margin="5"/>
+                                <TextBlock Grid.Row="4" Text="{StaticResource fourthColumnBackground}" Margin="5"/>
+                                <TextBlock Grid.Row="5" Text="{StaticResource fifthColumnBackground}" Margin="5"/>
                                 <!--Border and picker-->
                                 <StackPanel Grid.Row="0">
                                     <Border x:Name="SeBackBox"/>
@@ -209,7 +208,7 @@
                     </Grid>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Font">
+            <TabItem Header="{StaticResource font}">
                 <ScrollViewer>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -236,7 +235,7 @@
                                 <Setter Property="FontSize" Value="16"/>
                             </Style>
                         </Grid.Resources>
-                        <GroupBox Grid.Row="0" Header="General">
+                        <GroupBox Grid.Row="0" Header="{StaticResource general}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="230"/>
@@ -262,9 +261,9 @@
                                     </Style>
                                 </Grid.Resources>
                                 <!--Headers-->
-                                <TextBlock Grid.Row="0" Text="Input tape font" Margin="5"/>
-                                <TextBlock Grid.Row="1" Text="Output tape font" Margin="5"/>
-                                <TextBlock Grid.Row="2" Text="Headers font" Margin="5"/>
+                                <TextBlock Grid.Row="0" Text="{StaticResource inputTapeFont}" Margin="5"/>
+                                <TextBlock Grid.Row="1" Text="{StaticResource outputTapeFont}" Margin="5"/>
+                                <TextBlock Grid.Row="2" Text="{StaticResource headerFont}" Margin="5"/>
                                 <!--Border and picker-->
                                 <StackPanel Grid.Row="0">
                                     <Button/>
@@ -280,7 +279,7 @@
                                 </StackPanel>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Grid.Row="1" Header="Text Editor">
+                        <GroupBox Grid.Row="1" Header="{StaticResource textEditor}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="230"/>
@@ -304,7 +303,7 @@
                                     </Style>
                                 </Grid.Resources>
                                 <!--Headers-->
-                                <TextBlock Grid.Row="0" Text="Text editor font" Margin="5"/>
+                                <TextBlock Grid.Row="0" Text="{StaticResource generalFont}" Margin="5"/>
                                 <!--Border and picker-->
                                 <StackPanel Grid.Row="0">
                                     <Button/>
@@ -312,8 +311,7 @@
                                 </StackPanel>
                             </Grid>
                         </GroupBox>
-
-                        <GroupBox Grid.Row="2" Header="Simple Editor">
+                        <GroupBox Grid.Row="2" Header="{StaticResource simpleEditor}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="230"/>
@@ -342,11 +340,11 @@
                                     </Style>
                                 </Grid.Resources>
                                 <!--Headers-->
-                                <TextBlock Grid.Row="0" Text="First column font" Margin="5"/>
-                                <TextBlock Grid.Row="1" Text="Second column font" Margin="5"/>
-                                <TextBlock Grid.Row="2" Text="Third column font" Margin="5"/>
-                                <TextBlock Grid.Row="3" Text="Fourth column font" Margin="5"/>
-                                <TextBlock Grid.Row="4" Text="Fifth column font" Margin="5"/>
+                                <TextBlock Grid.Row="0" Text="{StaticResource firstColumnFont}" Margin="5"/>
+                                <TextBlock Grid.Row="1" Text="{StaticResource secondColumnFont}" Margin="5"/>
+                                <TextBlock Grid.Row="2" Text="{StaticResource thirdColumnFont}" Margin="5"/>
+                                <TextBlock Grid.Row="3" Text="{StaticResource fourthColumnFont}" Margin="5"/>
+                                <TextBlock Grid.Row="4" Text="{StaticResource fifthColumnFont}" Margin="5"/>
                                 <!--Border and picker-->
                                 <StackPanel Grid.Row="0">
                                     <Button/>
@@ -374,7 +372,26 @@
                 </ScrollViewer>
             </TabItem>
         </TabControl>
-        <Button Grid.Row="1" x:Name="OkBtn" Content="Ok" Click="okBtn_Click" HorizontalAlignment="Right" 
-                MinWidth="75" Margin="0, 0, 20, 10" MaxHeight="30"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="10, 0, 10, 0"/>
+                    <Setter Property="MaxHeight" Value="30"/>
+                    <Setter Property="MinWidth" Value="75"/>
+                </Style>
+            </Grid.Resources>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+                <Button x:Name="CancelBtn" Content="{StaticResource cancel}" Click="CancelBtn_OnClick"/>
+                <Button x:Name="OkBtn" Content="{StaticResource ok}" Click="okBtn_Click"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0">
+                <Button x:Name="RevertToDefault" Content="{StaticResource revertToDefault}" Click="RevertToDefault_OnClick"/>
+            </StackPanel>
+
+        </Grid>
     </Grid>
 </Window>

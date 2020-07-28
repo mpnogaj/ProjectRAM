@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using RAMEditor.Properties;
 using static Common.Interpreter;
 
 namespace RAMEditor

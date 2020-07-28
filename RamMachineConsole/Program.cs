@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Threading;
 using Common;
 
 namespace RAMConsole
@@ -44,8 +44,9 @@ namespace RAMConsole
                     break;
             }
 
+            CancellationTokenSource cts = new CancellationTokenSource();
             Queue<string> outputTape = 
-                Interpreter.RunCommands(Interpreter.CreateCommandList(args[0]), inputTape).Item1;
+                Interpreter.RunCommands(Interpreter.CreateCommandList(args[0]), inputTape, cts.Token).Item1;
             while(outputTape.Count > 0)
             {
                 Console.Write($"{outputTape.Dequeue()} ");

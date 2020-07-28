@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RAMEditor.CustomControls"
              xmlns:root="clr-namespace:RAMEditor"
+             xmlns:properties="clr-namespace:RAMEditor.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -21,7 +22,7 @@
               AutoGenerateColumns="False"
               PreviewKeyDown="Editor_OnKeyUp"
               DataGridCell.Selected="Editor_Selected"
-              Background="{Binding Source={x:Static root:Settings.Default}, Path=SEBack}"
+              Background="{Binding Source={x:Static properties:Settings.Default}, Path=SEBack}"
               ItemsSource="{Binding Path=Lines, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" UnloadingRow="Editor_UnloadingRow">
         <DataGrid.Resources>
             <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
@@ -32,60 +33,60 @@
             </Style>
         </DataGrid.Resources>
         <DataGrid.Columns>
-            <DataGridTextColumn IsReadOnly="True" Width="50" MaxWidth="75" MinWidth="50" Header="Line" Binding="{Binding Path=Line, Mode=OneWay, NotifyOnSourceUpdated=False, UpdateSourceTrigger=PropertyChanged}">
+            <DataGridTextColumn IsReadOnly="True" Width="50" MaxWidth="75" MinWidth="50" Header="{StaticResource line}" Binding="{Binding Path=Line, Mode=OneWay, NotifyOnSourceUpdated=False, UpdateSourceTrigger=PropertyChanged}">
                 <DataGridTextColumn.CellStyle>
                     <Style TargetType="DataGridCell">
-                        <Setter Property="Background" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow1Back}"/>
-                        <Setter Property="FontFamily" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE1FontFamily}"/>
-                        <Setter Property="FontSize" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE1FontSize}"/>
-                        <Setter Property="FontWeight" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE1FontWeight}"/>
-                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE1FontColor}"/>
+                        <Setter Property="Background" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SERow1Back}"/>
+                        <Setter Property="FontFamily" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE1FontFamily}"/>
+                        <Setter Property="FontSize" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE1FontSize}"/>
+                        <Setter Property="FontWeight" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE1FontWeight}"/>
+                        <Setter Property="Foreground" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE1FontColor}"/>
                     </Style>
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
-            <DataGridTextColumn IsReadOnly="False" Width="*" MinWidth="50" Header="Label" Binding="{Binding Path=Label, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
+            <DataGridTextColumn IsReadOnly="False" Width="*" MinWidth="50" Header="{StaticResource label}" Binding="{Binding Path=Label, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
                 <DataGridTextColumn.CellStyle>
                     <Style TargetType="DataGridCell">
-                        <Setter Property="Background" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow2Back}"/>
-                        <Setter Property="FontFamily" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE2FontFamily}"/>
-                        <Setter Property="FontSize" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE2FontSize}"/>
-                        <Setter Property="FontWeight" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE2FontWeight}"/>
-                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE2FontColor}"/>
+                        <Setter Property="Background" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SERow2Back}"/>
+                        <Setter Property="FontFamily" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE2FontFamily}"/>
+                        <Setter Property="FontSize" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE2FontSize}"/>
+                        <Setter Property="FontWeight" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE2FontWeight}"/>
+                        <Setter Property="Foreground" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE2FontColor}"/>
                     </Style>
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
-            <DataGridComboBoxColumn IsReadOnly="False" Width="*" MinWidth="50" Header="Command" 
+            <DataGridComboBoxColumn IsReadOnly="False" Width="*" MinWidth="50" Header="{StaticResource command}" 
                                     ItemsSource="{StaticResource CommandList}"
                                     SelectedItemBinding="{Binding Path=Command, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
                 <DataGridComboBoxColumn.CellStyle>
                     <Style TargetType="DataGridCell">
-                        <Setter Property="Background" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow3Back}"/>
-                        <Setter Property="FontFamily" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE3FontFamily}"/>
-                        <Setter Property="FontSize" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE3FontSize}"/>
-                        <Setter Property="FontWeight" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE3FontWeight}"/>
-                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE3FontColor}"/>
+                        <Setter Property="Background" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SERow3Back}"/>
+                        <Setter Property="FontFamily" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE3FontFamily}"/>
+                        <Setter Property="FontSize" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE3FontSize}"/>
+                        <Setter Property="FontWeight" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE3FontWeight}"/>
+                        <Setter Property="Foreground" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE3FontColor}"/>
                     </Style>
                 </DataGridComboBoxColumn.CellStyle>
             </DataGridComboBoxColumn>
-            <DataGridTextColumn IsReadOnly="False" Width="*" MinWidth="50" Header="Value" Binding="{Binding Path=Value, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
+            <DataGridTextColumn IsReadOnly="False" Width="*" MinWidth="50" Header="{StaticResource value}" Binding="{Binding Path=Value, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
                 <DataGridTextColumn.CellStyle>
                     <Style TargetType="DataGridCell">
-                        <Setter Property="Background" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow4Back}"/>
-                        <Setter Property="FontFamily" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE4FontFamily}"/>
-                        <Setter Property="FontSize" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE4FontSize}"/>
-                        <Setter Property="FontWeight" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE4FontWeight}"/>
-                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE4FontColor}"/>
+                        <Setter Property="Background" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SERow4Back}"/>
+                        <Setter Property="FontFamily" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE4FontFamily}"/>
+                        <Setter Property="FontSize" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE4FontSize}"/>
+                        <Setter Property="FontWeight" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE4FontWeight}"/>
+                        <Setter Property="Foreground" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE4FontColor}"/>
                     </Style>
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
-            <DataGridTextColumn IsReadOnly="False" Width="*" MinWidth="50" Header="Comment" Binding="{Binding Path=Comment, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
+            <DataGridTextColumn IsReadOnly="False" Width="*" MinWidth="50" Header="{StaticResource comment}" Binding="{Binding Path=Comment, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
                 <DataGridTextColumn.CellStyle>
                     <Style TargetType="DataGridCell">
-                        <Setter Property="Background" Value="{Binding Source={x:Static root:Settings.Default}, Path=SERow5Back}"/>
-                        <Setter Property="FontFamily" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE5FontFamily}"/>
-                        <Setter Property="FontSize" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE5FontSize}"/>
-                        <Setter Property="FontWeight" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE5FontWeight}"/>
-                        <Setter Property="Foreground" Value="{Binding Source={x:Static root:Settings.Default}, Path=SE5FontColor}"/>
+                        <Setter Property="Background" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SERow5Back}"/>
+                        <Setter Property="FontFamily" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE5FontFamily}"/>
+                        <Setter Property="FontSize" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE5FontSize}"/>
+                        <Setter Property="FontWeight" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE5FontWeight}"/>
+                        <Setter Property="Foreground" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SE5FontColor}"/>
                     </Style>
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>

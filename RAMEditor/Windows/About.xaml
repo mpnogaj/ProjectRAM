@@ -5,14 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RAMEditor.Windows"
         xmlns:root="clr-namespace:RAMEditor"
+        xmlns:properties="clr-namespace:RAMEditor.Properties"
         mc:Ignorable="d"
-        Title="About" Height="275" Width="430" WindowStartupLocation="CenterOwner">
+        Title="{StaticResource about}" Height="300" Width="450" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Image Grid.Column="1" Margin="30"/>
+        <Image Grid.Column="1" Margin="0, 20, 0, 20" Source="../Resources/Images/author1.jpg"/>
         <Grid Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
@@ -21,13 +22,22 @@
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="RAM Machine 2020" VerticalAlignment="Center" HorizontalAlignment="Center"
-                       FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=HDFontFamily}"
-                FontSize="{Binding Source={x:Static root:Settings.Default}, Path=HDFontSize}" 
-                FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=HDFontWeight}"
-                Foreground="{Binding Source={x:Static root:Settings.Default}, Path=HDFontColor}"/>
-            <TextBlock Grid.Row="1" Text="Author: Marcin Nogaj" FontSize="15" VerticalAlignment="Center"/>
-            <TextBlock Grid.Row="2" Text="email: mpnogaj@gmail.com" FontSize="15" VerticalAlignment="Center"/>
-            <TextBlock Grid.Row="3" Text="website: examplewebsite.com" FontSize="15" VerticalAlignment="Center"/>
+                       FontFamily="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontFamily}"
+                FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontSize}" 
+                FontWeight="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontWeight}"
+                Foreground="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontColor}"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                <TextBlock Text="{StaticResource author}" FontSize="15" VerticalAlignment="Center"/>
+                <TextBlock Text=": Marcin Nogaj" FontSize="15" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="2">
+                <TextBlock Text="{StaticResource email}" FontSize="15" VerticalAlignment="Center"/>
+                <TextBlock Text=": mpnogaj@gmail.com" FontSize="15" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="3">
+                <TextBlock Text="{StaticResource website}" FontSize="15" VerticalAlignment="Center"/>
+                <TextBlock Text=": example.com" FontSize="15" VerticalAlignment="Center"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

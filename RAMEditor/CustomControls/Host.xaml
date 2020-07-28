@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RAMEditor.CustomControls"
              xmlns:root="clr-namespace:RAMEditor"
+             xmlns:properties="clr-namespace:RAMEditor.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -21,13 +22,13 @@
             </Grid.RowDefinitions>
             <TextBlock 
                 Grid.Row="0" 
-                Text="Memory" 
+                Text="{StaticResource memory}" 
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center" 
-                FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=HDFontFamily}"
-                FontSize="{Binding Source={x:Static root:Settings.Default}, Path=HDFontSize}" 
-                FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=HDFontWeight}"
-                Foreground="{Binding Source={x:Static root:Settings.Default}, Path=HDFontColor}"/>
+                FontFamily="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontFamily}"
+                FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontSize}" 
+                FontWeight="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontWeight}"
+                Foreground="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontColor}"/>
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <Grid>
                     <Grid.Resources>
@@ -48,10 +49,10 @@
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <Border Grid.Column="0">
-                        <TextBlock Text="Address"/>
+                        <TextBlock Text="{StaticResource address}"/>
                     </Border>
                     <Border Grid.Column="1">
-                        <TextBlock Text="Value"/>
+                        <TextBlock Text="{StaticResource value}"/>
                     </Border>
                 </Grid>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -72,31 +73,31 @@
                 <TextBlock 
                     Margin="0, 10, 0, 0" 
                     HorizontalAlignment="Center" 
-                    Text="Input tape" 
-                    FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=HDFontFamily}"
-                    FontSize="{Binding Source={x:Static root:Settings.Default}, Path=HDFontSize}" 
-                    FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=HDFontWeight}"
-                    Foreground="{Binding Source={x:Static root:Settings.Default}, Path=HDFontColor}"/>
+                    Text="{StaticResource inputTape}" 
+                    FontFamily="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontFamily}"
+                    FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontSize}" 
+                    FontWeight="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontWeight}"
+                    Foreground="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontColor}"/>
                 <TextBox 
                     x:Name="InputTape" 
                     Margin="0, 10, 0, 0" 
                     HorizontalScrollBarVisibility="Visible"
-                    FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=ITFontFamily}"
-                    FontSize="{Binding Source={x:Static root:Settings.Default}, Path=ITFontSize}" 
-                    FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=ITFontWeight}"
-                    Foreground="{Binding Source={x:Static root:Settings.Default}, Path=ITFontColor}"
-                    Background="{Binding Source={x:Static root:Settings.Default}, Path=ITBackground}"/>
+                    FontFamily="{Binding Source={x:Static properties:Settings.Default}, Path=ITFontFamily}"
+                    FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=ITFontSize}" 
+                    FontWeight="{Binding Source={x:Static properties:Settings.Default}, Path=ITFontWeight}"
+                    Foreground="{Binding Source={x:Static properties:Settings.Default}, Path=ITFontColor}"
+                    Background="{Binding Source={x:Static properties:Settings.Default}, Path=ITBackground}"/>
             </StackPanel>
             <!--Code-->
             <DockPanel Grid.Row="1" LastChildFill="True">
                 <local:SimpleEditor x:Name="SimpleEditor" Visibility="Visible"/>
                 <TextBox
                     x:Name="Code" 
-                    Background="{Binding Source={x:Static root:Settings.Default}, Path=TBBackground}"
-                    FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=TBFontFamily}"
-                    FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=TBFontWeight}"
-                    FontSize="{Binding Source={x:Static root:Settings.Default}, Path=TBFontSize}" 
-                    Foreground="{Binding Source={x:Static root:Settings.Default}, Path=TBFontColor}"
+                    Background="{Binding Source={x:Static properties:Settings.Default}, Path=TBBackground}"
+                    FontFamily="{Binding Source={x:Static properties:Settings.Default}, Path=TBFontFamily}"
+                    FontWeight="{Binding Source={x:Static properties:Settings.Default}, Path=TBFontWeight}"
+                    FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=TBFontSize}" 
+                    Foreground="{Binding Source={x:Static properties:Settings.Default}, Path=TBFontColor}"
                     AcceptsReturn="True" 
                     AcceptsTab="True" 
                     DockPanel.Dock="Top"
@@ -112,19 +113,19 @@
                     Margin="0, 0, 0, 10" 
                     IsReadOnly="True" 
                     HorizontalScrollBarVisibility="Visible"
-                    FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=OTFontFamily}"
-                    FontSize="{Binding Source={x:Static root:Settings.Default}, Path=OTFontSize}" 
-                    FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=OTFontWeight}"
-                    Foreground="{Binding Source={x:Static root:Settings.Default}, Path=OTFontColor}"
-                    Background="{Binding Source={x:Static root:Settings.Default}, Path=OTBackground}"/>
+                    FontFamily="{Binding Source={x:Static properties:Settings.Default}, Path=OTFontFamily}"
+                    FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=OTFontSize}" 
+                    FontWeight="{Binding Source={x:Static properties:Settings.Default}, Path=OTFontWeight}"
+                    Foreground="{Binding Source={x:Static properties:Settings.Default}, Path=OTFontColor}"
+                    Background="{Binding Source={x:Static properties:Settings.Default}, Path=OTBackground}"/>
                 <TextBlock 
                     Margin="0, 0, 0, 10" 
                     HorizontalAlignment="Center" 
-                    Text="Output tape" 
-                    FontFamily="{Binding Source={x:Static root:Settings.Default}, Path=HDFontFamily}"
-                    FontSize="{Binding Source={x:Static root:Settings.Default}, Path=HDFontSize}" 
-                    FontWeight="{Binding Source={x:Static root:Settings.Default}, Path=HDFontWeight}"
-                    Foreground="{Binding Source={x:Static root:Settings.Default}, Path=HDFontColor}"/>
+                    Text="{StaticResource outputTape}" 
+                    FontFamily="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontFamily}"
+                    FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontSize}" 
+                    FontWeight="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontWeight}"
+                    Foreground="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontColor}"/>
             </StackPanel>
 
             <local:BottomDock x:Name="BottomDock" Grid.Row="3" Visibility="Collapsed"/>
