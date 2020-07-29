@@ -9,6 +9,25 @@
 
   <ItemGroup>
     <None Remove="Resources\Images\author1.jpg" />
+    <None Remove="Resources\Images\clear.png" />
+    <None Remove="Resources\Images\exit.png" />
+    <None Remove="Resources\Images\export.png" />
+    <None Remove="Resources\Images\help.png" />
+    <None Remove="Resources\Images\import.png" />
+    <None Remove="Resources\Images\info.png" />
+    <None Remove="Resources\Images\newFile.png" />
+    <None Remove="Resources\Images\openFile.png" />
+    <None Remove="Resources\Images\redo.png" />
+    <None Remove="Resources\Images\run.png" />
+    <None Remove="Resources\Images\save.png" />
+    <None Remove="Resources\Images\saveAs.png" />
+    <None Remove="Resources\Images\settings.png" />
+    <None Remove="Resources\Images\stop.png" />
+    <None Remove="Resources\Images\switch.png" />
+    <None Remove="Resources\Images\undo.png" />
+    <None Remove="Resources\Images\verify.png" />
+    <None Remove="Resources\Images\zoomIn.png" />
+    <None Remove="Resources\Images\zoomOut.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +37,25 @@
 
   <ItemGroup>
     <Resource Include="Resources\Images\author1.jpg" />
+    <Resource Include="Resources\Images\clear.png" />
+    <Resource Include="Resources\Images\exit.png" />
+    <Resource Include="Resources\Images\export.png" />
+    <Resource Include="Resources\Images\help.png" />
+    <Resource Include="Resources\Images\import.png" />
+    <Resource Include="Resources\Images\info.png" />
+    <Resource Include="Resources\Images\newFile.png" />
+    <Resource Include="Resources\Images\openFile.png" />
+    <Resource Include="Resources\Images\redo.png" />
+    <Resource Include="Resources\Images\run.png" />
+    <Resource Include="Resources\Images\save.png" />
+    <Resource Include="Resources\Images\saveAs.png" />
+    <Resource Include="Resources\Images\settings.png" />
+    <Resource Include="Resources\Images\stop.png" />
+    <Resource Include="Resources\Images\switch.png" />
+    <Resource Include="Resources\Images\undo.png" />
+    <Resource Include="Resources\Images\verify.png" />
+    <Resource Include="Resources\Images\zoomIn.png" />
+    <Resource Include="Resources\Images\zoomOut.png" />
   </ItemGroup>
 
   <ItemGroup>

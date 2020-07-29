@@ -20,56 +20,166 @@
     <DockPanel Dock="Top" LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{StaticResource file}">
-                <MenuItem Header="{StaticResource newFile}" Click="{x:Static local:ButtonLogic.NewFileClick}"/>
-                <Separator/>
-                <MenuItem Header="{StaticResource openFile}" Click="{x:Static local:ButtonLogic.OpenFileClick}"/>
-                <Separator/>
-                <MenuItem Header="{StaticResource saveFile}" Style="{StaticResource FileDependent}" Click="{x:Static local:ButtonLogic.SaveFileClick}" />
-                <MenuItem Header="{StaticResource saveFileAs}" Style="{StaticResource FileDependent}" Click="{x:Static local:ButtonLogic.SaveAsClick}"></MenuItem>
-                <Separator/>
-                <MenuItem Header="{StaticResource exit}" Click="{x:Static local:ButtonLogic.CloseClick}"/>
+                <MenuItem Header="{StaticResource newFile}" Click="{x:Static local:ButtonLogic.NewFileClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/newFile.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                    <Separator/>
+                <MenuItem Header="{StaticResource openFile}" Click="{x:Static local:ButtonLogic.OpenFileClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/openFile.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                    <Separator/>
+                <MenuItem Header="{StaticResource saveFile}" Style="{StaticResource FileDependent}" Click="{x:Static local:ButtonLogic.SaveFileClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/save.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{StaticResource saveFileAs}" Style="{StaticResource FileDependent}" Click="{x:Static local:ButtonLogic.SaveAsClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/saveAs.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                    <Separator/>
+                <MenuItem Header="{StaticResource exit}" InputGestureText="Alt + F4" Click="{x:Static local:ButtonLogic.CloseClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/exit.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="{StaticResource view}" Style="{StaticResource FileDependent}">
-                <MenuItem Header="{StaticResource zoomIn}" InputGestureText="Ctrl +" Click="{x:Static local:ButtonLogic.ZoomInClick}"/>
-                <MenuItem Header="{StaticResource zoomOut}" InputGestureText="Ctrl -" Click="{x:Static local:ButtonLogic.ZoomOutClick}"/>
-            </MenuItem>
+                <MenuItem Header="{StaticResource zoomIn}" Click="{x:Static local:ButtonLogic.ZoomInClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/zoomIn.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{StaticResource zoomOut}" Click="{x:Static local:ButtonLogic.ZoomOutClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/zoomOut.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                </MenuItem>
             <MenuItem Header="{StaticResource program}" Style="{StaticResource FileDependent}">
-                <MenuItem Header="{StaticResource verifyProgram}" Click="{x:Static local:ButtonLogic.VerifyClick}"/>
-                <Separator/>
-                <MenuItem Header="{StaticResource runProgram}" Click="{x:Static local:ButtonLogic.RunClick}"/>
-                <MenuItem Header="{StaticResource stopProgram}" Click="{x:Static local:ButtonLogic.CancelClick}"/>
+                <MenuItem Header="{StaticResource verifyProgram}" Click="{x:Static local:ButtonLogic.VerifyClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/verify.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                    <Separator/>
+                <MenuItem Header="{StaticResource runProgram}" Click="{x:Static local:ButtonLogic.RunClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/run.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{StaticResource stopProgram}" Click="{x:Static local:ButtonLogic.CancelClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/stop.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="{StaticResource data}" Style="{StaticResource FileDependent}">
                 <MenuItem Header="{StaticResource memory}">
-                    <MenuItem Header="{StaticResource clear}" Click="{x:Static local:ButtonLogic.ClearMemoryClick}"/>
+                    <MenuItem Header="{StaticResource clear}" Click="{x:Static local:ButtonLogic.ClearMemoryClick}">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/Images/clear.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator/>
-                    <MenuItem Header="{StaticResource exportToFile}" Click="{x:Static local:ButtonLogic.MemoryExportClick}"/>
-                    <MenuItem Header="{StaticResource importFromFile}" Click="{x:Static local:ButtonLogic.MemoryImportClick}"/>
+                    <MenuItem Header="{StaticResource exportToFile}" Click="{x:Static local:ButtonLogic.MemoryExportClick}">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/Images/export.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="{StaticResource importFromFile}" Click="{x:Static local:ButtonLogic.MemoryImportClick}">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/Images/import.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="{StaticResource inputTape}">
-                    <MenuItem Header="{StaticResource clear}" Click="{x:Static local:ButtonLogic.ClearInputTapeClick}"/>
+                    <MenuItem Header="{StaticResource clear}" Click="{x:Static local:ButtonLogic.ClearInputTapeClick}">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/Images/clear.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator/>
-                    <MenuItem Header="{StaticResource exportToFile}" Click="{x:Static local:ButtonLogic.InputTapeExportClick}"/>
-                    <MenuItem Header="{StaticResource importFromFile}" Click="{x:Static local:ButtonLogic.InputTapeImportClick}"/>
+                    <MenuItem Header="{StaticResource exportToFile}" Click="{x:Static local:ButtonLogic.InputTapeExportClick}">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/Images/export.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="{StaticResource importFromFile}" Click="{x:Static local:ButtonLogic.InputTapeImportClick}">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/Images/import.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="{StaticResource outputTape}">
-                    <MenuItem Header="{StaticResource clear}" Click="{x:Static local:ButtonLogic.ClearOutputTapeClick}"/>
+                    <MenuItem Header="{StaticResource clear}" Click="{x:Static local:ButtonLogic.ClearOutputTapeClick}">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/Images/clear.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator/>
-                    <MenuItem Header="{StaticResource exportToFile}" Click="{x:Static local:ButtonLogic.OutputTapeExportClick}"/>
+                    <MenuItem Header="{StaticResource exportToFile}" Click="{x:Static local:ButtonLogic.OutputTapeExportClick}">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/Images/export.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{StaticResource tools}">
-                <MenuItem Header="{StaticResource settings}" Click="{x:Static local:ButtonLogic.OptionsClick}"/>
+                <MenuItem Header="{StaticResource settings}" Click="{x:Static local:ButtonLogic.OptionsClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/settings.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="{StaticResource help}">
-                <MenuItem Header="{StaticResource about}" Click="{x:Static local:ButtonLogic.AboutClick}"/>
+                <MenuItem Header="{StaticResource about}" Click="{x:Static local:ButtonLogic.AboutClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/info.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <ToolBar DockPanel.Dock="Top">
-            <Button Content="Save" Click="{x:Static local:ButtonLogic.SaveFileClick}" Style="{StaticResource FileDependentBtn}"/>
+            <ToolBar.Resources>
+                <Style TargetType="Image">
+                    <Setter Property="Height" Value="24"/>
+                    <Setter Property="Width" Value="24"/>
+                </Style>
+            </ToolBar.Resources>
+            <Button Click="{x:Static local:ButtonLogic.NewFileClick}">
+                <Image Source="Resources/Images/newFile.png"/>
+            </Button>
+            <Separator/>
+            <Button Click="{x:Static local:ButtonLogic.OpenFileClick}">
+                <Image Source="Resources/Images/openFile.png"/>
+            </Button>
+            <Separator/>
+            <Button Click="{x:Static local:ButtonLogic.SaveFileClick}" Style="{StaticResource FileDependentBtn}">
+                <Image Source="Resources/Images/save.png"/>
+            </Button>
+            <Button Click="{x:Static local:ButtonLogic.SaveAsClick}" Style="{StaticResource FileDependentBtn}">
+                <Image Source="Resources/Images/saveAs.png"/>
+            </Button>
+            <Separator/>
+            <Button Click="{x:Static local:ButtonLogic.VerifyClick}" Style="{StaticResource FileDependentBtn}">
+                <Image Source="Resources/Images/verify.png"/>
+            </Button>
+            <Separator/>
+            <Button Click="{x:Static local:ButtonLogic.RunClick}" Style="{StaticResource FileDependentBtn}">
+                <Image Source="Resources/Images/run.png"/>
+            </Button>
+            <!-- zmienić nazwe eventu -->
+            <Button Click="{x:Static local:ButtonLogic.CancelClick}" Style="{StaticResource FileDependentBtn}">
+                <Image Source="Resources/Images/stop.png"/>
+            </Button>
         </ToolBar>
-
         <Grid Margin="10, 0, 10, 10">
             <TabControl x:Name="Files" DockPanel.Dock="Top" Background="{Binding Source={x:Static properties:Settings.Default}, Path=TCBackground}"/>
         </Grid>
