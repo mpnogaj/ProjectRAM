@@ -86,15 +86,15 @@ namespace Common
     public class Cell : IComparable<Cell>
     {
         public string Value { get; set; }
-        public BigInteger Index { get; }
+        public string Index { get; }
 
-        public Cell(string v, BigInteger i)
+        public Cell(string v, string i)
         {
             Value = v;
             Index = i;
         }
 
         public int CompareTo([AllowNull] Cell other) =>
-            other == null ? 1 : Index.CompareTo(other.Index);
+            other == null ? 1 : String.Compare(Index, other.Index, StringComparison.Ordinal);
     }
 }

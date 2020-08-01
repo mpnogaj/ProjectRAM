@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -256,20 +257,25 @@ namespace RAMEditor
             });
 
             token.ThrowIfCancellationRequested();
-            Tuple<Queue<string>, List<Cell>> result = RunCommands(cl, input, token);
+            Tuple<Queue<string>, Dictionary<string, string>> result = RunCommands(cl, input, token);
             token.ThrowIfCancellationRequested();
             Queue<string> output = result.Item1;
-            List<Cell> memory = result.Item2;
-            memory.Sort();
+            Dictionary<string, string> memory = result.Item2;
+            List<Cell> cells = new List<Cell>();
+            foreach (var item in memory)
+            {
+                cells.Add(new Cell(item.Value, item.Key));
+            }
+            cells.Sort();
             parent.Dispatcher.Invoke(() =>
             {
                 while (output.Count > 0)
                 {
                     parent.OutputTape.Text += $"{output.Dequeue()} ";
                 }
-                foreach (Cell mem in memory)
+                foreach (var cell in cells)
                 {
-                    parent.Memory.Children.Add(new MemoryGrid(mem));
+                    parent.Memory.Children.Add(new MemoryGrid(cell));
                 }
             });
         }
@@ -318,6 +324,14 @@ namespace RAMEditor
             var host = GetHost();
             host.BottomDock.Visibility = Visibility.Visible;
             host.LeftColumn.RowDefinitions[3].Height = new GridLength(5, GridUnitType.Star);
+        }
+
+        public static StringCollection GetStringCollectionFromTextEditor(TextBox txtEditor)
+        {
+            StringCollection sc = new StringCollection();
+            string[] txt = txtEditor.Text.Split("\r\n");
+            sc.AddRange(txt);
+            return sc;
         }
     }
 }

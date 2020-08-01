@@ -19,7 +19,7 @@
         <Setter Property="ContextMenu">
             <Setter.Value>
                 <ContextMenu>
-                    <MenuItem Header="Hide" Click="{x:Static root:ButtonLogic.HideBottomTabControlCick}"/>
+                    <MenuItem Header="Hide" Click="{x:Static root:ButtonLogic.HideBottomTabControlClick}"/>
                 </ContextMenu>
             </Setter.Value>
         </Setter>

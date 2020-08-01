@@ -20,7 +20,7 @@
                     </ContentControl.Content>
                     <ContentControl.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Hide" Click="{x:Static root:ButtonLogic.HideBottomTabControlCick}"/>
+                            <MenuItem Header="Hide" Click="{x:Static root:ButtonLogic.HideBottomTabControlClick}"/>
                         </ContextMenu>
                     </ContentControl.ContextMenu>
                 </ContentControl>

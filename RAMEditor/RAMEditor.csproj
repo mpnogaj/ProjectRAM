@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\FontPicker\ColorFont.csproj" />
+    <ProjectReference Include="..\FontDialog\FontDialog.csproj" />
   </ItemGroup>
 
   <ItemGroup>

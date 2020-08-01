@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:root="clr-namespace:RAMEditor"
         mc:Ignorable="d"
-        Title="{StaticResource settings}" Height="450" Width="800" WindowStartupLocation="CenterOwner">
+        Title="{StaticResource settings}" 
+        Height="400" Width="600"
+        MinHeight="300" MinWidth="450"
+        WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -382,6 +385,7 @@
                     <Setter Property="Margin" Value="10, 0, 10, 0"/>
                     <Setter Property="MaxHeight" Value="30"/>
                     <Setter Property="MinWidth" Value="75"/>
+                    <Setter Property="Padding" Value="5, 5, 5, 5"/>
                 </Style>
             </Grid.Resources>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">

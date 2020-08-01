@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RAMEditor"
         xmlns:properties="clr-namespace:RAMEditor.Properties"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800"
+        Title="RAM Editor" Height="600" Width="800"
         MinHeight="450" MinWidth="550">
     <Window.Resources>
         <ResourceDictionary>
@@ -60,7 +60,12 @@
                         <Image Source="Resources/Images/zoomOut.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="switch editors" Click="{x:Static local:ButtonLogic.SwitchEditorsClick}">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/Images/switch.png"/>
+                    </MenuItem.Icon>
                 </MenuItem>
+            </MenuItem>
             <MenuItem Header="{StaticResource program}" Style="{StaticResource FileDependent}">
                 <MenuItem Header="{StaticResource verifyProgram}" Click="{x:Static local:ButtonLogic.VerifyClick}">
                     <MenuItem.Icon>
@@ -146,7 +151,7 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
-        <ToolBar DockPanel.Dock="Top">
+        <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True" OverflowMode="Never" Loaded="FrameworkElement_OnLoaded">
             <ToolBar.Resources>
                 <Style TargetType="Image">
                     <Setter Property="Height" Value="24"/>

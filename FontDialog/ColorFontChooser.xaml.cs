@@ -1,14 +1,13 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Media;
 using MColor = System.Windows.Media.Color;
 using OColor = System.Drawing.Color;
-using System.Collections.ObjectModel;
-using System;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
-namespace ColorFont
+namespace FontDialog
 {
     public partial class ColorFontChooser : System.Windows.Controls.UserControl
     {

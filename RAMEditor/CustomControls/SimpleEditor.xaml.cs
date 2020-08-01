@@ -63,6 +63,7 @@ namespace RAMEditor.CustomControls
         public ObservableCollection<CodeLine> ConvertToCode(StringCollection code)
         {
             ObservableCollection<CodeLine> lines = new ObservableCollection<CodeLine>();
+            int ln = 1;
             foreach (string line in code)
             {
                 if (string.IsNullOrWhiteSpace(line))
@@ -95,17 +96,18 @@ namespace RAMEditor.CustomControls
                 }
                 lines.Add(new CodeLine
                 {
+                    Line = ln,
                     Label = lbl,
                     Command = command,
                     Value = arg,
                     Comment = comm
                 });
+                ln++;
             }
 
             return lines;
         }
 
-        
         private void Editor_OnKeyUp(object sender, KeyEventArgs e)
         {
             var uiElement = e.OriginalSource as UIElement;

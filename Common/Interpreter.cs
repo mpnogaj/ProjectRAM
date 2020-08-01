@@ -15,6 +15,7 @@ namespace Common
         /// </summary>
         /// <param name="c">Lista komend</param>
         /// <param name="lbl">Etykieta do wyszukania</param>
+        /// <param name="line">Numer linii</param>
         /// <returns>Indeks komendy do której skoczyć</returns>
         private static int Jump(List<Command> c, string lbl, int line)
         {
@@ -31,6 +32,7 @@ namespace Common
             throw new LabelDoesntExistExcpetion(line, lbl);
         }
 
+        /*
         /// <summary>
         /// Funkcja wyszukująca w pamięci komórkę o indeksie x
         /// </summary>
@@ -50,6 +52,7 @@ namespace Common
             }
             return -1;
         }
+        */
 
         private static CommandType GetCommandType(string switcher)
         {
@@ -89,6 +92,22 @@ namespace Common
             return t;
         }
 
+        private static string GetValue(ArgumentType at, string arg, Dictionary<string, string> memory, int i)
+        {
+            if (at == ArgumentType.Const)
+            {
+                return arg;
+            }
+            else
+            {
+                bool exists = memory.ContainsKey(arg);
+                if (!exists)
+                    throw new CellDoesntExistException(i);
+                return memory[arg];
+            }
+        }
+
+        #region Functions to create command list
         public static List<Command> CreateCommandList(string pathToFile)
         {
             List<Command> commands = new List<Command>();
@@ -171,7 +190,9 @@ namespace Common
             }
             return commands;
         }
+        #endregion
 
+        #region Functions to create input tape
         public static Queue<string> CreateInputTapeFromFile(string pathToFile)
         {
             Queue<string> inputTape = new Queue<string>();
@@ -195,20 +216,23 @@ namespace Common
                 return null;
             return new Queue<string>(line.Split(' '));
         }
+        #endregion
 
         /// <summary>
         /// Funkcja symulująca wykonanie wszystkich poleceń
         /// </summary>
         /// <param name="commands">Lista komend do wykonania</param>
         /// <param name="inputTape">Taśma wejściowa</param>
-        /// <returns>Taśmę wyjścia</returns>
-        public static Tuple<Queue<string>, List<Cell>> RunCommands(List<Command> commands, Queue<string> inputTape, CancellationToken token)
+        /// <param name="token">Token anulowania</param>
+        /// <returns>Taśmę wyjścia, pamięć</returns>
+        public static Tuple<Queue<string>, Dictionary<string, string>> RunCommands(List<Command> commands, Queue<string> inputTape, CancellationToken token)
         {
             //Syf panie, syf
             //Przeorganizować to kiedyś
-            List<Cell> memory = new List<Cell>();
+
+            Dictionary<string, string> memory = new Dictionary<string, string>();
             //akumulator
-            memory.Add(new Cell(string.Empty, 0));
+            memory.Add("0", string.Empty);
             //Taśma wyjścia
             Queue<string> outputTape = new Queue<string>();
             for (int i = 0; i < commands.Count; i++)
@@ -217,7 +241,7 @@ namespace Common
                 if (RunCommand(commands[i], commands, inputTape, outputTape, memory, ref i)) break;
             }
 
-            return new Tuple<Queue<string>, List<Cell>>(outputTape, memory);
+            return new Tuple<Queue<string>, Dictionary<string, string>>(outputTape, memory);
         }
 
         /// <summary>
@@ -230,51 +254,20 @@ namespace Common
         /// <param name="memory">Memory</param>
         /// <param name="i">Index of current command in list (for Jump)</param>
         /// <returns>Should end program</returns>
-        public static bool RunCommand(Command command, List<Command> commands, Queue<string> inputTape, Queue<string> outputTape, List<Cell> memory, ref int i)
+        public static bool RunCommand(Command command, List<Command> commands, Queue<string> inputTape, Queue<string> outputTape, Dictionary<string, string> memory, ref int i)
         {
-            Cell akumulator = memory[0];
-            //indeks pamieci
-            int index;
+            bool exists;
+            BigInteger value;
             //argument
-            string argStr = command.Argument;
-            //argument w formie liczby
-            BigInteger argInt = BigInteger.Zero, value;
-
-            if (command.ArgumentType != ArgumentType.Label)
+            string arg = command.Argument;
+            if (command.ArgumentType == ArgumentType.Const || command.ArgumentType == ArgumentType.IndirectAddress)
             {
-                if (command.ArgumentType == ArgumentType.DirectAddress)
-                    BigInteger.TryParse(argStr, out argInt);
-                else
+                arg = arg.Substring(1);
+                if (command.ArgumentType == ArgumentType.IndirectAddress)
                 {
-                    BigInteger.TryParse(argStr.Substring(1), out argInt);
-                    if (command.ArgumentType == ArgumentType.IndirectAddress)
-                        BigInteger.TryParse(memory[GetMemoryIndex(memory, argInt)].Value, out argInt);
+                    arg = memory[arg];
                 }
             }
-            
-            /*
-            if (!BigInteger.TryParse(argStr, out argInt))
-            {
-                if (argStr.StartsWith('^'))
-                {
-                    BigInteger.TryParse(argStr.Substring(1), out argInt);
-                    BigInteger.TryParse(memory[GetMemoryIndex(memory, argInt)].Value, out argInt);
-                    command.ArgumentType = ArgumentType.IndirectAddress;
-                }
-                else if (argStr.StartsWith('='))
-                {
-                    BigInteger.TryParse(argStr.Substring(1), out argInt);
-                    command.ArgumentType = ArgumentType.Const;
-                }
-                else
-                {
-                    command.ArgumentType = ArgumentType.Label;
-                }
-            }
-            else
-            {
-                command.ArgumentType = ArgumentType.DirectAddress;
-            }*/
 
             switch (command.CommandType)
             {
@@ -291,7 +284,7 @@ namespace Common
 
                     #endregion
 
-                    i = Jump(commands, argStr, i);
+                    i = Jump(commands, arg, i);
                     break;
                 case CommandType.Jgtz:
 
@@ -302,10 +295,10 @@ namespace Common
 
                     #endregion
 
-                    if (akumulator.Value != "" &&
-                        akumulator.Value[0] != '-' &&
-                        akumulator.Value != "0")
-                        i = Jump(commands, argStr, i);
+                    if (memory["0"] != "" &&
+                        memory["0"][0] != '-' &&
+                        memory["0"] != "0")
+                        i = Jump(commands, arg, i);
                     break;
                 case CommandType.Jzero:
 
@@ -316,9 +309,9 @@ namespace Common
 
                     #endregion
 
-                    if (akumulator.Value != "" &&
-                        akumulator.Value == "0")
-                        i = Jump(commands, argStr, i);
+                    if (memory["0"] != "" &&
+                        memory["0"] == "0")
+                        i = Jump(commands, arg, i);
                     break;
                 case CommandType.Read:
 
@@ -331,16 +324,17 @@ namespace Common
                         throw new InputTapeEmptyException(i);
 
                     #endregion
-                    index = GetMemoryIndex(memory, argInt);
+                    //index = GetMemoryIndex(memory, argInt);
+                    exists = memory.ContainsKey(arg);
                     string val = inputTape.Dequeue();
 
-                    if (index == -1)
+                    if (exists == false)
                     {
-                        memory.Add(new Cell(val, argInt));
+                        memory.Add(arg, val);
                     }
                     else
                     {
-                        memory[index].Value = val;
+                        memory[arg] = val;
                     }
 
                     break;
@@ -355,14 +349,15 @@ namespace Common
 
                     if (command.ArgumentType == ArgumentType.Const)
                     {
-                        outputTape.Enqueue(argInt.ToString());
+                        outputTape.Enqueue(arg);
                     }
                     else
                     {
-                        index = GetMemoryIndex(memory, argInt);
-                        if (index == -1)
+                        //index = GetMemoryIndex(memory, argInt);
+                        exists = memory.ContainsKey(arg);
+                        if (exists == false)
                             throw new CellDoesntExistException(i);
-                        outputTape.Enqueue(memory[index].Value);
+                        outputTape.Enqueue(memory[arg]);
                     }
 
                     break;
@@ -376,11 +371,12 @@ namespace Common
 
                     #endregion
 
-                    index = GetMemoryIndex(memory, argInt);
-                    if (index == -1)
-                        memory.Add(new Cell(akumulator.Value, argInt));
+                    //index = GetMemoryIndex(memory, argInt);
+                    exists = memory.ContainsKey(arg);
+                    if (!exists)
+                        memory.Add(arg, memory["0"]);
                     else
-                        memory[index].Value = akumulator.Value;
+                        memory[arg] = memory["0"];
                     break;
                 case CommandType.Load:
 
@@ -391,17 +387,7 @@ namespace Common
 
                     #endregion
 
-                    if (command.ArgumentType == ArgumentType.Const)
-                    {
-                        akumulator.Value = argInt.ToString();
-                    }
-                    else
-                    {
-                        index = GetMemoryIndex(memory, argInt);
-                        if (index == -1)
-                            throw new CellDoesntExistException(i);
-                        akumulator.Value = memory[index].Value;
-                    }
+                    memory["0"] = GetValue(command.ArgumentType, arg, memory, i);
 
                     break;
                 case CommandType.Add:
@@ -413,20 +399,10 @@ namespace Common
 
                     #endregion
 
-                    if (command.ArgumentType == ArgumentType.Const)
-                    {
-                        value = argInt;
-                    }
-                    else
-                    {
-                        index = GetMemoryIndex(memory, argInt);
-                        if (index == -1)
-                            throw new CellDoesntExistException(i);
-                        value = BigInteger.Parse(memory[index].Value);
-                    }
+                    value = BigInteger.Parse(GetValue(command.ArgumentType, arg, memory, i));
 
-                    akumulator.Value = BigInteger
-                        .Add(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException(i)), value).ToString();
+                    memory["0"] = BigInteger
+                        .Add(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(i)), value).ToString();
                     break;
                 case CommandType.Sub:
 
@@ -437,20 +413,10 @@ namespace Common
 
                     #endregion
 
-                    if (command.ArgumentType == ArgumentType.Const)
-                    {
-                        value = argInt;
-                    }
-                    else
-                    {
-                        index = GetMemoryIndex(memory, argInt);
-                        if (index == -1)
-                            throw new CellDoesntExistException(i);
-                        value = BigInteger.Parse(memory[index].Value);
-                    }
+                    value = BigInteger.Parse(GetValue(command.ArgumentType, arg, memory, i));
 
-                    akumulator.Value = BigInteger
-                        .Subtract(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException(i)), value).ToString();
+                    memory["0"] = BigInteger
+                        .Subtract(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(i)), value).ToString();
                     break;
                 case CommandType.Mult:
 
@@ -461,20 +427,10 @@ namespace Common
 
                     #endregion
 
-                    if (command.ArgumentType == ArgumentType.Const)
-                    {
-                        value = argInt;
-                    }
-                    else
-                    {
-                        index = GetMemoryIndex(memory, argInt);
-                        if (index == -1)
-                            throw new CellDoesntExistException(i);
-                        value = BigInteger.Parse(memory[index].Value);
-                    }
+                    value = BigInteger.Parse(GetValue(command.ArgumentType, arg, memory, i));
 
-                    akumulator.Value = BigInteger
-                        .Multiply(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException(i)), value).ToString();
+                    memory["0"] = BigInteger
+                        .Multiply(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(i)), value).ToString();
                     break;
                 case CommandType.Div:
 
@@ -485,23 +441,14 @@ namespace Common
 
                     #endregion
 
-                    if (command.ArgumentType == ArgumentType.Const)
-                    {
-                        value = argInt;
-                    }
-                    else
-                    {
-                        index = GetMemoryIndex(memory, argInt);
-                        if (index == -1)
-                            throw new CellDoesntExistException(i);
-                        value = BigInteger.Parse(memory[index].Value);
-                    }
+                    value = BigInteger.Parse(GetValue(command.ArgumentType, arg, memory, i));
 
-                    akumulator.Value = BigInteger
-                        .Divide(BigInteger.Parse(akumulator.Value ?? throw new AcumulatorEmptyException(i)), value).ToString();
+                    memory["0"] = BigInteger
+                        .Divide(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(i)), value).ToString();
                     break;
             }
 
+            //memory["0"] = akumulator.Value;
             return false;
         }
     }

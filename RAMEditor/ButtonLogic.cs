@@ -1,24 +1,21 @@
-﻿using System;
+﻿using Common;
+using Microsoft.Win32;
+using RAMEditor.CustomControls;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Common;
-
-using Microsoft.Win32;
-
-using RAMEditor.CustomControls;
 
 
 namespace RAMEditor
 {
     public static class ButtonLogic
     {
-        private static CancellationTokenSource _tokenSource = null;
+        private static CancellationTokenSource _tokenSource;
 
         #region Handlers
         public static RoutedEventHandler CloseClick => Close_Click;
@@ -49,10 +46,46 @@ namespace RAMEditor
         public static RoutedEventHandler ClearOutputTapeClick => ClearOutputTape_Click;
         public static RoutedEventHandler OutputTapeExportClick => OutputTapeExport_Click;
         //Bottom bar
-        public static RoutedEventHandler HideBottomTabControlCick => HideBottomTabControl_Cick;
+        public static RoutedEventHandler HideBottomTabControlClick => HideBottomTabControl_Click;
+
+        public static RoutedEventHandler SwitchEditorsClick => SwitchEditors_Click;
+
+
         #endregion
 
-        private static void HideBottomTabControl_Cick(object sender, RoutedEventArgs e)
+        private static void SwitchEditors_Click(object sender, RoutedEventArgs e)
+        {
+            var host = Logic.GetHost();
+            var code = host.Code;
+            var se = host.SimpleEditor;
+            if (host.Code.Visibility == Visibility.Collapsed)
+            {
+                code.Text = string.Empty;
+                se.Visibility = Visibility.Collapsed;
+                var text = se.ConvertToStringCollection();
+                foreach (string line in text)
+                {
+                    code.Text += line + "\r\n";
+                }
+                code.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                var codeLines = se.ConvertToCode(Logic.GetStringCollectionFromTextEditor(code));
+                if (codeLines.Count <= 0)
+                {
+                    codeLines.Add(new CodeLine
+                    {
+                        Line = 1
+                    });
+                }
+                se.vm.Lines = codeLines;
+                se.Visibility = Visibility.Visible;
+                code.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private static void HideBottomTabControl_Click(object sender, RoutedEventArgs e)
         {
             Logic.HideBottomDock();
         }
@@ -119,12 +152,12 @@ namespace RAMEditor
             using (StreamReader sr = new StreamReader(ofd.FileName))
             {
                 string line;
-                while((line = sr.ReadLine()) != null)
+                while ((line = sr.ReadLine()) != null)
                 {
                     if (line == string.Empty)
                         continue;
                     string[] data = line.Split(';');
-                    memory.Add(new MemoryGrid(new Cell(data[1], BigInteger.Parse(data[0]))));
+                    memory.Add(new MemoryGrid(new Cell(data[1], data[0])));
                 }
             }
         }
@@ -136,7 +169,7 @@ namespace RAMEditor
             UIElementCollection memory = Logic.GetHost().Memory.Children;
             using (StreamWriter sw = new StreamWriter(sfd.FileName))
             {
-                foreach(MemoryGrid mg in memory)
+                foreach (MemoryGrid mg in memory)
                 {
                     sw.WriteLine($"{mg.Addr};{mg.Val}");
                 }
@@ -160,7 +193,7 @@ namespace RAMEditor
 
         private static void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            if(_tokenSource != null)
+            if (_tokenSource != null)
                 _tokenSource.Cancel();
         }
 
@@ -268,7 +301,7 @@ namespace RAMEditor
         {
             Logic.Exit();
         }
-        
+
         private static void CloseTab_Click(object sender, RoutedEventArgs e)
         {
             Logic.CloseTab(Logic.GetTabItemFromMenuItem(sender as MenuItem));
@@ -282,7 +315,7 @@ namespace RAMEditor
         private static void OpenFile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = Logic.PrepareOpenFileDialog("Select RAM Code to open", "RAM Code files (*.RAMCode)|*.RAMCode");
-            if(ofd.ShowDialog() == true)
+            if (ofd.ShowDialog() == true)
             {
                 Logic.CreateTabPage(Path.GetFileNameWithoutExtension(ofd.FileName), ofd.FileName);
             }
