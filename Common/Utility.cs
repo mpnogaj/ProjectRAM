@@ -95,6 +95,8 @@ namespace Common
         }
 
         public int CompareTo([AllowNull] Cell other) =>
-            other == null ? 1 : String.Compare(Index, other.Index, StringComparison.Ordinal);
+            other == null
+                ? 1
+                : BigInteger.Compare(BigInteger.Parse(Index), BigInteger.Parse(other.Index));
     }
 }

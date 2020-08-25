@@ -7,7 +7,8 @@
         xmlns:properties="clr-namespace:RAMEditor.Properties"
         mc:Ignorable="d"
         Title="RAM Editor" Height="600" Width="800"
-        MinHeight="450" MinWidth="550">
+        MinHeight="450" MinWidth="550"
+        Icon="/Resources/Icons/sharpIcon.ico">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -60,7 +61,7 @@
                         <Image Source="Resources/Images/zoomOut.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="switch editors" Click="{x:Static local:ButtonLogic.SwitchEditorsClick}">
+                <MenuItem Header="{StaticResource switchEditors}" Click="{x:Static local:ButtonLogic.SwitchEditorsClick}">
                     <MenuItem.Icon>
                         <Image Source="Resources/Images/switch.png"/>
                     </MenuItem.Icon>
@@ -82,6 +83,9 @@
                     <MenuItem.Icon>
                         <Image Source="Resources/Images/stop.png"/>
                     </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Print program" Click="{x:Static local:ButtonLogic.PrintClick}">
+                    
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{StaticResource data}" Style="{StaticResource FileDependent}">
@@ -144,7 +148,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{StaticResource help}">
-                <MenuItem Header="{StaticResource about}" Click="{x:Static local:ButtonLogic.AboutClick}">
+                <MenuItem Header="{StaticResource about}">
                     <MenuItem.Icon>
                         <Image Source="Resources/Images/info.png"/>
                     </MenuItem.Icon>

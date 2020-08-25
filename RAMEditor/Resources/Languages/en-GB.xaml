@@ -76,4 +76,6 @@
     <system:String x:Key="fourthColumnFont">Fourth column font</system:String>
     <system:String x:Key="fifthColumnFont">Fifth column font</system:String>
 
+    <system:String x:Key="switchEditors">Switch editors</system:String>
+
 </ResourceDictionary>

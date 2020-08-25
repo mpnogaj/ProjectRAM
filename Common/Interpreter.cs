@@ -32,28 +32,6 @@ namespace Common
             throw new LabelDoesntExistExcpetion(line, lbl);
         }
 
-        /*
-        /// <summary>
-        /// Funkcja wyszukująca w pamięci komórkę o indeksie x
-        /// </summary>
-        /// <param name="mem">Lista komórek, pamięć</param>
-        /// <param name="index">Indeks szukanej komórki</param>
-        /// <returns>Indeks komórki w pamięci. Jeżeli nie ma takiej komórki to zwraca -1</returns>
-        private static int GetMemoryIndex(List<Cell> mem, BigInteger index)
-        {
-            int i = 0;
-            foreach (Cell memCell in mem)
-            {
-                if (memCell.Index == index)
-                {
-                    return i;
-                }
-                i++;
-            }
-            return -1;
-        }
-        */
-
         private static CommandType GetCommandType(string switcher)
         {
             //Tymczasowe
@@ -122,7 +100,7 @@ namespace Common
                     string word = string.Empty;
                     for (int i = 0; i <= line.Length; i++)
                     {
-                        if (i != line.Length && line[i] != ' ')
+                        if (i != line.Length && line[i] != ' ' && line[i] != '\r' && line[i] != '\n')
                             word += line[i];
                         else
                         {
@@ -162,7 +140,7 @@ namespace Common
                 string word = string.Empty;
                 for (int i = 0; i <= line.Length; i++)
                 {
-                    if (i != line.Length && line[i] != ' ')
+                    if (i != line.Length && line[i] != ' ' && line[i] != '\r' && line[i] != '\n')
                         word += line[i];
                     else
                     {
@@ -272,9 +250,7 @@ namespace Common
             switch (command.CommandType)
             {
                 case CommandType.Halt:
-                    {
-                        return true;
-                    }
+                    return true;
                 case CommandType.Jump:
 
                     #region ExceptionHandling

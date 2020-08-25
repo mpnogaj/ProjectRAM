@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Documents;
 
 namespace RAMEditor
 {
@@ -34,6 +34,7 @@ namespace RAMEditor
         public static RoutedEventHandler VerifyClick => Verify_Click;
         public static RoutedEventHandler RunClick => Run_Click;
         public static RoutedEventHandler CancelClick => Cancel_Click;
+        public static RoutedEventHandler PrintClick => Print_Click;
         //Memory
         public static RoutedEventHandler ClearMemoryClick => ClearMemory_Click;
         public static RoutedEventHandler MemoryExportClick => MemoryExport_Click;
@@ -53,20 +54,51 @@ namespace RAMEditor
 
         #endregion
 
+        private static void Print_Click(object sender, RoutedEventArgs e)
+        {
+            PrintDialog pd = new PrintDialog();
+            if (pd.ShowDialog() == true)
+            {
+                var doc = Logic.GetFlowDocument();
+                doc.PageHeight = pd.PrintableAreaHeight;
+                doc.PageWidth = pd.PrintableAreaWidth;
+                doc.PagePadding = new Thickness(25);
+
+                doc.ColumnGap = 0;
+
+                doc.ColumnWidth = (doc.PageWidth -
+                                       doc.ColumnGap -
+                                       doc.PagePadding.Left -
+                                       doc.PagePadding.Right);
+
+                pd.PrintDocument(((IDocumentPaginatorSource)doc).DocumentPaginator,
+                                         "RAM Machine program");
+            }
+           
+        }
+
         private static void SwitchEditors_Click(object sender, RoutedEventArgs e)
         {
             var host = Logic.GetHost();
             var code = host.Code;
             var se = host.SimpleEditor;
-            if (host.Code.Visibility == Visibility.Collapsed)
+            if (!Logic.bUsingTextEditor())
             {
                 code.Text = string.Empty;
                 se.Visibility = Visibility.Collapsed;
                 var text = se.ConvertToStringCollection();
                 foreach (string line in text)
                 {
-                    code.Text += line + "\r\n";
+                    string a = line;
+                    if (line != string.Empty)
+                    {
+                        //remove last space
+                        a = a.Remove(a.Length - 1);
+                    }
+                    code.Text += a + "\r\n";
                 }
+                //remove last \r\n
+                code.Text = code.Text.Remove(code.Text.Length - 2);
                 code.Visibility = Visibility.Visible;
             }
             else

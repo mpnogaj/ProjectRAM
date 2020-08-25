@@ -44,8 +44,10 @@ namespace RAMEditor.CustomControls
                 line = string.Empty;
                 if (!String.IsNullOrEmpty(codeLine.Label))
                     line += codeLine.Label + ": ";
-                line += codeLine.Command + ' ';
-                line += codeLine.Value + ' ';
+                if(!String.IsNullOrEmpty(codeLine.Command))
+                    line += codeLine.Command + ' ';
+                if(!String.IsNullOrEmpty(codeLine.Value))
+                    line += codeLine.Value + ' ';
                 if (!String.IsNullOrEmpty(codeLine.Comment))
                     line += '#' + codeLine.Comment;
 
@@ -66,8 +68,6 @@ namespace RAMEditor.CustomControls
             int ln = 1;
             foreach (string line in code)
             {
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
                 string lbl = string.Empty, command = string.Empty, arg = string.Empty, comm = string.Empty;
                 string word = string.Empty;
                 for (int i = 0; i <= line.Length; i++)

@@ -1,16 +1,21 @@
 ﻿using Common;
+
 using Microsoft.Win32;
+
 using RAMEditor.CustomControls;
+using RAMEditor.Helpers;
+using RAMEditor.Properties;
 using RAMEditor.Windows;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using RAMEditor.Properties;
+using System.Windows.Documents;
+
 using static Common.Interpreter;
 
 namespace RAMEditor
@@ -37,6 +42,67 @@ namespace RAMEditor
             {
                 Owner = Application.Current.MainWindow
             }.ShowDialog();
+        }
+
+        public static FlowDocument GetFlowDocument()
+        {
+            FlowDocument doc = new FlowDocument();
+            Table t = new Table
+            {
+                CellSpacing = 0
+            };
+            var host = GetHost();
+            t.BorderThickness = new Thickness(7);
+            ObservableCollection<CodeLine> rows = new ObservableCollection<CodeLine>();
+            doc.Blocks.Add(t);
+            const int columns = 5;
+            var glc = new GridLengthConverter();
+            t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("50") });
+            t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("130") });
+            t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("90") });
+            t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("130") });
+            t.Columns.Add(new TableColumn { Width = GridLength.Auto });
+            for (int i = 1; i < columns; i++)
+            {
+                t.Columns.Add(new TableColumn { Width = GridLength.Auto });
+            }
+            t.RowGroups.Add(new TableRowGroup());
+            t.RowGroups[0].Rows.Add(new TableRow());
+            t.RowGroups[0].Rows.Add(new TableRow());
+
+            ContentControl cc = GetSelectedTab(GetMainWindow().Files).Header as ContentControl;
+            string programName = cc.Content.ToString();
+            t.RowGroups[0].Rows[0].Cells.Add(new FlowDocCell(new Paragraph(new Run(programName)), true));
+            var title = t.RowGroups[0].Rows[0].Cells[0];
+            title.ColumnSpan = columns;
+            title.FontSize = 22;
+
+            var header = t.RowGroups[0].Rows[1];
+            header.Cells.Add(new FlowDocCell(new Paragraph(new Run("Line")), true));
+            header.Cells.Add(new FlowDocCell(new Paragraph(new Run("Label")), true));
+            header.Cells.Add(new FlowDocCell(new Paragraph(new Run("Command")), true));
+            header.Cells.Add(new FlowDocCell(new Paragraph(new Run("Value")), true));
+            header.Cells.Add(new FlowDocCell(new Paragraph(new Run("Comment")), true));
+
+
+            rows = bUsingTextEditor() ?
+                host.SimpleEditor.ConvertToCode(
+                    GetStringCollectionFromTextEditor(host.Code))
+                : host.SimpleEditor.vm.Lines;
+
+            int j = 2;
+            foreach (var row in rows)
+            {
+                t.RowGroups[0].Rows.Add(new TableRow());
+                var currRow = t.RowGroups[0].Rows[j];
+                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run((j - 1).ToString())), false));
+                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Label)), false));
+                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Command)), false));
+                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Value)), false));
+                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Comment)), false));
+                j++;
+            }
+            return doc;
         }
 
         /// <summary>
@@ -251,7 +317,7 @@ namespace RAMEditor
             {
                 parent.OutputTape.Text = string.Empty;
                 parent.Memory.Children.Clear();
-                sc = Settings.Default.TextEditor ? parent.GetText() : parent.SimpleEditor.ConvertToStringCollection();
+                sc = bUsingTextEditor() ? parent.GetText() : parent.SimpleEditor.ConvertToStringCollection();
                 cl = CreateCommandList(sc);
                 input = CreateInputTapeFromString(parent.InputTape.Text);
             });

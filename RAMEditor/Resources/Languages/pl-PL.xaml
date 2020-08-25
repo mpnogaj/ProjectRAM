@@ -80,4 +80,6 @@
     <system:String x:Key="fourthColumnFont">Czcionka czwartej kolumny</system:String>
     <system:String x:Key="fifthColumnFont">Czcionka piątej kolumny</system:String>
 
+    <system:String x:Key="switchEditors">Zmień edytor</system:String>
+
 </ResourceDictionary>

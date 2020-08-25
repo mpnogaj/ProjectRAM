@@ -5,9 +5,16 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>sharpIcon.ico</ApplicationIcon>
+    <AssemblyName>RAM Editor</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\betterNewIcon.ico" />
+    <None Remove="Resources\Icons\icon.ico" />
+    <None Remove="Resources\Icons\iconOld.ico" />
+    <None Remove="Resources\Icons\newIcon.ico" />
+    <None Remove="Resources\Icons\sharpIcon.ico" />
     <None Remove="Resources\Images\author1.jpg" />
     <None Remove="Resources\Images\clear.png" />
     <None Remove="Resources\Images\exit.png" />
@@ -36,6 +43,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Icons\betterNewIcon.ico" />
+    <Resource Include="Resources\Icons\icon.ico" />
+    <Resource Include="Resources\Icons\iconOld.ico" />
+    <Resource Include="Resources\Icons\newIcon.ico" />
+    <Resource Include="Resources\Icons\sharpIcon.ico" />
     <Resource Include="Resources\Images\author1.jpg" />
     <Resource Include="Resources\Images\clear.png" />
     <Resource Include="Resources\Images\exit.png" />
