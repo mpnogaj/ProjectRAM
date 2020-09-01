@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RAMEditor.CustomControls"
+             xmlns:settings="clr-namespace:RAMEditor.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="125" d:DesignWidth="400">
     <UserControl.Resources>
@@ -21,15 +22,43 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*" MinWidth="40"/>
-            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="2"/>
             <ColumnDefinition Width="5*" MinWidth="40"/>
         </Grid.ColumnDefinitions>
-        <Border Background="LightCyan">
-            <TextBlock x:Name="Address" Text="Address"/>
+        <Border Background="{Binding 
+            Source={x:Static settings:Settings.Default}, 
+            Path=AddressBack}">
+            <TextBlock x:Name="Address" Text="Address"
+                       FontFamily="{Binding 
+                            Source={x:Static settings:Settings.Default}, 
+                            Path=AddressFontFamily}"
+                       FontSize="{Binding 
+                            Source={x:Static settings:Settings.Default}, 
+                            Path=AddressFontSize}"
+                       FontWeight="{Binding 
+                            Source={x:Static settings:Settings.Default}, 
+                            Path=AddressFontWeight}"
+                       Foreground="{Binding 
+                            Source={x:Static settings:Settings.Default}, 
+                            Path=AddressFontColor}"/>
         </Border>
         <GridSplitter ResizeDirection="Columns" Grid.Column="1" Height="Auto" Width="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Background="Black"/>
-        <Border Grid.Column="2" Background="White">
-            <TextBlock x:Name="Value" Text="Value"/>
+        <Border Grid.Column="2" Background="{Binding 
+            Source={x:Static settings:Settings.Default}, 
+            Path=ValueBack}">
+            <TextBlock x:Name="Value" Text="Value"
+                       FontFamily="{Binding 
+                            Source={x:Static settings:Settings.Default}, 
+                            Path=ValueFontFamily}"
+                       FontSize="{Binding 
+                            Source={x:Static settings:Settings.Default}, 
+                            Path=ValueFontSize}"
+                       FontWeight="{Binding 
+                            Source={x:Static settings:Settings.Default}, 
+                            Path=ValueFontWeight}"
+                       Foreground="{Binding 
+                            Source={x:Static settings:Settings.Default}, 
+                            Path=ValueFontColor}"/>
         </Border>
     </Grid>
 </UserControl>

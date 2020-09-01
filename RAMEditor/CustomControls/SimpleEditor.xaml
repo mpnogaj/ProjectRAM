@@ -5,12 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RAMEditor.CustomControls"
              xmlns:root="clr-namespace:RAMEditor"
+             xmlns:helpers="clr-namespace:RAMEditor.Helpers"
              xmlns:properties="clr-namespace:RAMEditor.Properties"
+             xmlns:commands="clr-namespace:RAMEditor.CustomControls"
+             xmlns:common="clr-namespace:Common;assembly=Common"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <local:CommandList x:Key="CommandList"/>
-    </UserControl.Resources>
     <DataGrid x:Name="Editor"
               CanUserAddRows="False" 
               CanUserDeleteRows="True" 
@@ -55,9 +56,13 @@
                     </Style>
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
-            <DataGridComboBoxColumn IsReadOnly="False" Width="*" MinWidth="50" Header="{StaticResource command}" 
-                                    ItemsSource="{StaticResource CommandList}"
-                                    SelectedItemBinding="{Binding Path=Command, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
+            <DataGridComboBoxColumn IsReadOnly="False" Width="*" MinWidth="50" Header="{StaticResource command}"
+                                    ItemsSource="{x:Static commands:Commands.CommandsList}"
+                                    SelectedItemBinding="{Binding 
+                                    Path=CommandName, 
+                                    Mode=TwoWay, 
+                                    NotifyOnSourceUpdated=True, 
+                                    UpdateSourceTrigger=PropertyChanged}">
                 <DataGridComboBoxColumn.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="Background" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SERow3Back}"/>
@@ -68,7 +73,7 @@
                     </Style>
                 </DataGridComboBoxColumn.CellStyle>
             </DataGridComboBoxColumn>
-            <DataGridTextColumn IsReadOnly="False" Width="*" MinWidth="50" Header="{StaticResource value}" Binding="{Binding Path=Value, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
+            <DataGridTextColumn IsReadOnly="False" Width="*" MinWidth="50" Header="{StaticResource value}" Binding="{Binding Path=Argument, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
                 <DataGridTextColumn.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="Background" Value="{Binding Source={x:Static properties:Settings.Default}, Path=SERow4Back}"/>

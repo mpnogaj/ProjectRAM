@@ -11,9 +11,9 @@ namespace FontDialog
 {
     public partial class ColorFontChooser : System.Windows.Controls.UserControl
     {
-        private int[] _colors = new int[16];
+        private readonly int[] _colors = new int[16];
 
-        private List<int> _defaultFontSizes = new List<int>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72, 96 };
+        private readonly List<int> _defaultFontSizes = new List<int>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72, 96 };
         private List<int> _fontSizes = null;
 
         public List<int> FontSizes
@@ -63,7 +63,7 @@ namespace FontDialog
                 CustomColors = _colors,
                 AllowFullOpen = true
             };
-            if(cd.ShowDialog() == DialogResult.OK)
+            if (cd.ShowDialog() == DialogResult.OK)
             {
                 this.PickedColor.Background = new SolidColorBrush(ColorToMColor(cd.Color));
                 this.txtSampleText.Foreground = this.PickedColor.Background;
@@ -80,8 +80,10 @@ namespace FontDialog
         {
             try
             {
-                if(fontSizeBox.Text.Length >= 1 && fontSizeBox.Text[0] != '0')
+                if (fontSizeBox.Text.Length >= 1 && fontSizeBox.Text[0] != '0')
+                {
                     this.txtSampleText.FontSize = Convert.ToDouble(fontSizeBox.Text);
+                }
             }
             catch
             {

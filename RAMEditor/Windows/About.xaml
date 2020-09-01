@@ -7,7 +7,12 @@
         xmlns:root="clr-namespace:RAMEditor"
         xmlns:properties="clr-namespace:RAMEditor.Properties"
         mc:Ignorable="d"
-        Title="{StaticResource about}" Height="300" Width="450" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+        Title="{StaticResource about}" 
+        Height="300" 
+        Width="450" 
+        WindowStartupLocation="CenterOwner" 
+        ResizeMode="NoResize"
+        Icon="../Resources/Images/info.png">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>

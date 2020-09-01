@@ -3,12 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:root="clr-namespace:RAMEditor"
         mc:Ignorable="d"
         Title="{StaticResource settings}" 
         Height="400" Width="600"
         MinHeight="300" MinWidth="450"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        Icon="../Resources/Images/settings.png">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -80,6 +80,9 @@
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <Grid.Resources>
                                     <Style TargetType="TextBlock">
@@ -99,6 +102,9 @@
                                 <TextBlock Grid.Row="0" Text="{StaticResource generalBackground}" Margin="5"/>
                                 <TextBlock Grid.Row="1" Text="{StaticResource inputTapeBackground}" Margin="5"/>
                                 <TextBlock Grid.Row="2" Text="{StaticResource outputTapeBackground}" Margin="5"/>
+                                <TextBlock Grid.Row="3" Text="{StaticResource addressBackground}" Margin="5"/>
+                                <TextBlock Grid.Row="4" Text="{StaticResource valueBackground}" Margin="5"/>
+                                <TextBlock Grid.Row="5" Text="{StaticResource toolbarBackground}" Margin="5"/>
                                 <!--Border and picker-->
                                 <StackPanel Grid.Row="0">
                                     <Border x:Name="GBackColorBox"/>
@@ -110,6 +116,18 @@
                                 </StackPanel>
                                 <StackPanel Grid.Row="2">
                                     <Border x:Name="OtBackColorBox"/>
+                                    <Button/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="3">
+                                    <Border x:Name="AddressBackColorBox"/>
+                                    <Button/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="4">
+                                    <Border x:Name="ValueBackColorBox"/>
+                                    <Button/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="5">
+                                    <Border x:Name="ToolbarBackColorBox"/>
                                     <Button/>
                                 </StackPanel>
                             </Grid>
@@ -248,6 +266,8 @@
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <Grid.Resources>
                                     <Style TargetType="TextBlock">
@@ -267,6 +287,8 @@
                                 <TextBlock Grid.Row="0" Text="{StaticResource inputTapeFont}" Margin="5"/>
                                 <TextBlock Grid.Row="1" Text="{StaticResource outputTapeFont}" Margin="5"/>
                                 <TextBlock Grid.Row="2" Text="{StaticResource headerFont}" Margin="5"/>
+                                <TextBlock Grid.Row="3" Text="{StaticResource addressFont}" Margin="5"/>
+                                <TextBlock Grid.Row="4" Text="{StaticResource valueFont}" Margin="5"/>
                                 <!--Border and picker-->
                                 <StackPanel Grid.Row="0">
                                     <Button/>
@@ -279,6 +301,14 @@
                                 <StackPanel Grid.Row="2">
                                     <Button/>
                                     <TextBox x:Name="HdFontBox"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="3">
+                                    <Button/>
+                                    <TextBox x:Name="AddressFontBox"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="4">
+                                    <Button/>
+                                    <TextBox x:Name="ValueFontBox"/>
                                 </StackPanel>
                             </Grid>
                         </GroupBox>
@@ -395,7 +425,6 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0">
                 <Button x:Name="RevertToDefault" Content="{StaticResource revertToDefault}" Click="RevertToDefault_OnClick"/>
             </StackPanel>
-
         </Grid>
     </Grid>
 </Window>

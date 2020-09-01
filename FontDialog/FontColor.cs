@@ -21,7 +21,7 @@ namespace FontDialog
             }
 
             FontColor p = obj as FontColor;
-            if ((System.Object)p == null)
+            if (p == null)
             {
                 return false;
             }
@@ -31,7 +31,7 @@ namespace FontDialog
 
         public bool Equals(FontColor p)
         {
-            if ((object)p == null)
+            if (p == null)
             {
                 return false;
             }

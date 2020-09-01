@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Windows.Controls;
-
-using Common;
 
 namespace RAMEditor.CustomControls
 {
@@ -22,9 +21,13 @@ namespace RAMEditor.CustomControls
             set
             {
                 if (value == String.Empty)
+                {
                     Value.Text = "?";
+                }
                 else
+                {
                     Value.Text = value;
+                }
             }
         }
 

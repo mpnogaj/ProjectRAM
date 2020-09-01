@@ -78,4 +78,12 @@
 
     <system:String x:Key="switchEditors">Switch editors</system:String>
 
+    <system:String x:Key="printProgram">Print program</system:String>
+
+    <system:String x:Key="addressBackground">Address column background</system:String>
+    <system:String x:Key="valueBackground">Value column background</system:String>
+    <system:String x:Key="toolbarBackground">Toolbar background</system:String>
+
+    <system:String x:Key="addressFont">Address column font</system:String>
+    <system:String x:Key="valueFont">Value column font</system:String>
 </ResourceDictionary>

@@ -1,8 +1,6 @@
-﻿using Common;
-using Microsoft.Win32;
-using RAMEditor.CustomControls;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -10,8 +8,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using Common;
+using Microsoft.Win32;
+using RAMEditor.CustomControls;
 
-namespace RAMEditor
+namespace RAMEditor.Logic
 {
     public static class ButtonLogic
     {
@@ -74,7 +75,7 @@ namespace RAMEditor
                 pd.PrintDocument(((IDocumentPaginatorSource)doc).DocumentPaginator,
                                          "RAM Machine program");
             }
-           
+
         }
 
         private static void SwitchEditors_Click(object sender, RoutedEventArgs e)
@@ -86,7 +87,7 @@ namespace RAMEditor
             {
                 code.Text = string.Empty;
                 se.Visibility = Visibility.Collapsed;
-                var text = se.ConvertToStringCollection();
+                var text = Creator.CommandListToStringCollection(new List<Command>(se.Lines));
                 foreach (string line in text)
                 {
                     string a = line;
@@ -103,15 +104,16 @@ namespace RAMEditor
             }
             else
             {
-                var codeLines = se.ConvertToCode(Logic.GetStringCollectionFromTextEditor(code));
+                var codeLines = Creator.CreateCommandList(Logic.GetStringCollectionFromTextEditor(code));
+                //var codeLines = se.ConvertToCode(Logic.GetStringCollectionFromTextEditor(code));
                 if (codeLines.Count <= 0)
                 {
-                    codeLines.Add(new CodeLine
+                    codeLines.Add(new Command
                     {
                         Line = 1
                     });
                 }
-                se.vm.Lines = codeLines;
+                se.Lines = new ObservableCollection<Command>(codeLines);
                 se.Visibility = Visibility.Visible;
                 code.Visibility = Visibility.Collapsed;
             }
@@ -130,7 +132,11 @@ namespace RAMEditor
         private static void InputTapeImport_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = Logic.PrepareOpenFileDialog("Select text file", "Text file|*.*");
-            if (ofd.ShowDialog() != true) return;
+            if (ofd.ShowDialog() != true)
+            {
+                return;
+            }
+
             string input = string.Empty;
             using (StreamReader sr = new StreamReader(ofd.FileName))
             {
@@ -138,7 +144,10 @@ namespace RAMEditor
                 while ((line = sr.ReadLine()) != null)
                 {
                     if (line == string.Empty)
+                    {
                         continue;
+                    }
+
                     input += $"{line} ";
                 }
             }
@@ -148,7 +157,11 @@ namespace RAMEditor
         private static void InputTapeExport_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog sfd = Logic.PrepareSaveFileDialog("Save text file", "Text file|*.*");
-            if (sfd.ShowDialog() != true) return;
+            if (sfd.ShowDialog() != true)
+            {
+                return;
+            }
+
             string inputTape = Logic.GetHost().InputTape.Text;
             string[] tape = inputTape.Split(' ');
             using (StreamWriter sw = new StreamWriter(sfd.FileName))
@@ -163,7 +176,11 @@ namespace RAMEditor
         private static void OutputTapeExport_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog sfd = Logic.PrepareSaveFileDialog("Save text file", "Text file|*.*");
-            if (sfd.ShowDialog() != true) return;
+            if (sfd.ShowDialog() != true)
+            {
+                return;
+            }
+
             string outputTape = Logic.GetHost().OutputTape.Text;
             string[] tape = outputTape.Split(' ');
             using (StreamWriter sw = new StreamWriter(sfd.FileName))
@@ -178,7 +195,11 @@ namespace RAMEditor
         private static void MemoryImport_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = Logic.PrepareOpenFileDialog("Select text file", "Text file|*.*");
-            if (ofd.ShowDialog() != true) return;
+            if (ofd.ShowDialog() != true)
+            {
+                return;
+            }
+
             UIElementCollection memory = Logic.GetHost().Memory.Children;
             memory.Clear();
             using (StreamReader sr = new StreamReader(ofd.FileName))
@@ -187,7 +208,10 @@ namespace RAMEditor
                 while ((line = sr.ReadLine()) != null)
                 {
                     if (line == string.Empty)
+                    {
                         continue;
+                    }
+
                     string[] data = line.Split(';');
                     memory.Add(new MemoryGrid(new Cell(data[1], data[0])));
                 }
@@ -197,7 +221,11 @@ namespace RAMEditor
         private static void MemoryExport_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog sfd = Logic.PrepareSaveFileDialog("Save text file", "Text file|*.*");
-            if (sfd.ShowDialog() != true) return;
+            if (sfd.ShowDialog() != true)
+            {
+                return;
+            }
+
             UIElementCollection memory = Logic.GetHost().Memory.Children;
             using (StreamWriter sw = new StreamWriter(sfd.FileName))
             {
@@ -226,7 +254,9 @@ namespace RAMEditor
         private static void Cancel_Click(object sender, RoutedEventArgs e)
         {
             if (_tokenSource != null)
+            {
                 _tokenSource.Cancel();
+            }
         }
 
         private static async void Run_Click(object sender, RoutedEventArgs e)
@@ -242,7 +272,9 @@ namespace RAMEditor
             {
                 Logic.ShowErrorMessage("Error", ex.Message);
                 if (_tokenSource != null)
+                {
                     _tokenSource.Cancel();
+                }
             }
         }
 
@@ -301,13 +333,20 @@ namespace RAMEditor
                 SaveAs_Click(sender, e);
                 return;
             }
+            Save(h, h.CodeFilePath);
+        }
+
+        private static void Save(Host h, string path)
+        {
             if (Logic.bUsingTextEditor())
             {
-                File.WriteAllTextAsync(h.CodeFilePath, h.Code.Text);
+                File.WriteAllTextAsync(path, h.Code.Text);
             }
             else
             {
-                File.WriteAllLines(h.CodeFilePath, h.SimpleEditor.ConvertToStringCollection().Cast<string>());
+
+                File.WriteAllLines(path, Creator.CommandListToStringCollection
+                    (Logic.GetSimpleEditorLines()).Cast<string>());
             }
         }
 
@@ -316,15 +355,12 @@ namespace RAMEditor
             Host h = Logic.GetHost();
             TabItem ti = Logic.GetMainWindow().Files.SelectedItem as TabItem;
             SaveFileDialog sfd = Logic.PrepareSaveFileDialog("Save RAM Code", "RAM Code files (*.RAMCode)|*.RAMCode");
-            if (sfd.ShowDialog() != true) return;
-            if (Logic.bUsingTextEditor())
+            if (sfd.ShowDialog() != true)
             {
-                File.WriteAllTextAsync(sfd.FileName, h.Code.Text);
+                return;
             }
-            else
-            {
-                File.WriteAllLines(sfd.FileName, h.SimpleEditor.ConvertToStringCollection().Cast<string>());
-            }
+
+            Save(h, sfd.FileName);
             Logic.ChangeHeaderPage(ti, Path.GetFileNameWithoutExtension(sfd.FileName));
             h.CodeFilePath = sfd.FileName;
         }

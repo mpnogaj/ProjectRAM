@@ -59,7 +59,7 @@ namespace FontDialog
 
         }
 
-        public FontInfo(FontFamily fam, double sz, FontStyle style, 
+        public FontInfo(FontFamily fam, double sz, FontStyle style,
                         FontStretch strc, FontWeight weight, SolidColorBrush c)
         {
             this.Family = fam;

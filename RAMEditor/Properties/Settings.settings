@@ -38,6 +38,15 @@
     <Setting Name="SEBack" Type="System.String" Scope="User">
       <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
+    <Setting Name="AddressBack" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="ValueBack" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="ToolbarBack" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
     <Setting Name="TBFontColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#000000</Value>
     </Setting>
@@ -144,6 +153,32 @@
       <Value Profile="(Default)">16</Value>
     </Setting>
     <Setting Name="SE5FontWeight" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+
+    <Setting Name="AddressFontColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000000</Value>
+    </Setting>
+    <Setting Name="AddressFontFamily" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Consolas</Value>
+    </Setting>
+    <Setting Name="AddressFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="AddressFontWeight" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+
+    <Setting Name="ValueFontColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000000</Value>
+    </Setting>
+    <Setting Name="ValueFontFamily" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Consolas</Value>
+    </Setting>
+    <Setting Name="ValueFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="ValueFontWeight" Type="System.String" Scope="User">
       <Value Profile="(Default)">Normal</Value>
     </Setting>
   </Settings>

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RAMEditor.CustomControls"
-             xmlns:root="clr-namespace:RAMEditor"
              xmlns:properties="clr-namespace:RAMEditor.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -35,24 +34,63 @@
                         <Style TargetType="Border">
                             <Setter Property="BorderThickness" Value="1"/>
                             <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="PaleGoldenrod"/>
+                            <Style.Triggers>
+                                <Trigger Property="Grid.Column" Value="0">
+                                    <Setter Property="Background" Value="{Binding Source={x:Static properties:Settings.Default}, Path=AddressBack}"/>
+                                </Trigger>
+
+                                <Trigger Property="Grid.Column" Value="1">
+                                    <Setter Property="Background" Value="{Binding Source={x:Static properties:Settings.Default}, Path=ValueBack}"/>
+                                </Trigger>
+                            </Style.Triggers>
                         </Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Right"/>
                             <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="FontSize" Value="14"/>
                             <Setter Property="Margin" Value="0, 0, 7, 0"/>
+                            <Style.Triggers>
+                                <Trigger Property="Grid.Column" Value="0">
+                                    <Setter Property="FontSize" Value="14"/>
+                                </Trigger>
+
+                                <Trigger Property="Grid.Column" Value="1">
+                                    <Setter Property="FontSize" Value="14"/>
+                                </Trigger>
+                            </Style.Triggers>
                         </Style>
                     </Grid.Resources>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
+
                     <Border Grid.Column="0">
-                        <TextBlock Text="{StaticResource address}"/>
+                        <TextBlock Text="{StaticResource address}" FontFamily="{Binding 
+                            Source={x:Static properties:Settings.Default}, 
+                            Path=AddressFontFamily}"
+                                   FontSize="{Binding 
+                            Source={x:Static properties:Settings.Default}, 
+                            Path=AddressFontSize}"
+                                   FontWeight="{Binding 
+                            Source={x:Static properties:Settings.Default}, 
+                            Path=AddressFontWeight}"
+                                   Foreground="{Binding 
+                            Source={x:Static properties:Settings.Default}, 
+                            Path=AddressFontColor}"/>
                     </Border>
                     <Border Grid.Column="1">
-                        <TextBlock Text="{StaticResource value}"/>
+                        <TextBlock Text="{StaticResource value}" FontFamily="{Binding 
+                            Source={x:Static properties:Settings.Default}, 
+                            Path=ValueFontFamily}"
+                                   FontSize="{Binding 
+                            Source={x:Static properties:Settings.Default}, 
+                            Path=ValueFontSize}"
+                                   FontWeight="{Binding 
+                            Source={x:Static properties:Settings.Default}, 
+                            Path=ValueFontWeight}"
+                                   Foreground="{Binding 
+                            Source={x:Static properties:Settings.Default}, 
+                            Path=ValueFontColor}"/>
                     </Border>
                 </Grid>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -86,7 +124,8 @@
                     FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=ITFontSize}" 
                     FontWeight="{Binding Source={x:Static properties:Settings.Default}, Path=ITFontWeight}"
                     Foreground="{Binding Source={x:Static properties:Settings.Default}, Path=ITFontColor}"
-                    Background="{Binding Source={x:Static properties:Settings.Default}, Path=ITBackground}"/>
+                    Background="{Binding Source={x:Static properties:Settings.Default}, Path=ITBackground}"
+                    LostFocus="InputTape_LostFocus"/>
             </StackPanel>
             <!--Code-->
             <DockPanel Grid.Row="1" LastChildFill="True">

@@ -26,6 +26,9 @@ namespace RAMEditor.Windows
             GBackColorBox.Background = CreateBrush(Settings.Default.TCBackground);
             ItBackColorBox.Background = CreateBrush(Settings.Default.ITBackground);
             OtBackColorBox.Background = CreateBrush(Settings.Default.OTBackground);
+            AddressBackColorBox.Background = CreateBrush(Settings.Default.AddressBack);
+            ValueBackColorBox.Background = CreateBrush(Settings.Default.ValueBack);
+            ToolbarBackColorBox.Background = CreateBrush(Settings.Default.ToolbarBack);
             TbBackColorBox.Background = CreateBrush(Settings.Default.TBBackground);
             SeBackBox.Background = CreateBrush(Settings.Default.SEBack);
             Se1BackBox.Background = CreateBrush(Settings.Default.SERow1Back);
@@ -53,6 +56,10 @@ namespace RAMEditor.Windows
                 Settings.Default.SE4FontWeight, Settings.Default.SE4FontColor);
             SetFont(Se5FontBox, Settings.Default.SE5FontFamily, Settings.Default.SE5FontSize,
                 Settings.Default.SE5FontWeight, Settings.Default.SE5FontColor);
+            SetFont(AddressFontBox, Settings.Default.AddressFontFamily, Settings.Default.AddressFontSize,
+                Settings.Default.AddressFontWeight, Settings.Default.AddressFontColor);
+            SetFont(ValueFontBox, Settings.Default.ValueFontFamily, Settings.Default.ValueFontSize,
+                Settings.Default.ValueFontWeight, Settings.Default.ValueFontColor);
             #endregion
             string langCode = Settings.Default.Language;
             foreach (ComboBoxItem item in SelectedLanguage.Items)
@@ -79,6 +86,9 @@ namespace RAMEditor.Windows
             Settings.Default.SERow3Back = GetStringFromBrush(Se3BackBox.Background);
             Settings.Default.SERow4Back = GetStringFromBrush(Se4BackBox.Background);
             Settings.Default.SERow5Back = GetStringFromBrush(Se5BackBox.Background);
+            Settings.Default.AddressBack = GetStringFromBrush(AddressBackColorBox.Background);
+            Settings.Default.ValueBack = GetStringFromBrush(ValueBackColorBox.Background);
+            Settings.Default.ToolbarBack = GetStringFromBrush(ToolbarBackColorBox.Background);
             #endregion
             #region Save font
 
@@ -126,6 +136,16 @@ namespace RAMEditor.Windows
             Settings.Default.SE5FontSize = Convert.ToInt32(Se5FontBox.FontSize);
             Settings.Default.SE5FontWeight = Se5FontBox.FontWeight.ToString();
             Settings.Default.SE5FontColor = GetStringFromBrush(Se5FontBox.Foreground);
+
+            Settings.Default.AddressFontFamily = AddressFontBox.FontFamily.Source;
+            Settings.Default.AddressFontSize = Convert.ToInt32(AddressFontBox.FontSize);
+            Settings.Default.AddressFontWeight = AddressFontBox.FontWeight.ToString();
+            Settings.Default.AddressFontColor = GetStringFromBrush(AddressFontBox.Foreground);
+
+            Settings.Default.ValueFontFamily = ValueFontBox.FontFamily.Source;
+            Settings.Default.ValueFontSize = Convert.ToInt32(ValueFontBox.FontSize);
+            Settings.Default.ValueFontWeight = ValueFontBox.FontWeight.ToString();
+            Settings.Default.ValueFontColor = GetStringFromBrush(ValueFontBox.Foreground);
 
             #endregion
             Settings.Default.Language = ((ComboBoxItem)SelectedLanguage.SelectedItem).Tag.ToString();

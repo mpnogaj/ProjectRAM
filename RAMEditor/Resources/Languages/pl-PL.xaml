@@ -82,4 +82,12 @@
 
     <system:String x:Key="switchEditors">Zmień edytor</system:String>
 
+    <system:String x:Key="printProgram">Wydrukuj program</system:String>
+
+    <system:String x:Key="addressBackground">Tło kolumny adresu</system:String>
+    <system:String x:Key="valueBackground">Tło kolumny wartości</system:String>
+    <system:String x:Key="toolbarBackground">Tło paska narzędzi</system:String>
+
+    <system:String x:Key="addressFont">Czcionka kolumny adresu</system:String>
+    <system:String x:Key="valueFont">Czcionka kolumny wartości</system:String>
 </ResourceDictionary>

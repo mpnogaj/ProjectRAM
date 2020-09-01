@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
 using System.Numerics;
-using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace Common
@@ -15,9 +12,9 @@ namespace Common
         /// </summary>
         /// <param name="c">Lista komend</param>
         /// <param name="lbl">Etykieta do wyszukania</param>
-        /// <param name="line">Numer linii</param>
+        /// <param name="index">Numer linii</param>
         /// <returns>Indeks komendy do której skoczyć</returns>
-        private static int Jump(List<Command> c, string lbl, int line)
+        private static int Jump(List<Command> c, string lbl, int index)
         {
             int i = 0;
             foreach (Command command in c)
@@ -29,172 +26,26 @@ namespace Common
                 }
                 i++;
             }
-            throw new LabelDoesntExistExcpetion(line, lbl);
+            throw new LabelDoesntExistExcpetion(c[index].Line, lbl);
         }
 
-        private static CommandType GetCommandType(string switcher)
+        private static string GetValue(Command c, string formatedArg, Dictionary<string, string> memory)
         {
-            //Tymczasowe
-            CommandType t;
-            switch (switcher.ToUpper())
+            if (c.ArgumentType == ArgumentType.Const)
             {
-                case "ADD":
-                    return CommandType.Add;
-                case "SUB":
-                    return CommandType.Sub;
-                case "MULT":
-                    return CommandType.Mult;
-                case "DIV":
-                    return CommandType.Div;
-                case "LOAD":
-                    return CommandType.Load;
-                case "STORE":
-                    return CommandType.Store;
-                case "READ":
-                    t = CommandType.Read;
-                    break;
-                case "WRITE":
-                    return CommandType.Write;
-                case "JUMP":
-                    t = CommandType.Jump;
-                    break;
-                case "JGTZ":
-                    return CommandType.Jgtz;
-                case "JZERO":
-                    return CommandType.Jzero;
-                case "HALT":
-                    return CommandType.Halt;
-                default:
-                    return CommandType.Unknown;
-            }
-            return t;
-        }
-
-        private static string GetValue(ArgumentType at, string arg, Dictionary<string, string> memory, int i)
-        {
-            if (at == ArgumentType.Const)
-            {
-                return arg;
+                return formatedArg;
             }
             else
             {
-                bool exists = memory.ContainsKey(arg);
+                bool exists = memory.ContainsKey(formatedArg);
                 if (!exists)
-                    throw new CellDoesntExistException(i);
-                return memory[arg];
-            }
-        }
-
-        #region Functions to create command list
-        public static List<Command> CreateCommandList(string pathToFile)
-        {
-            List<Command> commands = new List<Command>();
-            using (StreamReader sr = new StreamReader(pathToFile))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
                 {
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
-                    string lbl = string.Empty, command = string.Empty, arg = string.Empty, comm = string.Empty;
-                    string word = string.Empty;
-                    for (int i = 0; i <= line.Length; i++)
-                    {
-                        if (i != line.Length && line[i] != ' ' && line[i] != '\r' && line[i] != '\n')
-                            word += line[i];
-                        else
-                        {
-                            if (word == string.Empty)
-                                continue;
-                            if (word.EndsWith(':'))
-                                lbl = word;
-                            else if (word.StartsWith('#'))
-                                comm = word;
-                            else
-                            {
-                                if (command == string.Empty)
-                                    command = word;
-                                else
-                                    arg = word;
-                            }
-
-                            word = string.Empty;
-                        }
-                    }
-                    commands.Add(new Command(GetCommandType(command),
-                    Regex.Replace(arg, @"\t|\n|\r", ""), lbl,
-                    Regex.Replace(comm, @"\t|\n|\r", "")));
+                    throw new CellDoesntExistException(c.Line);
                 }
+
+                return memory[formatedArg];
             }
-            return commands;
         }
-
-        public static List<Command> CreateCommandList(StringCollection lines)
-        {
-            List<Command> commands = new List<Command>();
-            foreach (string line in lines)
-            {
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-                string lbl = string.Empty, command = string.Empty, arg = string.Empty, comm = string.Empty;
-                string word = string.Empty;
-                for (int i = 0; i <= line.Length; i++)
-                {
-                    if (i != line.Length && line[i] != ' ' && line[i] != '\r' && line[i] != '\n')
-                        word += line[i];
-                    else
-                    {
-                        if (word == string.Empty)
-                            continue;
-                        if (word.EndsWith(':'))
-                            lbl = word.Substring(0, word.Length - 1);
-                        else if (word.StartsWith('#'))
-                            comm = word.Substring(1);
-                        else
-                        {
-                            if (command == string.Empty)
-                                command = word;
-                            else if (arg == string.Empty)
-                                arg = word;
-                            else
-                                comm += ' ' + word;
-                        }
-                        word = string.Empty;
-                    }
-                }
-                commands.Add(new Command(GetCommandType(command),
-                    Regex.Replace(arg, @"\t|\n|\r", ""), lbl,
-                    Regex.Replace(comm, @"\t|\n|\r", "")));
-            }
-            return commands;
-        }
-        #endregion
-
-        #region Functions to create input tape
-        public static Queue<string> CreateInputTapeFromFile(string pathToFile)
-        {
-            Queue<string> inputTape = new Queue<string>();
-            using (StreamReader sr = new StreamReader(pathToFile))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
-                    inputTape.Enqueue(line);
-                }
-            }
-
-            return inputTape;
-        }
-
-        public static Queue<string> CreateInputTapeFromString(string line)
-        {
-            if (line == string.Empty)
-                return null;
-            return new Queue<string>(line.Split(' '));
-        }
-        #endregion
 
         /// <summary>
         /// Funkcja symulująca wykonanie wszystkich poleceń
@@ -216,7 +67,10 @@ namespace Common
             for (int i = 0; i < commands.Count; i++)
             {
                 token.ThrowIfCancellationRequested();
-                if (RunCommand(commands[i], commands, inputTape, outputTape, memory, ref i)) break;
+                if (RunCommand(commands, inputTape, outputTape, memory, ref i))
+                {
+                    break;
+                }
             }
 
             return new Tuple<Queue<string>, Dictionary<string, string>>(outputTape, memory);
@@ -225,18 +79,19 @@ namespace Common
         /// <summary>
         /// Run single command
         /// </summary>
-        /// <param name="command">Command to execute</param>
         /// <param name="commands">List of another commands (for Jump)</param>
         /// <param name="inputTape">Input tape</param>
         /// <param name="outputTape">Output tape</param>
         /// <param name="memory">Memory</param>
-        /// <param name="i">Index of current command in list (for Jump)</param>
+        /// <param name="i">Index of current command in list</param>
         /// <returns>Should end program</returns>
-        public static bool RunCommand(Command command, List<Command> commands, Queue<string> inputTape, Queue<string> outputTape, Dictionary<string, string> memory, ref int i)
+        public static bool RunCommand(List<Command> commands, Queue<string> inputTape, Queue<string> outputTape, Dictionary<string, string> memory, ref int i)
         {
+            Command command = commands[i];
             bool exists;
             BigInteger value;
             //argument
+            command.ArgumentType = Command.GetArgumentType(command.CommandType, command.Argument);
             string arg = command.Argument;
             if (command.ArgumentType == ArgumentType.Const || command.ArgumentType == ArgumentType.IndirectAddress)
             {
@@ -256,7 +111,9 @@ namespace Common
                     #region ExceptionHandling
 
                     if (command.ArgumentType != ArgumentType.Label)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
 
                     #endregion
 
@@ -267,27 +124,37 @@ namespace Common
                     #region ExceptionHandling
 
                     if (command.ArgumentType != ArgumentType.Label)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
 
                     #endregion
 
                     if (memory["0"] != "" &&
                         memory["0"][0] != '-' &&
                         memory["0"] != "0")
+                    {
                         i = Jump(commands, arg, i);
+                    }
+
                     break;
                 case CommandType.Jzero:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType != ArgumentType.Label)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
 
                     #endregion
 
                     if (memory["0"] != "" &&
                         memory["0"] == "0")
+                    {
                         i = Jump(commands, arg, i);
+                    }
+
                     break;
                 case CommandType.Read:
 
@@ -295,9 +162,14 @@ namespace Common
 
                     if (command.ArgumentType != ArgumentType.DirectAddress &&
                         command.ArgumentType != ArgumentType.IndirectAddress)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
+
                     if (inputTape == null || inputTape.Count <= 0)
-                        throw new InputTapeEmptyException(i);
+                    {
+                        throw new InputTapeEmptyException(command.Line);
+                    }
 
                     #endregion
                     //index = GetMemoryIndex(memory, argInt);
@@ -319,7 +191,9 @@ namespace Common
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
 
                     #endregion
 
@@ -329,10 +203,12 @@ namespace Common
                     }
                     else
                     {
-                        //index = GetMemoryIndex(memory, argInt);
                         exists = memory.ContainsKey(arg);
                         if (exists == false)
-                            throw new CellDoesntExistException(i);
+                        {
+                            throw new CellDoesntExistException(command.Line);
+                        }
+
                         outputTape.Enqueue(memory[arg]);
                     }
 
@@ -343,27 +219,36 @@ namespace Common
 
                     if (command.ArgumentType == ArgumentType.Const ||
                         command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
 
                     #endregion
 
                     //index = GetMemoryIndex(memory, argInt);
                     exists = memory.ContainsKey(arg);
                     if (!exists)
+                    {
                         memory.Add(arg, memory["0"]);
+                    }
                     else
+                    {
                         memory[arg] = memory["0"];
+                    }
+
                     break;
                 case CommandType.Load:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
 
                     #endregion
 
-                    memory["0"] = GetValue(command.ArgumentType, arg, memory, i);
+                    memory["0"] = GetValue(command, arg, memory);
 
                     break;
                 case CommandType.Add:
@@ -371,60 +256,66 @@ namespace Common
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
 
                     #endregion
 
-                    value = BigInteger.Parse(GetValue(command.ArgumentType, arg, memory, i));
+                    value = BigInteger.Parse(GetValue(command, arg, memory));
 
                     memory["0"] = BigInteger
-                        .Add(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(i)), value).ToString();
+                        .Add(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(command.Line)), value).ToString();
                     break;
                 case CommandType.Sub:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
 
                     #endregion
 
-                    value = BigInteger.Parse(GetValue(command.ArgumentType, arg, memory, i));
+                    value = BigInteger.Parse(GetValue(command, arg, memory));
 
                     memory["0"] = BigInteger
-                        .Subtract(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(i)), value).ToString();
+                        .Subtract(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(command.Line)), value).ToString();
                     break;
                 case CommandType.Mult:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
 
                     #endregion
 
-                    value = BigInteger.Parse(GetValue(command.ArgumentType, arg, memory, i));
+                    value = BigInteger.Parse(GetValue(command, arg, memory));
 
                     memory["0"] = BigInteger
-                        .Multiply(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(i)), value).ToString();
+                        .Multiply(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(command.Line)), value).ToString();
                     break;
                 case CommandType.Div:
 
                     #region ExceptionHandling
 
                     if (command.ArgumentType == ArgumentType.Label)
-                        throw new ArgumentIsNotValidException(i);
+                    {
+                        throw new ArgumentIsNotValidException(command.Line);
+                    }
 
                     #endregion
 
-                    value = BigInteger.Parse(GetValue(command.ArgumentType, arg, memory, i));
+                    value = BigInteger.Parse(GetValue(command, arg, memory));
 
                     memory["0"] = BigInteger
-                        .Divide(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(i)), value).ToString();
+                        .Divide(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(command.Line)), value).ToString();
                     break;
             }
-
-            //memory["0"] = akumulator.Value;
             return false;
         }
     }

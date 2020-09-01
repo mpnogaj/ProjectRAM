@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Common;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,101 +11,28 @@ namespace RAMEditor.CustomControls
     /// <summary>
     /// Interaction logic for SimpleEditor.xaml
     /// </summary>
-    public partial class SimpleEditor : UserControl
+    public partial class SimpleEditor : INotifyPropertyChanged
     {
-        /// <summary>
-        /// Reference to ViewModel
-        /// </summary>
-        public SimpleEditorViewModel vm;
+        private ObservableCollection<Command> _lines;
+        public ObservableCollection<Command> Lines
+        {
+            get { return _lines; }
+            set
+            {
+                _lines = value;
+                RaisePropertyChangedEvent("Lines");
+            }
+        }
 
         public SimpleEditor()
         {
             InitializeComponent();
-            this.DataContext = new SimpleEditorViewModel();
-            vm = this.DataContext as SimpleEditorViewModel;
-            vm.Lines.Add(new CodeLine
+            DataContext = this;
+            Lines = new ObservableCollection<Command>();
+            Lines.Add(new Command
             {
                 Line = 1
             });
-        }
-
-        /// <summary>
-        /// Gets the "normal" code from list of CodeLine
-        /// </summary>
-        /// <returns>Lines of "normal" code</returns>
-        public StringCollection ConvertToStringCollection()
-        {
-            vm.Lines.Add(new CodeLine());
-            vm.Lines.RemoveAt(vm.Lines.Count - 1);
-            StringCollection outCollection = new StringCollection();
-            string line;
-            foreach (CodeLine codeLine in vm.Lines)
-            {
-                line = string.Empty;
-                if (!String.IsNullOrEmpty(codeLine.Label))
-                    line += codeLine.Label + ": ";
-                if(!String.IsNullOrEmpty(codeLine.Command))
-                    line += codeLine.Command + ' ';
-                if(!String.IsNullOrEmpty(codeLine.Value))
-                    line += codeLine.Value + ' ';
-                if (!String.IsNullOrEmpty(codeLine.Comment))
-                    line += '#' + codeLine.Comment;
-
-                outCollection.Add(line);
-            }
-
-            return outCollection;
-        }
-
-        /// <summary>
-        /// Get list of CodeLine from "normal" code
-        /// </summary>
-        /// <param name="code">"normal" code</param>
-        /// <returns>List of CodeLine</returns>
-        public ObservableCollection<CodeLine> ConvertToCode(StringCollection code)
-        {
-            ObservableCollection<CodeLine> lines = new ObservableCollection<CodeLine>();
-            int ln = 1;
-            foreach (string line in code)
-            {
-                string lbl = string.Empty, command = string.Empty, arg = string.Empty, comm = string.Empty;
-                string word = string.Empty;
-                for (int i = 0; i <= line.Length; i++)
-                {
-                    if (i != line.Length && line[i] != ' ')
-                        word += line[i];
-                    else
-                    {
-                        if (word == string.Empty)
-                            continue;
-                        if (word.EndsWith(':'))
-                            lbl = word.Substring(0, word.Length - 1);
-                        else if (word.StartsWith('#'))
-                            comm = word.Substring(1);
-                        else
-                        {
-                            if (command == string.Empty)
-                                command = word;
-                            else if (arg == string.Empty)
-                                arg = word;
-                            else
-                                comm += ' ' + word;
-                        }
-                        word = string.Empty;
-                    }
-                }
-                lines.Add(new CodeLine
-                {
-                    Line = ln,
-                    Label = lbl,
-                    Command = command,
-                    Value = arg,
-                    Comment = comm
-                });
-                ln++;
-            }
-
-            return lines;
         }
 
         private void Editor_OnKeyUp(object sender, KeyEventArgs e)
@@ -115,7 +42,7 @@ namespace RAMEditor.CustomControls
             if (e.Key == Key.Enter && uiElement != null)
             {
                 e.Handled = true;
-                vm.Lines.Insert(Editor.Items.IndexOf(Editor.CurrentCell.Item) + 1, new CodeLine());
+                Lines.Insert(Editor.Items.IndexOf(Editor.CurrentCell.Item) + 1, new Command());
                 UpdateLineNumber();
             }
             else if (e.Key == Key.Delete)
@@ -124,15 +51,25 @@ namespace RAMEditor.CustomControls
                 //if (!(uiElement is DataGridCell)) return;
                 try
                 {
-                    if (((ComboBox)uiElement).IsDropDownOpen) return;
+                    if (((ComboBox)uiElement).IsDropDownOpen)
+                    {
+                        return;
+                    }
+
+                    Lines.RemoveAt(Editor.Items.IndexOf(Editor.CurrentCell.Item));
                 }
                 catch
                 {
                     try
                     {
-                        if (((TextBox)uiElement).Text != string.Empty) return;
+                        if (((TextBox)uiElement).Text != string.Empty)
+                        {
+                            return;
+                        }
+
+                        Lines.RemoveAt(Editor.Items.IndexOf(Editor.CurrentCell.Item));
                     }
-                    catch {}
+                    catch { Lines.RemoveAt(Editor.Items.IndexOf(Editor.CurrentCell.Item)); }
                 }
             }
         }
@@ -140,9 +77,9 @@ namespace RAMEditor.CustomControls
         //prevent deleting the las row
         private void Editor_UnloadingRow(object sender, DataGridRowEventArgs e)
         {
-            if (vm.Lines.Count == 0)
+            if (Lines.Count == 0)
             {
-                vm.Lines.Add(new CodeLine
+                Lines.Add(new Command
                 {
                     Line = 1
                 });
@@ -152,9 +89,9 @@ namespace RAMEditor.CustomControls
 
         public void UpdateLineNumber()
         {
-            for (int i = 0; i < vm.Lines.Count; i++)
+            for (int i = 0; i < Lines.Count; i++)
             {
-                vm.Lines[i].Line = i + 1;
+                Lines[i].Line = i + 1;
             }
         }
 
@@ -165,125 +102,37 @@ namespace RAMEditor.CustomControls
                 Editor.BeginEdit(e);
             }
         }
-    }
 
-    /// <summary>
-    /// SimpleEditor ViewModel class
-    /// </summary>
-    public class SimpleEditorViewModel : ViewModelBase
-    {
-        private ObservableCollection<CodeLine> _lines;
-        public ObservableCollection<CodeLine> Lines
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChangedEvent(string propertyName)
         {
-            get { return _lines; }
-            set
+            if (PropertyChanged != null)
             {
-                _lines = value;
-                RaisePropertyChangedEvent("Lines");
+                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                PropertyChanged(this, e);
             }
-        }
-
-        public SimpleEditorViewModel()
-        {
-            Lines = new ObservableCollection<CodeLine>();
         }
     }
 
-    /// <summary>
-    /// Class whitch represents a CodeLine in SimpleEditor
-    /// </summary>
-    public class CodeLine : ViewModelBase
+    public class Commands
     {
-        #region Local variables
-        private int _line;
-        private string _label;
-        private string _command;
-        private string _value;
-        private string _comment;
-        #endregion
 
-        #region Properties
-
-        public int Line
+        public static IEnumerable<string> CommandsList => new List<string>
         {
-            get { return _line; }
-            set
-            {
-                _line = value;
-                RaisePropertyChangedEvent("Line");
-            }
-        }
-
-        public string Label 
-        { 
-            get { return _label; }
-            set
-            {
-                _label = value;
-                RaisePropertyChangedEvent("Label");
-            } 
-        }
-
-        public string Command 
-        {
-            get { return _command; } 
-            set
-            {
-                _command = value;
-                RaisePropertyChangedEvent("Command");
-            }
-        }
-        public string Value 
-        { 
-            get { return _value; }
-            set
-            {
-                _value = value;
-                RaisePropertyChangedEvent("Value");
-            }
-        }
-        public string Comment 
-        { 
-            get { return _comment; } 
-            set
-            {
-                _comment = value;
-                RaisePropertyChangedEvent("Comment");
-            }
-        }
-        #endregion
-
-        public CodeLine()
-        {
-            Label = string.Empty;
-            Command = string.Empty;
-            Value = string.Empty;
-            Comment = string.Empty;
-        }
-    }
-
-    
-
-    /// <summary>
-    /// Just list of available commands
-    /// </summary>
-    public class CommandList : List<string>
-    {
-        public CommandList()
-        {
-            this.Add("load");
-            this.Add("store");
-            this.Add("read");
-            this.Add("write");
-            this.Add("add");
-            this.Add("sub");
-            this.Add("mult");
-            this.Add("div");
-            this.Add("load");
-            this.Add("jump");
-            this.Add("jzero");
-            this.Add("jgtz");
-            this.Add("halt");
-        }
+            "load",
+            "store",
+            "read",
+            "write",
+            "add",
+            "sub",
+            "mult",
+            "div",
+            "load",
+            "jump",
+            "jzero",
+            "jgtz",
+            "halt"
+        };
     }
 }

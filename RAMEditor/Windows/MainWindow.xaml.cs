@@ -1,7 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
-namespace RAMEditor
+namespace RAMEditor.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -11,7 +14,24 @@ namespace RAMEditor
         public MainWindow()
         {
             InitializeComponent();
-            Logic.CreateTabPage("NEWRamCode");
+            var args = Environment.GetCommandLineArgs();
+            var userArgs = args.Skip(1);
+            if (userArgs == null || userArgs.Count() < 1)
+            {
+                Logic.Logic.CreateTabPage("NEW RAMCode");
+            }
+            else
+            {
+                foreach (var arg in userArgs)
+                {
+                    Uri pathUri;
+                    bool isValidUri = Uri.TryCreate(arg, UriKind.Absolute, out pathUri);
+                    if (isValidUri && pathUri != null && pathUri.IsLoopback)
+                    {
+                        Logic.Logic.CreateTabPage(Path.GetFileNameWithoutExtension(arg), arg);
+                    }
+                }
+            }
         }
 
         private void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)

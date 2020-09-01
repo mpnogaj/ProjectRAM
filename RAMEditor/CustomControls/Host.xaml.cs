@@ -1,11 +1,13 @@
-﻿using System.Collections.Specialized;
-using System.IO;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-
-using Common;
+﻿using Common;
 using RAMEditor.Properties;
+using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Input;
 
 namespace RAMEditor.CustomControls
 {
@@ -15,16 +17,16 @@ namespace RAMEditor.CustomControls
     public partial class Host
     {
         private string _path;
-        public string CodeFilePath 
+        public string CodeFilePath
         {
             get => _path;
             set
             {
-                if(_path == null)
+                if (_path == null)
                 {
                     _path = value;
                 }
-            } 
+            }
         }
         public Host()
         {
@@ -78,7 +80,7 @@ namespace RAMEditor.CustomControls
             }
             else
             {
-                SimpleEditor.vm.Lines = SimpleEditor.ConvertToCode(sc);
+                SimpleEditor.Lines = new ObservableCollection<Command>(Creator.CreateCommandList(sc));
                 SimpleEditor.UpdateLineNumber();
             }
         }
@@ -87,11 +89,11 @@ namespace RAMEditor.CustomControls
         {
             if ((e.Key == Key.Add || e.Key == Key.OemPlus) && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                Logic.ChangeZoom(1);
+                Logic.Logic.ChangeZoom(1);
             }
             else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                Logic.ChangeZoom(-1);
+                Logic.Logic.ChangeZoom(-1);
             }
         }
 
@@ -103,9 +105,26 @@ namespace RAMEditor.CustomControls
             int lineCount = Code.LineCount;
 
             for (int line = 0; line < lineCount; line++)
+            {
                 lines.Add(Code.GetLineText(line));
+            }
 
             return lines;
+        }
+
+        public void FixInputTapeFormat()
+        {
+            InputTape.Text = new String
+                (InputTape.Text
+                .Where(x => (char.IsDigit(x) || char.IsWhiteSpace(x)))
+                .ToArray());
+            InputTape.Text = Regex.Replace(InputTape.Text, @"\s+", " ");
+            InputTape.Text = InputTape.Text.Trim();
+        }
+
+        private void InputTape_LostFocus(object sender, RoutedEventArgs e)
+        {
+            FixInputTapeFormat();
         }
     }
 }

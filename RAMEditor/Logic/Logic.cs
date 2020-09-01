@@ -1,24 +1,18 @@
-﻿using Common;
-
-using Microsoft.Win32;
-
-using RAMEditor.CustomControls;
-using RAMEditor.Helpers;
-using RAMEditor.Properties;
-using RAMEditor.Windows;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using Common;
+using Microsoft.Win32;
+using RAMEditor.CustomControls;
+using RAMEditor.Helpers;
+using RAMEditor.Properties;
+using RAMEditor.Windows;
 
-using static Common.Interpreter;
-
-namespace RAMEditor
+namespace RAMEditor.Logic
 {
     public static class Logic
     {
@@ -53,7 +47,7 @@ namespace RAMEditor
             };
             var host = GetHost();
             t.BorderThickness = new Thickness(7);
-            ObservableCollection<CodeLine> rows = new ObservableCollection<CodeLine>();
+            List<Command> rows = new List<Command>();
             doc.Blocks.Add(t);
             const int columns = 5;
             var glc = new GridLengthConverter();
@@ -86,9 +80,9 @@ namespace RAMEditor
 
 
             rows = bUsingTextEditor() ?
-                host.SimpleEditor.ConvertToCode(
-                    GetStringCollectionFromTextEditor(host.Code))
-                : host.SimpleEditor.vm.Lines;
+                Creator.CreateCommandList(
+                    host.GetText())
+                : GetSimpleEditorLines();
 
             int j = 2;
             foreach (var row in rows)
@@ -97,8 +91,8 @@ namespace RAMEditor
                 var currRow = t.RowGroups[0].Rows[j];
                 currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run((j - 1).ToString())), false));
                 currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Label)), false));
-                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Command)), false));
-                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Value)), false));
+                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.CommandType.ToString())), false));
+                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Argument)), false));
                 currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Comment)), false));
                 j++;
             }
@@ -195,7 +189,11 @@ namespace RAMEditor
             if (bUsingTextEditor())
             {
                 TextBox tb = GetHost().Code;
-                if (tb.FontSize <= 1 && offset < 0) return;
+                if (tb.FontSize <= 1 && offset < 0)
+                {
+                    return;
+                }
+
                 tb.FontSize += offset;
             }
             else
@@ -310,20 +308,27 @@ namespace RAMEditor
         /// <param name="parent">Host control where the program is written in</param>
         public static void RunProgram(Host parent, CancellationToken token)
         {
-            StringCollection sc = new StringCollection();
-            List<Command> cl = new List<Command>();
+            List<Command> commands = new List<Command>();
             Queue<string> input = new Queue<string>();
             parent.Dispatcher.Invoke(() =>
             {
+                parent.FixInputTapeFormat();
                 parent.OutputTape.Text = string.Empty;
                 parent.Memory.Children.Clear();
-                sc = bUsingTextEditor() ? parent.GetText() : parent.SimpleEditor.ConvertToStringCollection();
-                cl = CreateCommandList(sc);
-                input = CreateInputTapeFromString(parent.InputTape.Text);
+                if (bUsingTextEditor())
+                {
+                    commands = Creator.CreateCommandList(parent.GetText());
+                }
+                else
+                {
+                    commands = new List<Command>(parent.SimpleEditor.Lines);
+                }
+                var arry = parent.InputTape.Text.Split(' ');
+                input = Creator.CreateInputTapeFromString(parent.InputTape.Text);
             });
 
             token.ThrowIfCancellationRequested();
-            Tuple<Queue<string>, Dictionary<string, string>> result = RunCommands(cl, input, token);
+            Tuple<Queue<string>, Dictionary<string, string>> result = Interpreter.RunCommands(commands, input, token);
             token.ThrowIfCancellationRequested();
             Queue<string> output = result.Item1;
             Dictionary<string, string> memory = result.Item2;
@@ -350,9 +355,9 @@ namespace RAMEditor
         /// Get List of CodeLine objects
         /// </summary>
         /// <returns>List of CodeLine objects</returns>
-        public static ObservableCollection<CodeLine> GetSimpleEditorLines()
+        public static List<Command> GetSimpleEditorLines()
         {
-            return GetHost().SimpleEditor.vm.Lines;
+            return new List<Command>(GetHost().SimpleEditor.Lines);
         }
 
         public static List<RamInterpreterException> CheckIfValid()
@@ -360,10 +365,15 @@ namespace RAMEditor
             Host parent = GetHost();
             StringCollection sc;
             if (parent.SimpleEditor.Visibility == Visibility.Visible)
-                sc = parent.SimpleEditor.ConvertToStringCollection();
+            {
+                return Validator.ValidateProgram(GetSimpleEditorLines());
+            }
             else
+            {
                 sc = parent.GetText();
-            return Validator.ValidateProgram(Interpreter.CreateCommandList(sc));
+            }
+
+            return Validator.ValidateProgram(Creator.CreateCommandList(sc));
         }
 
         public static void ShowErrorMessage(string header, string error)
@@ -374,7 +384,10 @@ namespace RAMEditor
         public static bool bUsingTextEditor()
         {
             if (GetHost().Code.Visibility == Visibility.Visible)
+            {
                 return true;
+            }
+
             return false;
         }
 

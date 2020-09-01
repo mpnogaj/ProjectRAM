@@ -1,17 +1,8 @@
 ﻿using Common;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Windows;
+using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace RAMEditor.CustomControls
 {
@@ -20,7 +11,7 @@ namespace RAMEditor.CustomControls
     /// </summary>
     public partial class ValidationRaport : UserControl
     {
-        private ValidationRaportViewModel vm;
+        private readonly ValidationRaportViewModel vm;
         public ValidationRaport()
         {
             InitializeComponent();
@@ -32,15 +23,18 @@ namespace RAMEditor.CustomControls
         {
             vm.Exceptions.Clear();
             if (list == null)
+            {
                 return;
-            foreach(var ex in list)
+            }
+
+            foreach (var ex in list)
             {
                 vm.Exceptions.Add(ex.Message);
             }
         }
     }
 
-    public class ValidationRaportViewModel : ViewModelBase
+    public class ValidationRaportViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<string> _exceptions;
         public ObservableCollection<string> Exceptions
@@ -56,6 +50,17 @@ namespace RAMEditor.CustomControls
         public ValidationRaportViewModel()
         {
             Exceptions = new ObservableCollection<string>();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChangedEvent(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                PropertyChanged(this, e);
+            }
         }
     }
 }

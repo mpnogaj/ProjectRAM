@@ -12,7 +12,7 @@ namespace RAMEditor.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -164,6 +164,42 @@ namespace RAMEditor.Properties {
             }
             set {
                 this["SEBack"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string AddressBack {
+            get {
+                return ((string)(this["AddressBack"]));
+            }
+            set {
+                this["AddressBack"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string ValueBack {
+            get {
+                return ((string)(this["ValueBack"]));
+            }
+            set {
+                this["ValueBack"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string ToolbarBack {
+            get {
+                return ((string)(this["ToolbarBack"]));
+            }
+            set {
+                this["ToolbarBack"] = value;
             }
         }
         
@@ -596,6 +632,102 @@ namespace RAMEditor.Properties {
             }
             set {
                 this["SE5FontWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        public string AddressFontColor {
+            get {
+                return ((string)(this["AddressFontColor"]));
+            }
+            set {
+                this["AddressFontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string AddressFontFamily {
+            get {
+                return ((string)(this["AddressFontFamily"]));
+            }
+            set {
+                this["AddressFontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        public int AddressFontSize {
+            get {
+                return ((int)(this["AddressFontSize"]));
+            }
+            set {
+                this["AddressFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string AddressFontWeight {
+            get {
+                return ((string)(this["AddressFontWeight"]));
+            }
+            set {
+                this["AddressFontWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        public string ValueFontColor {
+            get {
+                return ((string)(this["ValueFontColor"]));
+            }
+            set {
+                this["ValueFontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string ValueFontFamily {
+            get {
+                return ((string)(this["ValueFontFamily"]));
+            }
+            set {
+                this["ValueFontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        public int ValueFontSize {
+            get {
+                return ((int)(this["ValueFontSize"]));
+            }
+            set {
+                this["ValueFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string ValueFontWeight {
+            get {
+                return ((string)(this["ValueFontWeight"]));
+            }
+            set {
+                this["ValueFontWeight"] = value;
             }
         }
     }
