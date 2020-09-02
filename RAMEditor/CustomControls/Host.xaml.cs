@@ -116,9 +116,12 @@ namespace RAMEditor.CustomControls
         {
             InputTape.Text = new String
                 (InputTape.Text
-                .Where(x => (char.IsDigit(x) || char.IsWhiteSpace(x)))
+                .Where(x => (char.IsDigit(x) || char.IsWhiteSpace(x) || x == '-'))
                 .ToArray());
+            //Usuń nadmiarowe spacje
             InputTape.Text = Regex.Replace(InputTape.Text, @"\s+", " ");
+            //Usuń spacje po minusach
+            InputTape.Text = Regex.Replace(InputTape.Text, @"-\s*", "-");
             InputTape.Text = InputTape.Text.Trim();
         }
 
