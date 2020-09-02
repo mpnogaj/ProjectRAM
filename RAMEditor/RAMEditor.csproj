@@ -41,7 +41,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\FontDialog\FontDialog.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="FontDialog">
+      <HintPath>C:\Users\Marcin\OneDrive - I LO\Informatyka\VisualStudio\CustomWPFDialogs\FontDialog\bin\Release\netcoreapp3.1\FontDialog.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

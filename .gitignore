@@ -340,8 +340,8 @@ ASALocalRun/
 healthchecksdb
 
 # Custom files
-Thumbs.db
-icon.png
+.db
+/icon.png
 
 # Custom folders
-RAMEditorSetup/
+/RAMEditorSetup/
