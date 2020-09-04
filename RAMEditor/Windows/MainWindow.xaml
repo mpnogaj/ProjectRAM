@@ -179,6 +179,10 @@
                 <Image Source="../Resources/Images/saveAs.png"/>
             </Button>
             <Separator/>
+            <Button Click="{x:Static logic:ButtonLogic.SwitchEditorsClick}">
+                <Image Source="../Resources/Images/switch.png"/>
+            </Button>
+            <Separator/>
             <Button Click="{x:Static logic:ButtonLogic.VerifyClick}" Style="{StaticResource FileDependentBtn}">
                 <Image Source="../Resources/Images/verify.png"/>
             </Button>

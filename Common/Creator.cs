@@ -13,10 +13,6 @@ namespace Common
             long i = 0;
             foreach (string line in lines)
             {
-                if (String.IsNullOrWhiteSpace(line))
-                {
-                    continue;
-                }
                 commands.Add(new Command(line, ++i));
             }
             return commands;
@@ -41,10 +37,6 @@ namespace Common
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    if (String.IsNullOrWhiteSpace(line))
-                    {
-                        continue;
-                    }
                     commands.Add(new Command(line, ++i));
                 }
             }

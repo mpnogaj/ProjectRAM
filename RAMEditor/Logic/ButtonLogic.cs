@@ -90,11 +90,11 @@ namespace RAMEditor.Logic
                 var text = Creator.CommandListToStringCollection(new List<Command>(se.Lines));
                 foreach (string line in text)
                 {
-                    string a = line;
+                    string a = string.Empty;
                     if (line != string.Empty)
                     {
-                        //remove last space
-                        a = a.Remove(a.Length - 1);
+                        //remove spaces before and after
+                        a = line.Trim();
                     }
                     code.Text += a + "\r\n";
                 }

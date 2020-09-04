@@ -188,13 +188,10 @@ namespace RAMEditor.Logic
         {
             if (bUsingTextEditor())
             {
-                TextBox tb = GetHost().Code;
-                if (tb.FontSize <= 1 && offset < 0)
+                if (Settings.Default.TBFontSize > 1 && offset >= 0)
                 {
-                    return;
+                    Settings.Default.TBFontSize += offset;
                 }
-
-                tb.FontSize += offset;
             }
             else
             {
@@ -219,6 +216,7 @@ namespace RAMEditor.Logic
                     Settings.Default.SE5FontSize += offset;
                 }
             }
+            Settings.Default.Save();
         }
 
         /// <summary>

@@ -64,7 +64,6 @@ namespace Common
                 {
                     requiredLabels.Add(commands[i].Argument);
                 }
-
                 try
                 {
                     ValidateCommand(commands[i]);
