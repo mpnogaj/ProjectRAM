@@ -276,6 +276,10 @@ namespace RAMEditor.Logic
                     _tokenSource.Cancel();
                 }
             }
+            finally
+            {
+                parent.IsProgramRunning = false;
+            }
         }
 
         private static void Verify_Click(object sender, RoutedEventArgs e)

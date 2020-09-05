@@ -1,4 +1,5 @@
 ﻿using Common;
+using RAMEditor.Logic;
 using RAMEditor.Properties;
 using System;
 using System.Collections.ObjectModel;
@@ -28,25 +29,40 @@ namespace RAMEditor.CustomControls
                 }
             }
         }
+
+        private bool _isProgramRunning;
+        public bool IsProgramRunning
+        {
+            get => _isProgramRunning;
+            set
+            {
+                _isProgramRunning = value;
+                var mw = Logic.Logic.GetMainWindow();
+                mw.runBtn.IsEnabled = !value;
+                mw.verifyBtn.IsEnabled = !value;
+                mw.stopBtn.IsEnabled = value;
+                mw.runMi.IsEnabled = !value;
+                mw.verifyMi.IsEnabled = !value;
+                mw.stopMi.IsEnabled = value;
+            }
+        }
+
         public Host()
         {
             InitializeComponent();
-            if (Settings.Default.TextEditor)
-            {
-                Code.Visibility = Visibility.Visible;
-                SimpleEditor.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                Code.Visibility = Visibility.Collapsed;
-                SimpleEditor.Visibility = Visibility.Visible;
-            }
+            BasicSetup();
         }
 
         public Host(string path)
         {
             InitializeComponent();
             CodeFilePath = path;
+            BasicSetup();
+            FillWithCode();
+        }
+
+        private void BasicSetup()
+        {
             if (Settings.Default.TextEditor)
             {
                 Code.Visibility = Visibility.Visible;
@@ -57,7 +73,7 @@ namespace RAMEditor.CustomControls
                 Code.Visibility = Visibility.Collapsed;
                 SimpleEditor.Visibility = Visibility.Visible;
             }
-            FillWithCode();
+            IsProgramRunning = false;
         }
 
         private void FillWithCode()

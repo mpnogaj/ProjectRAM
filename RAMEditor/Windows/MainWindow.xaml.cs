@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RAMEditor.CustomControls;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -47,6 +48,44 @@ namespace RAMEditor.Windows
             {
                 mainPanelBorder.Margin = new Thickness();
             }
+        }
+
+        private void Files_Drop(object sender, DragEventArgs e)
+        {
+            if(e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                foreach (string file in files)
+                { 
+                    Logic.Logic.CreateTabPage(Path.GetFileNameWithoutExtension(file), file);
+                }
+            }
+        }
+
+        private void Files_OnDragOver(object sender, DragEventArgs e)
+        {
+            bool dropEnabled = true;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                foreach (string file in files)
+                {
+                    if (Path.GetExtension(file) != ".RAMCode")
+                    {
+                        dropEnabled = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                dropEnabled = false;
+            }
+
+            if (dropEnabled) return;
+            e.Effects = DragDropEffects.None;
+            e.Handled = true;
         }
     }
 }

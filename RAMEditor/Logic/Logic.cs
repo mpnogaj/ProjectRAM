@@ -313,6 +313,7 @@ namespace RAMEditor.Logic
                 parent.FixInputTapeFormat();
                 parent.OutputTape.Text = string.Empty;
                 parent.Memory.Children.Clear();
+                parent.IsProgramRunning = true;
                 if (bUsingTextEditor())
                 {
                     commands = Creator.CreateCommandList(parent.GetText());
@@ -321,7 +322,6 @@ namespace RAMEditor.Logic
                 {
                     commands = new List<Command>(parent.SimpleEditor.Lines);
                 }
-                var arry = parent.InputTape.Text.Split(' ');
                 input = Creator.CreateInputTapeFromString(parent.InputTape.Text);
             });
 

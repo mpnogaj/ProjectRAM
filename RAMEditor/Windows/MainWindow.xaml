@@ -68,22 +68,23 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{StaticResource program}" Style="{StaticResource FileDependent}">
-                <MenuItem Header="{StaticResource verifyProgram}" Click="{x:Static logic:ButtonLogic.VerifyClick}">
+                <MenuItem x:Name="verifyMi" Header="{StaticResource verifyProgram}" Click="{x:Static logic:ButtonLogic.VerifyClick}">
                     <MenuItem.Icon>
                         <Image Source="../Resources/Images/verify.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                    <Separator/>
-                <MenuItem Header="{StaticResource runProgram}" Click="{x:Static logic:ButtonLogic.RunClick}">
+                <Separator/>
+                <MenuItem x:Name="runMi" Header="{StaticResource runProgram}" Click="{x:Static logic:ButtonLogic.RunClick}">
                     <MenuItem.Icon>
                         <Image Source="../Resources/Images/run.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{StaticResource stopProgram}" Click="{x:Static logic:ButtonLogic.CancelClick}">
+                <MenuItem x:Name="stopMi" Header="{StaticResource stopProgram}" Click="{x:Static logic:ButtonLogic.CancelClick}">
                     <MenuItem.Icon>
                         <Image Source="../Resources/Images/stop2.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <Separator/>
                 <MenuItem Header="{StaticResource printProgram}" Click="{x:Static logic:ButtonLogic.PrintClick}">
                     <MenuItem.Icon>
                         <Image Source="../Resources/Images/print.png"/>
@@ -183,20 +184,19 @@
                 <Image Source="../Resources/Images/switch.png"/>
             </Button>
             <Separator/>
-            <Button Click="{x:Static logic:ButtonLogic.VerifyClick}" Style="{StaticResource FileDependentBtn}">
+            <Button x:Name="verifyBtn" Click="{x:Static logic:ButtonLogic.VerifyClick}" Style="{StaticResource FileDependentBtn}">
                 <Image Source="../Resources/Images/verify.png"/>
             </Button>
             <Separator/>
-            <Button Click="{x:Static logic:ButtonLogic.RunClick}" Style="{StaticResource FileDependentBtn}">
+            <Button x:Name="runBtn" Click="{x:Static logic:ButtonLogic.RunClick}" Style="{StaticResource FileDependentBtn}">
                 <Image Source="../Resources/Images/run.png"/>
             </Button>
-            <!-- zmienić nazwe eventu -->
-            <Button Click="{x:Static logic:ButtonLogic.CancelClick}" Style="{StaticResource FileDependentBtn}">
+            <Button x:Name="stopBtn" Click="{x:Static logic:ButtonLogic.CancelClick}" Style="{StaticResource FileDependentBtn}">
                 <Image Source="../Resources/Images/stop2.png"/>
             </Button>
         </ToolBar>
         <Grid Margin="10, 0, 10, 10">
-            <TabControl x:Name="Files" DockPanel.Dock="Top" Background="{Binding Source={x:Static properties:Settings.Default}, Path=TCBackground}"/>
+            <TabControl x:Name="Files" DockPanel.Dock="Top" Background="{Binding Source={x:Static properties:Settings.Default}, Path=TCBackground}" AllowDrop="True" DragOver="Files_OnDragOver" Drop="Files_Drop"/>
         </Grid>
 
     </DockPanel>

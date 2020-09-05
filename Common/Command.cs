@@ -291,20 +291,6 @@ namespace Common
                 }
             }
         }
-        #endregion
-
-        #region Interface implementation
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void RaisePropertyChangedEvent(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
-                PropertyChanged(this, e);
-            }
-        }
-        #endregion
 
         public override string ToString()
         {
@@ -324,5 +310,19 @@ namespace Common
             }
             return outcome;
         }
+        #endregion
+
+        #region Interface implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChangedEvent(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                PropertyChanged(this, e);
+            }
+        }
+        #endregion
     }
 }
