@@ -1,5 +1,4 @@
-﻿using RAMEditor.CustomControls;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -17,7 +16,7 @@ namespace RAMEditor.Windows
             InitializeComponent();
             var args = Environment.GetCommandLineArgs();
             var userArgs = args.Skip(1);
-            if (userArgs == null || userArgs.Count() < 1)
+            if (!userArgs.Any())
             {
                 Logic.Logic.CreateTabPage("NEW RAMCode");
             }
@@ -52,11 +51,11 @@ namespace RAMEditor.Windows
 
         private void Files_Drop(object sender, DragEventArgs e)
         {
-            if(e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (string file in files)
-                { 
+                {
                     Logic.Logic.CreateTabPage(Path.GetFileNameWithoutExtension(file), file);
                 }
             }

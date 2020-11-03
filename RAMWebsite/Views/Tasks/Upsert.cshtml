@@ -1,0 +1,88 @@
+﻿@model RAMWebsite.Models.Task
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Task</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Upsert" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Code" class="control-label"></label>
+                <input asp-for="Code" class="form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <br>
+                <textarea rows="15" asp-for="Description" class="form-control z-depth-1"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input" class="control-label"></label>
+                <br>
+                <textarea rows="10" asp-for="Input" class="form-control z-depth-1"></textarea>
+                <span asp-validation-for="Input" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Output" class="control-label"></label>
+                <br>
+                <textarea rows="10" asp-for="Output" class="form-control z-depth-1"></textarea>
+                <span asp-validation-for="Output" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExampleInput" class="control-label"></label>
+                <br>
+                <textarea rows="10" asp-for="ExampleInput" class="form-control z-depth-1"></textarea>
+                <span asp-validation-for="ExampleInput" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExampleOutput" class="control-label"></label>
+                <br>
+                <textarea rows="10" asp-for="ExampleOutput" class="form-control z-depth-1"></textarea>
+                <span asp-validation-for="ExampleOutput" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InputFiles" class="control-label"></label>
+                <br>
+                <input type="file" asp-for="InputFiles" accept=".in" class="form-control-file" multiple />
+                <span asp-validation-for="InputFiles" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OutputFiles" class="control-label"></label>
+                <br>
+                <input type="file" asp-for="OutputFiles" accept=".out" class="form-control-file" multiple />
+                <span asp-validation-for="OutputFiles" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">@Model.Id == 0 : Create ? Update</button>
+                @if (Model.Id == 0)
+                {
+                    <button type="submit" class="btn btn-primary">Create</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary">Update</button>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

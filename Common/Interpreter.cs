@@ -56,13 +56,8 @@ namespace Common
         /// <returns>Taśmę wyjścia, pamięć</returns>
         public static Tuple<Queue<string>, Dictionary<string, string>> RunCommands(List<Command> commands, Queue<string> inputTape, CancellationToken token)
         {
-            //Syf panie, syf
-            //Przeorganizować to kiedyś
-
             Dictionary<string, string> memory = new Dictionary<string, string>();
-            //akumulator
             memory.Add("0", string.Empty);
-            //Taśma wyjścia
             Queue<string> outputTape = new Queue<string>();
             for (int i = 0; i < commands.Count; i++)
             {
@@ -91,7 +86,7 @@ namespace Common
             bool exists;
             BigInteger value;
             //argument
-            command.ArgumentType = Command.GetArgumentType(command.CommandType, command.Argument);
+            command.ArgumentType = Command.GetArgumentType(command.Argument);
             string arg = command.Argument;
             if (command.ArgumentType == ArgumentType.Const || command.ArgumentType == ArgumentType.IndirectAddress)
             {
@@ -265,7 +260,7 @@ namespace Common
                     value = BigInteger.Parse(GetValue(command, arg, memory));
 
                     memory["0"] = BigInteger
-                        .Add(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(command.Line)), value).ToString();
+                        .Add(BigInteger.Parse(memory["0"] ?? throw new AccumulatorEmptyException(command.Line)), value).ToString();
                     break;
                 case CommandType.Sub:
 
@@ -281,7 +276,7 @@ namespace Common
                     value = BigInteger.Parse(GetValue(command, arg, memory));
 
                     memory["0"] = BigInteger
-                        .Subtract(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(command.Line)), value).ToString();
+                        .Subtract(BigInteger.Parse(memory["0"] ?? throw new AccumulatorEmptyException(command.Line)), value).ToString();
                     break;
                 case CommandType.Mult:
 
@@ -297,7 +292,7 @@ namespace Common
                     value = BigInteger.Parse(GetValue(command, arg, memory));
 
                     memory["0"] = BigInteger
-                        .Multiply(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(command.Line)), value).ToString();
+                        .Multiply(BigInteger.Parse(memory["0"] ?? throw new AccumulatorEmptyException(command.Line)), value).ToString();
                     break;
                 case CommandType.Div:
 
@@ -313,7 +308,7 @@ namespace Common
                     value = BigInteger.Parse(GetValue(command, arg, memory));
 
                     memory["0"] = BigInteger
-                        .Divide(BigInteger.Parse(memory["0"] ?? throw new AcumulatorEmptyException(command.Line)), value).ToString();
+                        .Divide(BigInteger.Parse(memory["0"] ?? throw new AccumulatorEmptyException(command.Line)), value).ToString();
                     break;
             }
             return false;

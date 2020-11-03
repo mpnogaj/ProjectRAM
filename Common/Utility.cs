@@ -35,7 +35,6 @@ namespace Common
     public enum ArgumentType
     {
         Null,
-        None,
         Label,
         DirectAddress,
         IndirectAddress,

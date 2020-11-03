@@ -8,8 +8,8 @@
 
   <Identity
     Name="d60517df-2432-4c6c-bf13-57d70ea6e84a"
-    Publisher="CN=Marcin"
-    Version="1.0.0.0" />
+    Publisher="CN=Marcin Nogaj"
+    Version="1.0.4.0" />
 
   <Properties>
     <DisplayName>RAM Editor</DisplayName>
@@ -33,10 +33,15 @@
       <uap:VisualElements
         DisplayName="RAM Editor"
         Description="RAMEditorSetup"
-        BackgroundColor="transparent"
+        BackgroundColor="black"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png"/>
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png" ShortName="RAM Editor">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+            <uap:ShowOn Tile="square310x310Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile >
         <uap:SplashScreen Image="Images\SplashScreen.png" />
         <uap:LockScreen BadgeLogo="Images\BadgeLogo.png" Notification="badge"/>
         <uap:InitialRotationPreference>
@@ -47,7 +52,7 @@
   </Applications>
 
   <Capabilities>
-    <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
+    <Capability Name="internetClient"/>
   </Capabilities>
 </Package>

@@ -18,7 +18,19 @@ namespace Common
 
         private static void ValidateCommand(Command c)
         {
-            if ((c.Argument == string.Empty && c.CommandType != CommandType.Halt) || c.CommandType == CommandType.Unknown)
+            //linia pusta ale poprawna
+            if(c.CommandType == CommandType.Null && c.ArgumentType == ArgumentType.Null)
+            {
+                return;
+            }
+
+            if(c.CommandType == CommandType.Unknown)
+            {
+                throw new UnknownCommandTypeException(c.Line);
+            }
+
+            if ((c.ArgumentType == ArgumentType.Null && c.CommandType != CommandType.Halt) ||
+                c.ArgumentType != ArgumentType.Null && c.CommandType == CommandType.Null)
             {
                 throw new LineIsEmptyException(c.Line);
             }
@@ -26,7 +38,7 @@ namespace Common
             CommandType t = c.CommandType;
             if (t == CommandType.Halt)
             {
-                if (c.ArgumentType != ArgumentType.None)
+                if (c.ArgumentType != ArgumentType.Null)
                 {
                     throw new ArgumentIsNotValidException(c.Line);
                 }
@@ -47,7 +59,7 @@ namespace Common
             }
             else
             {
-                if (c.ArgumentType == ArgumentType.Label || c.ArgumentType == ArgumentType.None)
+                if (c.ArgumentType == ArgumentType.Label || c.ArgumentType == ArgumentType.Null)
                 {
                     throw new ArgumentIsNotValidException(c.Line);
                 }

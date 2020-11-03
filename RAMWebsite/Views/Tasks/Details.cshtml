@@ -1,0 +1,59 @@
+﻿@model RAMWebsite.Models.Task
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Html.DisplayFor(model => model.Code) - @Html.DisplayFor(model => model.Name)</h1>
+
+<hr>
+
+<div>
+    <p>@Html.DisplayFor(model => model.Description)</p>
+
+    <h3>@Html.DisplayNameFor(model => model.Input)</h3>
+    <p>@Html.DisplayFor(model => model.Input)</p>
+
+    <h3>@Html.DisplayNameFor(model => model.Output)</h3>
+    <p>@Html.DisplayFor(model => model.Output)</p>
+
+    <h3>Example</h3>
+    <pre class="bg-light border-left border-secondary p-2">
+<strong>Input:</strong>
+@Html.DisplayFor(model => model.ExampleInput)
+<strong>Output:</strong>
+@Html.DisplayFor(model => model.ExampleOutput)</pre>
+    <div class="text-center">
+        <a class="btn btn-primary btn-lg text-light" data-toggle="modal" data-target="#wyslijRozwiazanie">
+            Wyślij rozwiązanie!
+        </a>
+    </div>
+</div>
+<div>
+    <a asp-action="Upsert" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<div class="modal" id="wyslijRozwiazanie" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Wyślij rozwiązanie</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form asp-action="Submit" asp-route-id="@Model.Id" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <textarea class="form-control mb-2" rows="10" placeholder="Tutaj wklej kod źródłowy..." name="code"></textarea>
+                    ...lub wybierz plik
+                    <input class="form-control-file mt-2" type="file" accept=".RAMCode" name="file"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Wyślij</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

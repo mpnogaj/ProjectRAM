@@ -37,13 +37,16 @@ namespace RAMEditor.CustomControls
             set
             {
                 _isProgramRunning = value;
+                if(value)
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
+                }
+                else
+                {
+                    Mouse.OverrideCursor = null;
+                }
                 var mw = Logic.Logic.GetMainWindow();
-                mw.runBtn.IsEnabled = !value;
-                mw.verifyBtn.IsEnabled = !value;
-                mw.stopBtn.IsEnabled = value;
-                mw.runMi.IsEnabled = !value;
-                mw.verifyMi.IsEnabled = !value;
-                mw.stopMi.IsEnabled = value;
+                this.InputTape.IsEnabled = !value;
             }
         }
 
@@ -103,14 +106,7 @@ namespace RAMEditor.CustomControls
 
         private void Code_KeyDown(object sender, KeyEventArgs e)
         {
-            if ((e.Key == Key.Add || e.Key == Key.OemPlus) && Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                Logic.Logic.ChangeZoom(1);
-            }
-            else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                Logic.Logic.ChangeZoom(-1);
-            }
+            MessageBox.Show(e.Key.ToString());
         }
 
         public StringCollection GetText()

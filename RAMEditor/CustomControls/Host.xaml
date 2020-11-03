@@ -141,10 +141,8 @@
                     AcceptsTab="True" 
                     DockPanel.Dock="Top"
                     Visibility="Collapsed"
-                    VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                    KeyDown="Code_KeyDown"/>
+                    VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
             </DockPanel>
-            
             <!--Output tape-->
             <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Top" Margin="0, 15, 0, 0">
                 <TextBox 

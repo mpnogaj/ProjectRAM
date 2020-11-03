@@ -123,12 +123,13 @@ namespace RAMEditor.Logic
         /// <param name="header">Tab's header</param>
         public static void CreateTabPage(string header)
         {
-            MenuItem menuItemToAdd = new MenuItem { Header = "Close" };
+            MenuItem menuItemToAdd = new MenuItem { Header = "Close", InputGestureText = "Ctrl+W"};
             menuItemToAdd.Click += ButtonLogic.CloseTabClick;
             ContextMenu contextMenu = new ContextMenu();
             contextMenu.Items.Add(menuItemToAdd);
 
-            GetMainWindow().Files.Items.Add(new TabItem
+            TabControl tc = GetMainWindow().Files;
+            tc.Items.Add(new TabItem
             {
                 Header = new ContentControl
                 {
@@ -137,6 +138,11 @@ namespace RAMEditor.Logic
                 },
                 Content = new Host()
             });
+
+            if (tc.SelectedItem == null)
+            {
+                tc.SelectedIndex = 0;
+            }
         }
 
         /// <summary>
@@ -150,7 +156,8 @@ namespace RAMEditor.Logic
             menuItemToAdd.Click += ButtonLogic.CloseTabClick;
             ContextMenu contextMenu = new ContextMenu();
             contextMenu.Items.Add(menuItemToAdd);
-            GetMainWindow().Files.Items.Add(new TabItem
+            TabControl tc = GetMainWindow().Files;
+            tc.Items.Add(new TabItem
             {
                 Header = new ContentControl
                 {
@@ -159,6 +166,10 @@ namespace RAMEditor.Logic
                 },
                 Content = new Host(filePath)
             });
+            if (tc.SelectedItem == null)
+            {
+                tc.SelectedIndex = 0;
+            }
         }
 
         /// <summary>
@@ -188,7 +199,7 @@ namespace RAMEditor.Logic
         {
             if (bUsingTextEditor())
             {
-                if (Settings.Default.TBFontSize > 1 && offset >= 0)
+                if (Settings.Default.TBFontSize > 1 || offset >= 0)
                 {
                     Settings.Default.TBFontSize += offset;
                 }
@@ -235,6 +246,12 @@ namespace RAMEditor.Logic
         {
             TabControl tc = tb.Parent as TabControl;
             ((TabControl)tb.Parent).Items.Remove(tb);
+        }
+
+        public static void CloseTab()
+        {
+            TabControl tc = GetMainWindow().Files;
+            tc.Items.Remove(tc.SelectedItem);
         }
 
         /// <summary>

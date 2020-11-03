@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Common
 {
     /// <summary>
-    /// Klasa reprezentująca komendę
+    /// Class whitch represents single command
     /// </summary>
     public class Command : INotifyPropertyChanged
     {
@@ -21,6 +21,9 @@ namespace Common
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Type of argument
+        /// </summary>
         public ArgumentType ArgumentType
         {
             get { return _argumentType; }
@@ -31,6 +34,9 @@ namespace Common
             }
         }
 
+        /// <summary>
+        /// Type of command
+        /// </summary>
         public CommandType CommandType
         {
             get { return _commandType; }
@@ -41,6 +47,9 @@ namespace Common
             }
         }
 
+        /// <summary>
+        /// Command
+        /// </summary>
         public string CommandName
         {
             get { return _command; }
@@ -49,7 +58,8 @@ namespace Common
                 _command = value;
                 if (_command != null && _command != string.Empty)
                 {
-                    object type;
+                    CommandType = GetCommandType(value);
+                    /*object type;
                     if (Enum.TryParse(typeof(CommandType), _command, true, out type))
                     {
                         CommandType = (CommandType)type;
@@ -57,7 +67,7 @@ namespace Common
                     else
                     {
                         CommandType = CommandType.Unknown;
-                    }
+                    }*/
                     //CommandType = (CommandType)Enum.Parse(typeof(CommandType), _command, true);
                 }
 
@@ -65,6 +75,9 @@ namespace Common
             }
         }
 
+        /// <summary>
+        /// Argument
+        /// </summary>
         public string Argument
         {
             get { return _argument; }
@@ -74,11 +87,15 @@ namespace Common
                 if(_argument != null && _argument != string.Empty)
                 {
                     _argument = Regex.Replace(_argument, @"#|\s", "");
+                    ArgumentType = GetArgumentType(_argument);
                 }
                 RaisePropertyChangedEvent(nameof(Argument));
             }
         }
 
+        /// <summary>
+        /// Label
+        /// </summary>
         public string Label
         {
             get { return _label; }
@@ -93,6 +110,9 @@ namespace Common
             }
         }
 
+        /// <summary>
+        /// Comment
+        /// </summary>
         public string Comment
         {
             get { return _comment; }
@@ -103,6 +123,9 @@ namespace Common
             }
         }
 
+        /// <summary>
+        /// Line number
+        /// </summary>
         public long Line
         {
             get { return _line; }
@@ -115,52 +138,40 @@ namespace Common
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Creates empty command
+        /// </summary>
         public Command()
         {
-            this.ArgumentType = ArgumentType.Null;
-            this.CommandType = CommandType.Null;
-            this.CommandName = string.Empty;
             this.Argument = string.Empty;
-            this.Label = string.Empty;
+            this.ArgumentType = ArgumentType.Null;
+            this.CommandName = string.Empty;
+            this.CommandType = CommandType.Null;
             this.Comment = string.Empty;
+            this.Label = string.Empty;      
         }
 
-        public Command(string t, string a, string l, string c)
+        /// <summary>
+        /// Creates command from given arguments, without line
+        /// </summary>
+        /// <param name="command">Command</param>
+        /// <param name="argument">Argument</param>
+        /// <param name="label">Label</param>
+        /// <param name="comment">Comment</param>
+        public Command(string command, string argument, string label, string comment)
         {
-            this.CommandName = t;
-            this.Argument = a;
-            this.Label = l;
-            this.Comment = c;
-
-            if (this.CommandType == CommandType.Halt)
-            {
-                this.ArgumentType = ArgumentType.None;
-            }
-            else
-            {
-                BigInteger b;
-                if (!BigInteger.TryParse(a, out b))
-                {
-                    if (a.StartsWith('^'))
-                    {
-                        this.ArgumentType = ArgumentType.IndirectAddress;
-                    }
-                    else if (a.StartsWith('='))
-                    {
-                        this.ArgumentType = ArgumentType.Const;
-                    }
-                    else
-                    {
-                        this.ArgumentType = ArgumentType.Label;
-                    }
-                }
-                else
-                {
-                    this.ArgumentType = ArgumentType.DirectAddress;
-                }
-            }
+            this.CommandName = command;
+            this.Argument = argument;
+            this.Label = label;
+            this.Comment = comment;
+            this.ArgumentType = GetArgumentType(Argument);
         }
 
+        /// <summary>
+        /// Creates command from line. Requires line number
+        /// </summary>
+        /// <param name="line">Line</param>
+        /// <param name="lineNumber">Line number</param>
         public Command(string line, long lineNumber)
         {
             line = Regex.Replace(line, @"\s+", " ");
@@ -169,7 +180,11 @@ namespace Common
             int i = 0;
 
             Line = lineNumber;
-
+            Label = string.Empty;
+            CommandName = string.Empty;
+            Argument = string.Empty;
+            ArgumentType = ArgumentType.Null;
+            Comment = string.Empty;
             try
             {
                 if (!words[i].StartsWith("#"))
@@ -179,10 +194,6 @@ namespace Common
                         Label = words[i++];
                         Label = Label.Substring(0, Label.Length - 1);
                     }
-                    else
-                    {
-                        Label = string.Empty;
-                    }
 
                     if (!int.TryParse(words[i], out _))
                     {
@@ -191,8 +202,7 @@ namespace Common
 
                     if (CommandType == CommandType.Halt)
                     {
-                        Argument = string.Empty;
-                        ArgumentType = ArgumentType.None;
+                        ArgumentType = ArgumentType.Null;
                     }
                     else if (CommandType == CommandType.Unknown)
                     {
@@ -212,10 +222,13 @@ namespace Common
                             return;
                         }
                         Argument = Regex.Replace(words[i++], @"\t|\n|\r", "");
-                        ArgumentType = GetArgumentType(CommandType, Argument);
+                        ArgumentType = GetArgumentType(Argument);
                     }
                 }
-                Comment = Regex.Replace(String.Join(' ', words, i, words.Length - i), @"\t|\n|\r|#", "");
+                if (words.Length - 1 > 0)
+                {
+                    Comment = Regex.Replace(String.Join(' ', words, i, words.Length - i), @"\t|\n|\r|#", "");
+                }
             }
             catch
             {
@@ -225,6 +238,11 @@ namespace Common
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Get type of command
+        /// </summary>
+        /// <param name="command">Command text</param>
+        /// <returns>Command type</returns>
         public static CommandType GetCommandType(string command)
         {
             switch (command.ToUpper())
@@ -258,40 +276,42 @@ namespace Common
             }
         }
 
-        public static ArgumentType GetArgumentType(CommandType command, string argument)
+        /// <summary>
+        /// Get type of argument
+        /// </summary>
+        /// <param name="argument">Argument text</param>
+        /// <returns></returns>
+        public static ArgumentType GetArgumentType(string argument)
         {
-            if (command == CommandType.Halt)
+            if (String.IsNullOrWhiteSpace(argument))
             {
-                return ArgumentType.None;
+                return ArgumentType.Null;
             }
-            else
+            if (!BigInteger.TryParse(argument, out _))
             {
-                if (String.IsNullOrWhiteSpace(argument))
+                if (argument.StartsWith('^'))
                 {
-                    return ArgumentType.Null;
+                    return ArgumentType.IndirectAddress;
                 }
-                if (!BigInteger.TryParse(argument, out _))
+                else if (argument.StartsWith('='))
                 {
-                    if (argument.StartsWith('^'))
-                    {
-                        return ArgumentType.IndirectAddress;
-                    }
-                    else if (argument.StartsWith('='))
-                    {
-                        return ArgumentType.Const;
-                    }
-                    else
-                    {
-                        return ArgumentType.Label;
-                    }
+                    return ArgumentType.Const;
                 }
                 else
                 {
-                    return ArgumentType.DirectAddress;
+                    return ArgumentType.Label;
                 }
+            }
+            else
+            {
+                return ArgumentType.DirectAddress;
             }
         }
 
+        /// <summary>
+        /// ToString() method override
+        /// </summary>
+        /// <returns>{label}: {command} {argument} #{comment}</returns>
         public override string ToString()
         {
             string outcome = string.Empty;
