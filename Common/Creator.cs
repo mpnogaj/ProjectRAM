@@ -99,5 +99,20 @@ namespace Common
 
             return new Queue<string>(line.Split(' '));
         }
+
+        /// <summary>
+        /// Create output tape string from given string queue
+        /// </summary>
+        /// <param name="tape">Output tape</param>
+        /// <returns>String representation of output tape</returns>
+        public static string CreateOutputTapeFromQueue(Queue<string> tape)
+        {
+            string outputTape = "";
+            while(tape.Count > 0)
+            {
+                outputTape += $"{tape.Dequeue()} ";
+            }
+            return outputTape.Trim();
+        }
     }
 }

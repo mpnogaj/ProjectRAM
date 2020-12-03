@@ -35,5 +35,8 @@ namespace RAMWebsite.Models
 
         [Required(ErrorMessage = "To pole jest wymagane")]
         public override string Email { get; set; }
+
+        [ForeignKey("TaskId")]
+        public virtual ICollection<UserInTask> SolvedTasks { get; set; }
     }
 }

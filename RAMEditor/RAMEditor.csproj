@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationIcon>sharpIcon.ico</ApplicationIcon>
+    <ApplicationIcon></ApplicationIcon>
     <AssemblyName>RAM Editor</AssemblyName>
   </PropertyGroup>
 
@@ -37,6 +37,7 @@
     <None Remove="Resources\Images\verify.png" />
     <None Remove="Resources\Images\zoomIn.png" />
     <None Remove="Resources\Images\zoomOut.png" />
+    <None Remove="sharpIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -77,6 +78,7 @@
     <Resource Include="Resources\Images\verify.png" />
     <Resource Include="Resources\Images\zoomIn.png" />
     <Resource Include="Resources\Images\zoomOut.png" />
+    <Resource Include="sharpIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>

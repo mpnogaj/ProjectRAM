@@ -12,16 +12,23 @@ using RAMWebsite.Helpers;
 using Common;
 using System.Runtime.InteropServices;
 using System.Collections.Specialized;
+using Microsoft.AspNetCore.Identity;
 
 namespace RAMWebsite.Controllers
 {
     public class TasksController : Controller
     {
         private readonly AppDbContext _appDbContext;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         public TasksController(
-            AppDbContext appDbContext)
+            AppDbContext appDbContext, 
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _appDbContext = appDbContext;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -29,10 +36,10 @@ namespace RAMWebsite.Controllers
             return View(_appDbContext.Tasks);
         }
 
-        public async Task<IActionResult> Upsert(int? id)
+        public async Task<IActionResult> Upsert(string id)
         {
             Models.Task md = new Models.Task();
-            if (id.HasValue)
+            if (!String.IsNullOrEmpty(id))
             {
                 md = await _appDbContext.Tasks.FirstOrDefaultAsync(t => t.Id == id);
             }
@@ -40,18 +47,34 @@ namespace RAMWebsite.Controllers
             return View(md);
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(string id)
         {
             Models.Task md = await _appDbContext.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+            if (User.Identity.IsAuthenticated)
+            {
+                User u = await _userManager.GetUserAsync(User);
+                ViewData["Submissions"] = await _appDbContext.Reports
+                    .Where(report => report.Task == md && report.AuthorId == u.Id)
+                    .ToListAsync();
+            }
+            if (ViewData["Submissions"] == null) ViewData["Submissions"] = new List<Report>();
             return View(md);
+        }
+        
+        public async Task<IActionResult> Report(string id)
+        {
+            Report report = await _appDbContext.Reports.FirstOrDefaultAsync(r => r.Id == id);
+            report.ReportRows = await _appDbContext.ReportRows.Where(rr => rr.ReportId == report.Id).ToListAsync();
+            return View(report);
         }
 
         [HttpPost]
         public async Task<IActionResult> Upsert(Models.Task t)
         {
-            if (t.InputFiles != null && t.Id == 0)
+            if (t.InputFiles != null)
             {
                 List<Test> tests = new List<Test>();
+                
                 if (t.InputFiles.Count != t.OutputFiles.Count)
                 {
                     //dupa
@@ -71,14 +94,18 @@ namespace RAMWebsite.Controllers
 
                 t.Tests = tests;
             }
-            else
+            else if(t.Id == null)
             {
-                //Dupa
+                //Wywal sie
             }
 
-            if (t.Id != 0)
+            if (t.Id != null)
             {
                 _appDbContext.Tasks.Update(t);
+                if (t.InputFiles != null)
+                {
+                    _appDbContext.Tests.RemoveRange(_appDbContext.Tests.Where(test => test.TaskId == t.Id));
+                }
             }
             else
             {
@@ -89,7 +116,7 @@ namespace RAMWebsite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Submit(int id, string code, IFormFile file)
+        public async Task<IActionResult> Submit(string id, string code, IFormFile file)
         {
             StringCollection sc;
             if(file == null)
@@ -105,13 +132,79 @@ namespace RAMWebsite.Controllers
                 sc = Converter.IFormFileToStringCollection(file);
             }
             List<Command> CommandList = Creator.CreateCommandList(sc);
-            Models.Task t = await _appDbContext.Tasks.FirstOrDefaultAsync(t => t.Id == id);
-            foreach (Test test in t.Tests)
+            Models.Task task = await _appDbContext.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+            List<Test> tests = await _appDbContext.Tests.Where(t => t.TaskId == task.Id).ToListAsync();
+            bool taskSolved = true;
+            Report report = new Report
             {
-                //Dla karzdego testu zasymyluj działanie programu
+                Task = task,
+                ReportRows = new List<ReportRow>(),
+                SubmitionDate = DateTime.Now,
+                AuthorId = (await _userManager.GetUserAsync(this.User)).Id
+            };
+            foreach (Test test in tests)
+            {
+                //Nie wiem czy działa
+                //***
+                var token = new System.Threading.CancellationToken();
+                var t = System.Threading.Tasks.Task.Run(() => 
+                    Interpreter.RunCommands(CommandList, 
+                    Creator.CreateInputTapeFromString(test.Input), 
+                    token));
+                t.Wait(5000);
+                //***
+                if(t.Result == null)
+                {
+                    //niezaliczony
+                    taskSolved = false;
+                    report.ReportRows.Add(new ReportRow
+                    {
+                        Passed = false,
+                        ExpectedOutput = test.Output,
+                        GivenOutput = ""
+                    });
+                }
+                else
+                {
+                    string tape = Creator.CreateOutputTapeFromQueue(t.Result.Item1);
+                    if(tape == test.Output)
+                    {
+                        report.ReportRows.Add(new ReportRow
+                        {
+                            Passed = true,
+                        });
+                    }
+                    else
+                    {
+                        report.ReportRows.Add(new ReportRow
+                        {
+                            Passed = false,
+                            ExpectedOutput = test.Output,
+                            GivenOutput = tape
+                        });
+                        taskSolved = false;
+                    }
+                    
+                }
             }
+            report.Passed = taskSolved;
+            await _appDbContext.Reports.AddAsync(report);
+            User user = await _userManager.GetUserAsync(User);
+            if(taskSolved == true && !task.SolvedBy.Where(u => u.User == user).Any())
+            {
+                task.SolvedNumber++;
+                task.SolvedBy.Add(new UserInTask
+                {
+                    Task = task,
+                    TaskId = task.Id,
+                    User = user,
+                    UserId = user.Id
+                });
+                _appDbContext.Tasks.Update(task);
+            }
+            await _appDbContext.SaveChangesAsync();
             //Wygeneruj raport
-            return RedirectToAction("");
+            return RedirectToAction("Report", new { id = report.Id });
         }
     }
 }

@@ -56,7 +56,6 @@ namespace RAMWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(User u)
         {
-
             var res = await _userManager.CreateAsync(u, u.Password);
 
             if(res.Succeeded)

@@ -65,8 +65,7 @@
                 <span asp-validation-for="OutputFiles" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">@Model.Id == 0 : Create ? Update</button>
-                @if (Model.Id == 0)
+                @if (Model.Id == null)
                 {
                     <button type="submit" class="btn btn-primary">Create</button>
                 }

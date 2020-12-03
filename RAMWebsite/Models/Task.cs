@@ -15,7 +15,8 @@ namespace RAMWebsite.Models
         //Auto increment
         [Key]
         [Required]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
 
         [Required]
         [DisplayName("Kod zadania")]
@@ -60,6 +61,9 @@ namespace RAMWebsite.Models
         public int SolvedNumber { get; set; }
 
         [Required]
-        public ICollection<Test> Tests { get; set; }
+        public virtual ICollection<Test> Tests { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual ICollection<UserInTask> SolvedBy { get; set; }
     }
 }

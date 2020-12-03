@@ -1,0 +1,37 @@
+﻿@{ const string DOWNLOAD_FOLDER = "wwwroot/downloads";}
+<h1>Pobierz</h1>
+<hr />
+<h3>Windows</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Plik</th>
+            <th>Data</th>
+            <th>Rozmiar pliku</th>
+            <th>Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (string file in System.IO.Directory.GetFiles($"{DOWNLOAD_FOLDER}/win/"))
+            {
+                System.IO.FileInfo f = new System.IO.FileInfo(file);
+                DateTime creationTime = System.IO.File.GetCreationTime(file);
+                <tr>
+                    <th class="align-middle">@f.Name</th>
+                    <th class="align-middle">
+                        @Html.Raw($"{creationTime.Day}.{creationTime.Month}.{creationTime.Year}")
+                    </th>
+                    <th class="align-middle">
+                        @Html.Raw(f.Length / 1000.0) kb
+                    </th>
+                    <th class="align-middle">
+                        <a class="btn btn-primary" asp-action="DownloadItem" asp-route-fileName="@file">
+                            Pobierz
+                        </a>
+                    </th>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

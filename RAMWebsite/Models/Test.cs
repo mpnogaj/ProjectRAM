@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +11,13 @@ namespace RAMWebsite.Models
     {
         [Required]
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
+
+        [ForeignKey("Task")]
+        public string TaskId { get; set; }
+
+        public virtual Task Task { get; set; }
 
         [Required]
         //Numer testu

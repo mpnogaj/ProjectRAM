@@ -12,11 +12,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RAMWebsite.Models;
 using RAMWebsite.Data;
+using Microsoft.Extensions.Primitives;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Sqlite;
 
 namespace RAMWebsite
 {
     public class Startup
     {
+        const string CONNECTION = "DefaultConnection";
+
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,16 +33,21 @@ namespace RAMWebsite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UserDbContext>(config =>
+            /*services.AddDbContext<UserDbContext>(config =>
             {
-                config.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-                //config.UseSqlServer(Configuration.GetConnectionString("LaptopConnection"));
+                config.UseSqlServer(Configuration.GetConnectionString(CONNECTION));
             });
 
             services.AddDbContext<AppDbContext>(config =>
             {
-                config.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-                //config.UseSqlServer(Configuration.GetConnectionString("LaptopConnection"));
+                config.UseSqlServer(Configuration.GetConnectionString(CONNECTION));
+            });*/
+
+            services.AddDbContext<AppDbContext>(config =>
+            {
+                config
+                .UseSqlite(Configuration.GetConnectionString(CONNECTION))
+                .UseLazyLoadingProxies();
             });
 
             services.AddIdentity<User, IdentityRole>(config =>
@@ -45,7 +56,8 @@ namespace RAMWebsite
                 config.Password.RequireDigit = false;
                 config.Password.RequireNonAlphanumeric = false;
                 config.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<UserDbContext>()
+                config.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(config =>
@@ -54,12 +66,39 @@ namespace RAMWebsite
                 config.Cookie.Name = "Identity.Cookie";
             });
 
-
             services.AddControllersWithViews();
+            services.AddHttpContextAccessor();
+        }
+
+        private async System.Threading.Tasks.Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            // Initializing custom roles   
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            string[] Roles = { "User", "Admin", "Teacher" };
+
+            foreach (string role in Roles)
+            {
+                // Add role
+                var roleCheck = await RoleManager.RoleExistsAsync(role);
+                if (!roleCheck)
+                {
+                    //Create the roles and seed them to the database 
+                    await RoleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+            
+
+            // Assign Admin role to newly registered user
+            User user = await UserManager.FindByNameAsync("mpnogaj");
+            if (user != null)
+            {
+                await UserManager.AddToRoleAsync(user, "Admin");
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider service)
         {
             if (env.IsDevelopment())
             {
@@ -86,6 +125,8 @@ namespace RAMWebsite
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            CreateUserRoles(service).Wait();
         }
     }
 }

@@ -23,11 +23,19 @@
 @Html.DisplayFor(model => model.ExampleInput)
 <strong>Output:</strong>
 @Html.DisplayFor(model => model.ExampleOutput)</pre>
-    <div class="text-center">
-        <a class="btn btn-primary btn-lg text-light" data-toggle="modal" data-target="#wyslijRozwiazanie">
-            Wyślij rozwiązanie!
-        </a>
-    </div>
+    @{ 
+        if (User.Identity.IsAuthenticated)
+        {
+        <div class="text-center">
+            <a class="btn btn-primary btn-lg text-light" data-toggle="modal" data-target="#wyslijRozwiazanie">
+                Wyślij rozwiązanie!
+            </a>
+            <a class="btn btn-success btn-lg text-light" data-toggle="modal" data-target="#zobaczHistorie">
+                Twoje zgłoszenia
+            </a>
+        </div>
+        }
+     }
 </div>
 <div>
     <a asp-action="Upsert" asp-route-id="@Model.Id">Edit</a> |
@@ -54,6 +62,40 @@
                     <button type="submit" class="btn btn-primary">Wyślij</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="zobaczHistorie" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Twoje zgłoszenia</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Id zgłoszenia</th>
+                        <th>Data wysłania</th>
+                        <th>Zaliczony</th>
+                        <th></th>
+                    </tr>
+                    @foreach (Report report in ViewBag.Submissions)
+                    {
+                        <tr>
+                            <th>@report.Id</th>
+                            <th>@report.SubmitionDate</th>
+                            <th>@report.Passed</th>
+                            <th>
+                                <a asp-action="Report" asp-route-id="@report.Id">Podgląd</a>
+                            </th>
+                        </tr>
+                    }
+                </table>
+            </div>
         </div>
     </div>
 </div>

@@ -7,13 +7,13 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="d60517df-2432-4c6c-bf13-57d70ea6e84a"
-    Publisher="CN=Marcin Nogaj"
-    Version="1.0.4.0" />
+    Name="16550mpnogaj.RAMEditor"
+    Publisher="CN=BB0CC7FB-5E08-4685-9B08-42D7E4AFA423"
+    Version="1.0.3.0" />
 
   <Properties>
-    <DisplayName>RAM Editor</DisplayName>
-    <PublisherDisplayName>Marcin</PublisherDisplayName>
+    <DisplayName>RAMEditor</DisplayName>
+    <PublisherDisplayName>mpnogaj</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -36,14 +36,14 @@
         BackgroundColor="black"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png" ShortName="RAM Editor">
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  ShortName="RAMEditor" Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo"/>
             <uap:ShowOn Tile="square310x310Logo"/>
+            <uap:ShowOn Tile="wide310x150Logo"/>
           </uap:ShowNameOnTiles>
         </uap:DefaultTile >
         <uap:SplashScreen Image="Images\SplashScreen.png" />
-        <uap:LockScreen BadgeLogo="Images\BadgeLogo.png" Notification="badge"/>
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/>
           <uap:Rotation Preference="landscapeFlipped"/></uap:InitialRotationPreference>
@@ -53,6 +53,5 @@
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
-    <Capability Name="internetClient"/>
   </Capabilities>
 </Package>
