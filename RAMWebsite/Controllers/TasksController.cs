@@ -31,9 +31,25 @@ namespace RAMWebsite.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string sortBy)
         {
-            return View(_appDbContext.Tasks);
+            var tasks = from t in _appDbContext.Tasks select t;
+            if(!String.IsNullOrEmpty(sortBy))
+            {
+                switch(sortBy)
+                {
+                    case "Name":
+                        tasks = tasks.OrderBy(t => t.Name);
+                        break;
+                    case "SolvedNumber":
+                        tasks = tasks.OrderByDescending(t => t.SolvedNumber);
+                        break;
+                    default:
+                        tasks = tasks.OrderBy(t => t.Code);
+                        break;
+                }
+            }
+            return View(tasks);
         }
 
         public async Task<IActionResult> Upsert(string id)

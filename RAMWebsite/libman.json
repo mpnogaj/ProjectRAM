@@ -1,5 +1,14 @@
 {
   "version": "1.0",
   "defaultProvider": "cdnjs",
-  "libraries": []
+  "libraries": [
+    {
+      "library": "jquery.tablesorter@2.31.3",
+      "destination": "wwwroot/lib/jquery.tablesorter/"
+    },
+    {
+      "library": "mdbootstrap@4.1.1",
+      "destination": "wwwroot/lib/mdbootstrap/"
+    }
+  ]
 }

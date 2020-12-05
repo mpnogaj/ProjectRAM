@@ -15,10 +15,11 @@
         <th>Oczekiwane wyjście</th>
         <th>Otrzymane wyjście</th>
     </tr>
-    @foreach (var model in @Model.ReportRows)
-    {
+    @{
         int i = 0;
-        <tr>
+        foreach (var model in @Model.ReportRows)
+        {
+            <tr>
             <td>@Html.Raw(++i)</td>
             @if (model.Passed)
             {
@@ -32,27 +33,28 @@
                     Źle
                 </td>
             }
-            <td>
-                @if (!String.IsNullOrEmpty(model.ExpectedOutput))
-                {
-                    @Html.Raw(model.ExpectedOutput)
-                }
-                else
-                {
-                    @Html.Raw("-")
-                }
-            </td>
-            <td>
-                @if (!String.IsNullOrEmpty(model.GivenOutput))
-                {
-                    @Html.Raw(model.GivenOutput)
-                }
-                else
-                {
-                    @Html.Raw("-")
-                }
-            </td>
-        </tr>
+                <td>
+                    @if (!String.IsNullOrEmpty(model.ExpectedOutput))
+                    {
+                        @Html.Raw(model.ExpectedOutput)
+                    }
+                    else
+                    {
+                        @Html.Raw("-")
+                    }
+                </td>
+                <td>
+                    @if (!String.IsNullOrEmpty(model.GivenOutput))
+                    {
+                        @Html.Raw(model.GivenOutput)
+                    }
+                    else
+                    {
+                        @Html.Raw("-")
+                    }
+                </td>
+            </tr>
+        } 
     }
 </table>
 
