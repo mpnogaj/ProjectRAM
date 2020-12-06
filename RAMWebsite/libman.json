@@ -3,12 +3,8 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "jquery.tablesorter@2.31.3",
-      "destination": "wwwroot/lib/jquery.tablesorter/"
-    },
-    {
-      "library": "mdbootstrap@4.1.1",
-      "destination": "wwwroot/lib/mdbootstrap/"
+      "library": "datatables@1.10.21",
+      "destination": "wwwroot/lib/datatables/"
     }
   ]
 }

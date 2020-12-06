@@ -85,14 +85,13 @@
 </table>
 
 @section Scripts{ 
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.22/datatables.min.js"></script>
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#taskTable').DataTable({
                 "language": {
-                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Polish.json"
+                    "url": "/lib/datatables/lang/Polish.json"
                 }
             });
         });
