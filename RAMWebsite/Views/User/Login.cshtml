@@ -1,11 +1,12 @@
 ﻿@model RAMWebsite.Models.User;
 @{
     ViewData["Title"] = "Project RAM";
+    string returnUrl = Context.Request.Query["returnurl"];
 }
 
 <h1 class="ml-3">Logowanie</h1>
 
-<form method="post" id="loginForm" action="/User/Login">
+<form method="post" id="loginForm" asp-action="Login" asp-route-ReturnUrl="@returnUrl">
     <div class="form-group">
         <label class="control-label col-sm-2" asp-for="UserName"></label>
         <div class="col-sm-10">

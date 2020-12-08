@@ -42,7 +42,7 @@ namespace RAMWebsite.Controllers
         #endregion
 
         [HttpPost]
-        public async Task<IActionResult> Login(User u, bool rememberMe = false)
+        public async Task<IActionResult> Login(User u, string ReturnUrl, bool rememberMe = false)
         {
             var user = await _userManager.FindByNameAsync(u.UserName);
 
@@ -50,6 +50,8 @@ namespace RAMWebsite.Controllers
             {
                 await _signInManager.PasswordSignInAsync(user, u.Password, rememberMe, false);
             }
+            if (!String.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+                return Redirect(ReturnUrl);
             return RedirectToAction("Index", "Home");
         }
 
