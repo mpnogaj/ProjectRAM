@@ -56,7 +56,7 @@ namespace RAMWebsite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(User u)
+        public async Task<IActionResult> Register(User u, string ReturnUrl)
         {
             var res = await _userManager.CreateAsync(u, u.Password);
 
@@ -64,6 +64,15 @@ namespace RAMWebsite.Controllers
             {
                 await _signInManager.PasswordSignInAsync(u, u.Password, false, false);
             }
+            else if(res.Errors.Count() > 0 )
+            {
+                switch (res.Errors.First())
+                {
+
+                }
+            }
+            if (!String.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+                return Redirect(ReturnUrl);
             return RedirectToAction("Index", "Home");
         }
 

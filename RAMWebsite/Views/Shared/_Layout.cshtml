@@ -46,7 +46,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login" asp-route-ReturnUrl="@Url.RouteUrl(ViewContext.RouteData.Values)">Zaloguj</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Rejestracja</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register" asp-route-ReturnUrl="@Url.RouteUrl(ViewContext.RouteData.Values)">Rejestracja</a>
                             </li>
                         }
                         else
