@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using RAMWebsite.Models;
 using RAMWebsite.Data;
+using Newtonsoft.Json;
 
 namespace RAMWebsite.Controllers
 {
@@ -27,6 +28,15 @@ namespace RAMWebsite.Controllers
             _userManager = userManager;
         }
 
-
+        [Route("duplicate/{username}")]
+        public IActionResult CheckDuplicatedUsername(string username)
+        {
+            bool duplicate =  _appDbContext.Users.Where(u => u.UserName == username).Count() != 0;
+            if(duplicate)
+            {
+                return Content("Ta nazwa użytkownika jest już używana", "application/json");
+            }
+            return Content(JsonConvert.SerializeObject(true), "application/json");
+        }
     }
 }

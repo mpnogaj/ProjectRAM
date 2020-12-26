@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RAMWebsite.Models
 {
@@ -14,6 +15,7 @@ namespace RAMWebsite.Models
     {
         [Required(ErrorMessage = "To pole jest wymagane")]
         [DisplayName("Login")]
+        [Remote(action: "CheckDuplicatedUsername", controller: "ApiActionController")]
         public override string UserName { get; set; }
 
         [Required(ErrorMessage = "To pole jest wymagane")]
