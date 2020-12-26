@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
 using RAMWebsite.Models;
 
 namespace RAMWebsite.Controllers
@@ -80,6 +81,17 @@ namespace RAMWebsite.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        public JsonResult Duplicate(string UserName)
+        {
+            User u = _userManager.FindByNameAsync(UserName).Result;
+            bool duplicate = u != null;
+            if (duplicate)
+            {
+                return Json("Ta nazwa użytkownika jest już używana");
+            }
+            return Json(true);
         }
     }
 }

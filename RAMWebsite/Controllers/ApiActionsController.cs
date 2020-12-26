@@ -28,10 +28,10 @@ namespace RAMWebsite.Controllers
             _userManager = userManager;
         }
 
-        [Route("duplicate/{username}")]
-        public IActionResult CheckDuplicatedUsername(string username)
+        [Route("duplicate")]
+        public IActionResult CheckDuplicatedUsername(string UserName)
         {
-            bool duplicate =  _appDbContext.Users.Where(u => u.UserName == username).Count() != 0;
+            bool duplicate =  _appDbContext.Users.FirstOrDefault(u => u.UserName == UserName) != null;
             if(duplicate)
             {
                 return Content("Ta nazwa użytkownika jest już używana", "application/json");

@@ -15,7 +15,7 @@ namespace RAMWebsite.Models
     {
         [Required(ErrorMessage = "To pole jest wymagane")]
         [DisplayName("Login")]
-        [Remote(action: "CheckDuplicatedUsername", controller: "ApiActionController")]
+        [Remote(action: "Duplicate", controller: "User")]
         public override string UserName { get; set; }
 
         [Required(ErrorMessage = "To pole jest wymagane")]
