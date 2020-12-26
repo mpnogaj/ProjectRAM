@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace RAMWebsite.Models
@@ -17,6 +18,7 @@ namespace RAMWebsite.Models
         [ForeignKey("Report")]
         public string ReportId { get; set; }
 
+        [JsonIgnore]
         public virtual Report Report { get; set; }
 
         [Required]

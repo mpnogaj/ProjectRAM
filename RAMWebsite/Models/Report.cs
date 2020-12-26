@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace RAMWebsite.Models
 {
@@ -16,9 +17,11 @@ namespace RAMWebsite.Models
         public bool Passed { get; set; }
 
         [Required]
+        [JsonIgnore]
         public virtual Task Task { get; set; }
 
         [Required]
+        [JsonIgnore]
         public virtual ICollection<ReportRow> ReportRows { get; set; }
 
         [Required]

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Newtonsoft.Json;
 
 namespace RAMWebsite.Models
 {
@@ -50,20 +51,24 @@ namespace RAMWebsite.Models
         [Required]
         [DisplayName("Testy - wejście")]
         [NotMapped]
+        [JsonIgnore]
         public IFormFileCollection InputFiles { get; set; }
 
         [Required]
         [DisplayName("Testy - wyjście")]
         [NotMapped]
+        [JsonIgnore]
         public IFormFileCollection OutputFiles { get; set; }
 
         [DefaultValue(0)]
         public int SolvedNumber { get; set; }
 
         [Required]
+        [JsonIgnore]
         public virtual ICollection<Test> Tests { get; set; }
 
         [ForeignKey("UserId")]
+        [JsonIgnore]
         public virtual ICollection<UserInTask> SolvedBy { get; set; }
     }
 }

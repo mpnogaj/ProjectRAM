@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace RAMWebsite.Models
 {
@@ -37,6 +38,7 @@ namespace RAMWebsite.Models
         public override string Email { get; set; }
 
         [ForeignKey("TaskId")]
+        [JsonIgnore]
         public virtual ICollection<UserInTask> SolvedTasks { get; set; }
     }
 }

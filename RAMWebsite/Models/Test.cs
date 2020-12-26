@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,6 +18,7 @@ namespace RAMWebsite.Models
         [ForeignKey("Task")]
         public string TaskId { get; set; }
 
+        [JsonIgnore]
         public virtual Task Task { get; set; }
 
         [Required]
