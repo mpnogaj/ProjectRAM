@@ -42,19 +42,19 @@ namespace RAMWebsite.Controllers
         }
         #endregion
 
-        [HttpPost]
-        public async Task<IActionResult> Login(User u, string ReturnUrl, bool rememberMe = false)
-        {
-            var user = await _userManager.FindByNameAsync(u.UserName);
+        //[HttpPost]
+        //public async Task<IActionResult> Login(User u, string ReturnUrl, bool rememberMe = false)
+        //{
+        //    var user = await _userManager.FindByNameAsync(u.UserName);
 
-            if(user != null)
-            {
-                await _signInManager.PasswordSignInAsync(user, u.Password, rememberMe, false);
-            }
-            if (!String.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
-                return Redirect(ReturnUrl);
-            return RedirectToAction("Index", "Home");
-        }
+        //    if(user != null)
+        //    {
+        //        await _signInManager.PasswordSignInAsync(user, u.Password, rememberMe, false);
+        //    }
+        //    if (!String.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+        //        return Redirect(ReturnUrl);
+        //    return RedirectToAction("Index", "Home");
+        //}
 
         //[HttpPost]
         //public async Task<IActionResult> Register(User u, string ReturnUrl)
@@ -83,13 +83,24 @@ namespace RAMWebsite.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public JsonResult Duplicate(string UserName)
+        public JsonResult DuplicateUsername(string UserName)
         {
             User u = _userManager.FindByNameAsync(UserName).Result;
             bool duplicate = u != null;
             if (duplicate)
             {
                 return Json("Ta nazwa użytkownika jest już używana");
+            }
+            return Json(true);
+        }
+
+        public JsonResult DuplicateEmail(string Email)
+        {
+            User u = _userManager.FindByEmailAsync(Email).Result;
+            bool duplicate = u != null;
+            if (duplicate)
+            {
+                return Json("Ten adres email jest już używany");
             }
             return Json(true);
         }

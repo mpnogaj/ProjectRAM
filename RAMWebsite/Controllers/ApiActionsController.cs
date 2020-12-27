@@ -26,6 +26,35 @@ namespace RAMWebsite.Controllers
         }
 
         [HttpPost]
+        [Route("login")]
+        public async Task<string> Login(User u, bool remember = false)
+        {
+            User user = await _userManager.FindByNameAsync(u.UserName);
+            if(user != null)
+            {
+                var res = await _signInManager.PasswordSignInAsync(user, user.Password, remember, false);
+                if(res.Succeeded)
+                {
+                    return JsonConvert.SerializeObject(new Status
+                    {
+                        Success = true,
+                        Message = "Pomyślnie zalogowano"
+                    });
+                }
+                return JsonConvert.SerializeObject(new Status
+                {
+                    Success = false,
+                    Message = "Złe hasło"
+                });
+            }
+            return JsonConvert.SerializeObject(new Status
+            {
+                Success = false,
+                Message = "Nazwa użytkownika nie została znaleziona"
+            });
+        }
+
+        [HttpPost]
         [Route("register")]
         public async Task<string> Register(User u)
         {

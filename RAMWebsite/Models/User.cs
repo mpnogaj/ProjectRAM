@@ -15,7 +15,7 @@ namespace RAMWebsite.Models
     {
         [Required(ErrorMessage = "To pole jest wymagane")]
         [DisplayName("Login")]
-        [Remote(action: "Duplicate", controller: "User")]
+        [Remote(action: "DuplicateUsername", controller: "User")]
         public override string UserName { get; set; }
 
         [Required(ErrorMessage = "To pole jest wymagane")]
@@ -32,11 +32,12 @@ namespace RAMWebsite.Models
         public string Password { get; set; }
 
         [NotMapped]
-        [Compare("Password")]
+        [Compare("Password", ErrorMessage = "Hasła muszą się zgadzać")]
         [DisplayName("Potwierdź hasło")]
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "To pole jest wymagane")]
+        [Remote(action: "DuplicateEmail", controller: "User")]
         public override string Email { get; set; }
 
         [ForeignKey("TaskId")]
