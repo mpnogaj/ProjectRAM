@@ -56,26 +56,26 @@ namespace RAMWebsite.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(User u, string ReturnUrl)
-        {
-            var res = await _userManager.CreateAsync(u, u.Password);
+        //[HttpPost]
+        //public async Task<IActionResult> Register(User u, string ReturnUrl)
+        //{
+        //    var res = await _userManager.CreateAsync(u, u.Password);
 
-            if(res.Succeeded)
-            {
-                await _signInManager.PasswordSignInAsync(u, u.Password, false, false);
-            }
-            else if(res.Errors.Count() > 0 )
-            {
-                switch (res.Errors.First())
-                {
+        //    if(res.Succeeded)
+        //    {
+        //        await _signInManager.PasswordSignInAsync(u, u.Password, false, false);
+        //    }
+        //    else if(res.Errors.Count() > 0 )
+        //    {
+        //        switch (res.Errors.First())
+        //        {
 
-                }
-            }
-            if (!String.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
-                return Redirect(ReturnUrl);
-            return RedirectToAction("Index", "Home");
-        }
+        //        }
+        //    }
+        //    if (!String.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+        //        return Redirect(ReturnUrl);
+        //    return RedirectToAction("Index", "Home");
+        //}
 
         public async Task<IActionResult> Logout()
         {

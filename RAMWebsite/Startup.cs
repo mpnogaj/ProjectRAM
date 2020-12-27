@@ -66,7 +66,7 @@ namespace RAMWebsite
                 config.Cookie.Name = "Identity.Cookie";
             });
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddHttpContextAccessor();
         }
 

@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+using Newtonsoft.Json;
+using RAMWebsite.Data;
+using RAMWebsite.Models;
 using System.Linq;
 using System.Threading.Tasks;
-using RAMWebsite.Models;
-using RAMWebsite.Data;
-using Newtonsoft.Json;
 
 namespace RAMWebsite.Controllers
 {
@@ -28,15 +25,24 @@ namespace RAMWebsite.Controllers
             _userManager = userManager;
         }
 
-        [Route("duplicate")]
-        public IActionResult CheckDuplicatedUsername(string UserName)
+        [HttpPost]
+        [Route("register")]
+        public async Task<string> Register(User u)
         {
-            bool duplicate =  _appDbContext.Users.FirstOrDefault(u => u.UserName == UserName) != null;
-            if(duplicate)
+            var res = await _userManager.CreateAsync(u, u.Password);
+            if (res.Succeeded)
             {
-                return Content("Ta nazwa użytkownika jest już używana", "application/json");
+                return JsonConvert.SerializeObject(new Status
+                {
+                    Success = true,
+                    Message = "Konto zostało zarejestrowane"
+                });
             }
-            return Content(JsonConvert.SerializeObject(true), "application/json");
+            return JsonConvert.SerializeObject(new Status
+            {
+                Success = false,
+                Message = res.Errors.First().Description
+            });
         }
     }
 }

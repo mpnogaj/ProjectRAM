@@ -4,8 +4,7 @@ namespace RAMWebsite.Models
 {
     public class Status
     {
-        string Code { get; set; }
-        string Message { get; set; }
-        bool Success { get; set; }
+        public string Message { get; set; }
+        public bool Success { get; set; }
     }
 }
