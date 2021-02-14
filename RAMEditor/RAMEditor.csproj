@@ -46,7 +46,7 @@
 
   <ItemGroup>
     <Reference Include="FontDialog">
-      <HintPath>C:\Users\Marcin\OneDrive - I LO\Informatyka\VisualStudio\CustomWPFDialogs\FontDialog\bin\Release\netcoreapp3.1\FontDialog.dll</HintPath>
+      <HintPath>..\DLL\FontDialog.dll</HintPath>
     </Reference>
   </ItemGroup>
 

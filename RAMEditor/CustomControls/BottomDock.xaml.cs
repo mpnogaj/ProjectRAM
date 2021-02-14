@@ -13,10 +13,5 @@ namespace RAMEditor.CustomControls
         {
             InitializeComponent();
         }
-
-        private void UserControl_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            MessageBox.Show("test");
-        }
     }
 }

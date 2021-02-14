@@ -343,10 +343,10 @@ namespace RAMEditor.Logic
             });
 
             token.ThrowIfCancellationRequested();
-            Tuple<Queue<string>, Dictionary<string, string>> result = Interpreter.RunCommands(commands, input, token);
+            Interpreter.RunCommands(commands, input, token);
             token.ThrowIfCancellationRequested();
-            Queue<string> output = result.Item1;
-            Dictionary<string, string> memory = result.Item2;
+            Queue<string> output = Interpreter.OutputTape;
+            Dictionary<string, string> memory = Interpreter.Memory;
             List<Cell> cells = new List<Cell>();
             foreach (var item in memory)
             {
@@ -363,6 +363,7 @@ namespace RAMEditor.Logic
                 {
                     parent.Memory.Children.Add(new MemoryGrid(cell));
                 }
+                parent.BottomDock.ComplexityReport.UpdateData(Interpreter.ExecutedCommands, Interpreter.Memory);
             });
         }
 
@@ -409,15 +410,13 @@ namespace RAMEditor.Logic
         public static void HideBottomDock()
         {
             var host = GetHost();
-            host.BottomDock.Visibility = Visibility.Collapsed;
-            GetHost().LeftColumn.RowDefinitions[3].Height = new GridLength(1, GridUnitType.Auto);
+            host.BottomDockRow.Height = new GridLength(0);
         }
 
         public static void ShowBottomDock()
         {
             var host = GetHost();
-            host.BottomDock.Visibility = Visibility.Visible;
-            host.LeftColumn.RowDefinitions[3].Height = new GridLength(5, GridUnitType.Star);
+            host.BottomDockRow.Height = new GridLength(200);
         }
 
         public static StringCollection GetStringCollectionFromTextEditor(TextBox txtEditor)

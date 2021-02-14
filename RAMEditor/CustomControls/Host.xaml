@@ -104,7 +104,8 @@
                 <RowDefinition Height="1.5*" MinHeight="100"/>
                 <RowDefinition Height="8*"/>
                 <RowDefinition Height="1.5*" MinHeight="100"/>
-                <RowDefinition Height="auto" MaxHeight="400"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="0" MaxHeight="400" x:Name="BottomDockRow"/>
             </Grid.RowDefinitions>
             <!--Input tape-->
             <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Bottom" Margin="0, 0, 0, 15">
@@ -165,7 +166,8 @@
                     Foreground="{Binding Source={x:Static properties:Settings.Default}, Path=HDFontColor}"/>
             </StackPanel>
 
-            <local:BottomDock x:Name="BottomDock" Grid.Row="3" Visibility="Collapsed"/>
+            <GridSplitter Height="5" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" ResizeDirection="Rows" Grid.Row="3"/>
+            <local:BottomDock x:Name="BottomDock" Grid.Row="4"/>
         </Grid>
     </Grid>
 </UserControl>

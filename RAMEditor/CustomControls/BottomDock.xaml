@@ -28,5 +28,20 @@
             </TabItem.Header>
             <local:ValidationRaport x:Name="ValidationRaport"/>
         </TabItem>
+        <TabItem x:Name="ComplexityPage">
+            <TabItem.Header>
+                <ContentControl>
+                    <ContentControl.Content>
+                        <TextBlock Text="Complexity"/>
+                    </ContentControl.Content>
+                    <ContentControl.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Hide" Click="{x:Static logic:ButtonLogic.HideBottomTabControlClick}"/>
+                        </ContextMenu>
+                    </ContentControl.ContextMenu>
+                </ContentControl>
+            </TabItem.Header>
+            <local:ComplexityReport x:Name="ComplexityReport"/>
+        </TabItem>
     </TabControl>
 </UserControl>
