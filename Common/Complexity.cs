@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Numerics
+using System.Numerics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,12 +37,66 @@ namespace Common
             }
         }
 
-        public static int CommandComplexity(Command x, int i, int j)
+        public static int CommandComplexity(Command x, ref int i)
         {
-            switch(x.CommandType)
+            switch (x.CommandType)
             {
+                case CommandType.Halt:
+                case CommandType.Jump:
+                    return 1;
+
+                case CommandType.Jgtz:
+                case CommandType.Jzero:
+                    return Lcost(M("0"));
+
+                case CommandType.Write:
+                case CommandType.Load:
+                    return T(x.ArgumentType, x.FormatedArg());
+
+                case CommandType.Sub:
+                case CommandType.Add:
+                case CommandType.Mult:
+                case CommandType.Div:
+                    return T(x.ArgumentType, x.FormatedArg()) + Lcost(M("0"));
+
+                case CommandType.Store:
+                    if (x.ArgumentType == ArgumentType.DirectAddress) return Lcost(M("0")) + Lcost(x.FormatedArg());
+                    return Lcost(M("0")) + Lcost(x.FormatedArg()) + Lcost(M(x.FormatedArg()));
+
                 case CommandType.Read:
+                    string input = Interpreter.ReadableInputTape[i];
+                    i++;
+                    if (x.ArgumentType == ArgumentType.DirectAddress) return Lcost(input) + Lcost(x.FormatedArg());
+                    return Lcost(input) + Lcost(x.FormatedArg()) + Lcost(M(x.FormatedArg()));
+
+                default:
+                    return 0;
             }
         }
+
+        public static int CountLogarithmicTimeComplexity()
+        {
+            int complexity = 0;
+            int i = 0;
+            foreach(Command command in Interpreter.ExecutedCommands)
+            {
+                complexity += CommandComplexity(command, ref i);
+            }
+            return complexity;
+        }
+
+        public static int CountUniformTimeComplexity() => Interpreter.ExecutedCommands.Count;
+
+        public static int CountLogarithmicMemoryCoplexity()
+        {
+            int complexity = 0;
+            foreach(var memory in Interpreter.MaxMemory.Select(k => k.Value))
+            {
+                complexity += Lcost(memory);
+            }
+            return complexity;
+        }
+
+        public static int CountUniformMemoryComplexity() => Interpreter.Memory.Count;
     }
 }

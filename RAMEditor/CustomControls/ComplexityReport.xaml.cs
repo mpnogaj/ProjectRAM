@@ -34,8 +34,10 @@ namespace RAMEditor.CustomControls
 
         public void UpdateData(List<Command> commands, Dictionary<string, string> memory)
         {
-            UniformTime.Text = commands.Count.ToString();
-            UniformMemory.Text = memory.Count.ToString();
+            UniformTime.Text = Complexity.CountUniformTimeComplexity().ToString();
+            UniformMemory.Text = Complexity.CountUniformMemoryComplexity().ToString();
+            LogarythmicTime.Text = Complexity.CountLogarithmicTimeComplexity().ToString();
+            LogarythmicMemory.Text = Complexity.CountLogarithmicMemoryCoplexity().ToString();
         }
     }
 }

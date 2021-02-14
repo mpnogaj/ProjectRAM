@@ -308,6 +308,16 @@ namespace Common
             }
         }
 
+        public string FormatedArg()
+        {
+            string arg = this.Argument;
+            if (this.ArgumentType == ArgumentType.Const || this.ArgumentType == ArgumentType.IndirectAddress)
+            {
+                return arg.Substring(1);
+            }
+            return arg;
+        }
+
         /// <summary>
         /// ToString() method override
         /// </summary>

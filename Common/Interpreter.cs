@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 using System.Threading;
 
@@ -13,6 +12,8 @@ namespace Common
         /// </summary>
         public static List<Command> Program = new List<Command>();
         public static Dictionary<string, string> Memory = new Dictionary<string, string>();
+        public static Dictionary<string, string> MaxMemory = new Dictionary<string, string>();
+        public static List<string> ReadableInputTape = new List<string>();
         public static Queue<string> InputTape = new Queue<string>();
         public static Queue<string> OutputTape = new Queue<string>();
         public static List<Command> ExecutedCommands = new List<Command>();
@@ -66,18 +67,26 @@ namespace Common
         /// <returns>Taśmę wyjścia, pamięć</returns>
         public static void RunCommands(List<Command> commands, Queue<string> inputTape, CancellationToken token)
         {
-            //Dictionary<string, string> memory = new Dictionary<string, string>();
-            Program = commands;
+            ExecutedCommands.Clear();
             Memory.Clear();
-            Memory.Add("0", string.Empty);
+            MaxMemory.Clear();
             OutputTape.Clear();
             InputTape.Clear();
+            ReadableInputTape.Clear();
+
+            Program = commands;
+            Memory.Add("0", string.Empty);
+            MaxMemory.Add("0", string.Empty);
             InputTape = inputTape;
-            ExecutedCommands.Clear();
+            ReadableInputTape = new List<string>(InputTape.ToArray());
+
             for (int i = 0; i < commands.Count; i++)
             {
                 token.ThrowIfCancellationRequested();
-                if (RunCommand(ref i)) break;
+                if (RunCommand(ref i))
+                {
+                    break;
+                }
             }
         }
 
@@ -98,15 +107,19 @@ namespace Common
             BigInteger value;
             //argument
             command.ArgumentType = Command.GetArgumentType(command.Argument);
-            string arg = command.Argument;
-            if (command.ArgumentType == ArgumentType.Const || command.ArgumentType == ArgumentType.IndirectAddress)
+            string arg = command.FormatedArg();
+            if (command.ArgumentType == ArgumentType.IndirectAddress)
             {
-                arg = arg.Substring(1);
-                if (command.ArgumentType == ArgumentType.IndirectAddress)
-                {
-                    arg = Memory[arg];
-                }
+                arg = Memory[arg];
             }
+            //if (command.ArgumentType == ArgumentType.Const || command.ArgumentType == ArgumentType.IndirectAddress)
+            //{
+            //    arg = arg.Substring(1);
+            //    if (command.ArgumentType == ArgumentType.IndirectAddress)
+            //    {
+            //        arg = Memory[arg];
+            //    }
+            //}
 
             switch (command.CommandType)
             {
@@ -178,17 +191,18 @@ namespace Common
                     }
 
                     #endregion
-                    //index = GetMemoryIndex(Memory, argInt);
                     exists = Memory.ContainsKey(arg);
                     string val = InputTape.Dequeue();
 
                     if (exists == false)
                     {
                         Memory.Add(arg, val);
+                        MaxMemory.Add(arg, val);
                     }
                     else
                     {
                         Memory[arg] = val;
+                        MaxMemory[arg] = Max(val, MaxMemory[arg]);
                     }
 
                     break;
@@ -230,16 +244,16 @@ namespace Common
                     }
 
                     #endregion
-
-                    //index = GetMemoryIndex(Memory, argInt);
                     exists = Memory.ContainsKey(arg);
                     if (!exists)
                     {
                         Memory.Add(arg, Memory["0"]);
+                        MaxMemory.Add(arg, Memory["0"]);
                     }
                     else
                     {
                         Memory[arg] = Memory["0"];
+                        MaxMemory[arg] = Max(Memory["0"], MaxMemory[arg]);
                     }
 
                     break;
@@ -255,6 +269,7 @@ namespace Common
                     #endregion
 
                     Memory["0"] = GetValue(command, arg, Memory);
+                    MaxMemory["0"] = Max(Memory["0"], MaxMemory["0"]);
 
                     break;
                 case CommandType.Add:
@@ -272,6 +287,8 @@ namespace Common
 
                     Memory["0"] = BigInteger
                         .Add(BigInteger.Parse(Memory["0"] ?? throw new AccumulatorEmptyException(command.Line)), value).ToString();
+
+                    MaxMemory["0"] = Max(Memory["0"], MaxMemory["0"]);
                     break;
                 case CommandType.Sub:
 
@@ -288,6 +305,8 @@ namespace Common
 
                     Memory["0"] = BigInteger
                         .Subtract(BigInteger.Parse(Memory["0"] ?? throw new AccumulatorEmptyException(command.Line)), value).ToString();
+
+                    MaxMemory["0"] = Max(Memory["0"], MaxMemory["0"]);
                     break;
                 case CommandType.Mult:
 
@@ -304,6 +323,8 @@ namespace Common
 
                     Memory["0"] = BigInteger
                         .Multiply(BigInteger.Parse(Memory["0"] ?? throw new AccumulatorEmptyException(command.Line)), value).ToString();
+
+                    MaxMemory["0"] = Max(Memory["0"], MaxMemory["0"]);
                     break;
                 case CommandType.Div:
 
@@ -320,9 +341,29 @@ namespace Common
 
                     Memory["0"] = BigInteger
                         .Divide(BigInteger.Parse(Memory["0"] ?? throw new AccumulatorEmptyException(command.Line)), value).ToString();
+
+                    MaxMemory["0"] = Max(Memory["0"], MaxMemory["0"]);
                     break;
             }
             return false;
+        }
+
+        private static string Max(string v1, string v2)
+        {
+            if (string.Empty == v1)
+            {
+                return v2;
+            }
+            else if (string.Empty == v2)
+            {
+                return v1;
+            }
+
+            if (BigInteger.Parse(v1) >= BigInteger.Parse(v2))
+            {
+                return v1;
+            }
+            return v2;
         }
     }
 }
