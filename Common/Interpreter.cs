@@ -344,6 +344,9 @@ namespace Common
 
                     MaxMemory["0"] = Max(Memory["0"], MaxMemory["0"]);
                     break;
+                default:
+                    ExecutedCommands.RemoveAt(ExecutedCommands.Count - 1);
+                    break;
             }
             return false;
         }
