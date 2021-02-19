@@ -67,19 +67,24 @@ namespace Common
         /// <returns>Taśmę wyjścia, pamięć</returns>
         public static void RunCommands(List<Command> commands, Queue<string> inputTape, CancellationToken token)
         {
-            ExecutedCommands.Clear();
-            Memory.Clear();
-            MaxMemory.Clear();
-            OutputTape.Clear();
-            InputTape.Clear();
-            ReadableInputTape.Clear();
+            ExecutedCommands = new List<Command>();
+            Memory = new Dictionary<string, string>();
+            MaxMemory = new Dictionary<string, string>();
+            OutputTape = new Queue<string>();
+            InputTape = new Queue<string>();
+            ReadableInputTape = new List<string>();
 
-            Program = commands;
+            if (commands != null)
+            {
+                Program = commands;
+            }
             Memory.Add("0", string.Empty);
             MaxMemory.Add("0", string.Empty);
-            InputTape = inputTape;
-            ReadableInputTape = new List<string>(InputTape.ToArray());
-
+            if (inputTape != null)
+            {
+                InputTape = inputTape;
+                ReadableInputTape = InputTape == null ? new List<string>() : new List<string>(InputTape.ToArray());
+            }
             for (int i = 0; i < commands.Count; i++)
             {
                 token.ThrowIfCancellationRequested();

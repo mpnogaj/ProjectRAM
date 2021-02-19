@@ -1,0 +1,234 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:imaging="clr-namespace:Avalonia.Media.Imaging;assembly=Avalonia.Visuals"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="RAMEditorMultiplatform.Windows.MainWindow"
+        Title="RAM Editor" Height="600" Width="800"
+        MinHeight="450" MinWidth="550">
+  <DockPanel LastChildFill="True" Margin="0, 0, 0, 10">
+    <DockPanel.Styles>
+      <Style Selector="TabItem">
+        <Setter Property="FontSize" Value="15"/>
+      </Style>
+      <Style Selector="Menu">
+        <Setter Property="Height" Value="20"/>
+      </Style>
+      <Style Selector="MenuItem">
+        <Setter Property="FontSize" Value="13"/>
+      </Style>
+    </DockPanel.Styles>
+    <Menu DockPanel.Dock="Top">
+      <Menu.Styles>
+        <Style Selector="Image">
+          <Setter Property="Width" Value="16"/>
+          <Setter Property="Height" Value="16"/>
+        </Style>
+      </Menu.Styles>
+      <MenuItem Header="File">
+        <MenuItem Header="New file" InputGesture="Ctrl+N">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/newFile.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Open file" InputGesture="Ctrl+O">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/openFile.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Save file" InputGesture="Ctrl+S">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/save.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Save file as" InputGesture="Ctrl+Shift+S">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/saveAs.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Print program" InputGesture="Ctrl+P">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/print.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Exit" InputGesture="Alt+F4">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/exit.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="View">
+        <MenuItem Header="Zoom in" InputGesture="Ctrl++">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/zoomIn.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Zoom out" InputGesture="Ctrl+-">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/zoomOut.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Switch editor" InputGesture="Ctrl+Q">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/switch.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="Program">
+        <MenuItem Header="Verify program" InputGesture="F7">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/verify.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Run program" InputGesture="F5">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/run.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Stop program" InputGesture="Shift+F5">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/stop2.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="Data">
+        <MenuItem Header="Memory">
+          <MenuItem Header="Clear">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/clear.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator/>
+          <MenuItem Header="Export to file">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/export.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Import from file">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/import.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Input tape">
+          <MenuItem Header="Clear">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/clear.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator/>
+          <MenuItem Header="Export to file">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/export.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="Import from file">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/import.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+        </MenuItem>
+        <MenuItem Header="Output tape">
+          <MenuItem Header="Clear">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/clear.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator/>
+          <MenuItem Header="Export to file">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/export.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="Tools">
+        <MenuItem Header="Settings">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/settings.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="Help">
+        <MenuItem Header="About" InputGesture="F1">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/info.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+    </Menu>
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="5" Margin="10, 5, 10, 5">
+      <StackPanel.Styles>
+        <Style Selector="Rectangle">
+          <Setter Property="VerticalAlignment" Value="Stretch"/>
+          <Setter Property="Width" Value="1"/>
+          <Setter Property="Stroke" Value="Gray"/>
+          <Setter Property="Fill" Value="Gray"/>
+        </Style>
+        <Style Selector="Button">
+          <Setter Property="Height" Value="26"/>
+          <Setter Property="Width" Value="26"/>
+          <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style Selector="Image">
+          <Setter Property="Height" Value="26"/>
+          <Setter Property="Width" Value="26"/>
+        </Style>
+      </StackPanel.Styles>
+      <Button>
+        <Panel>
+          <Image Source="/Assets/Images/newFile.png"/>
+        </Panel>
+      </Button>
+      <Rectangle/>
+      <Button>
+        <Panel>
+          <Image Source="/Assets/Images/openFile.png"/>
+        </Panel>
+      </Button>
+      <Rectangle/>
+      <Button>
+        <Panel>
+          <Image Source="/Assets/Images/save.png"/>
+        </Panel>
+      </Button>
+      <Button>
+        <Panel>
+          <Image Source="/Assets/Images/saveAs.png"/>
+        </Panel>
+      </Button>
+      <Rectangle/>
+      <Button>
+        <Panel>
+          <Image Source="/Assets/Images/switch.png"/>
+        </Panel>
+      </Button>
+      <Rectangle/>
+      <Button>
+        <Panel>
+          <Image Source="/Assets/Images/verify.png"/>
+        </Panel>
+      </Button>
+      <Button>
+        <Panel>
+          <Image Source="/Assets/Images/run.png"/>
+        </Panel>
+      </Button>
+      <Button>
+        <Panel>
+          <Image Source="/Assets/Images/stop2.png"/>
+        </Panel>
+      </Button>
+    </StackPanel>
+    <Grid DockPanel.Dock="Top">
+      <TabControl Name="Files" DragDrop.AllowDrop="True"/>
+    </Grid>
+  </DockPanel>
+</Window>

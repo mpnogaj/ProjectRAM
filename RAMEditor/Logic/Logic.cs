@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Common;
+using Microsoft.Win32;
+using RAMEditor.CustomControls;
+using RAMEditor.Helpers;
+using RAMEditor.Properties;
+using RAMEditor.Windows;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using Common;
-using Microsoft.Win32;
-using RAMEditor.CustomControls;
-using RAMEditor.Helpers;
-using RAMEditor.Properties;
-using RAMEditor.Windows;
 
 namespace RAMEditor.Logic
 {
@@ -123,7 +122,7 @@ namespace RAMEditor.Logic
         /// <param name="header">Tab's header</param>
         public static void CreateTabPage(string header)
         {
-            MenuItem menuItemToAdd = new MenuItem { Header = "Close", InputGestureText = "Ctrl+W"};
+            MenuItem menuItemToAdd = new MenuItem { Header = "Close", InputGestureText = "Ctrl+W" };
             menuItemToAdd.Click += ButtonLogic.CloseTabClick;
             ContextMenu contextMenu = new ContextMenu();
             contextMenu.Items.Add(menuItemToAdd);

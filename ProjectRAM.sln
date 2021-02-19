@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RAMWebsite", "RAMWebsite\RA
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "RAMEditorSetup", "RAMEditorSetup\RAMEditorSetup.wapproj", "{C3B5381F-6BE9-47C9-943E-9F720F868023}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RAMEditorMultiplatform", "RAMEditorMultiplatform\RAMEditorMultiplatform.csproj", "{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,26 @@ Global
 		{C3B5381F-6BE9-47C9-943E-9F720F868023}.Release|x86.ActiveCfg = Release|x86
 		{C3B5381F-6BE9-47C9-943E-9F720F868023}.Release|x86.Build.0 = Release|x86
 		{C3B5381F-6BE9-47C9-943E-9F720F868023}.Release|x86.Deploy.0 = Release|x86
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Debug|ARM.Build.0 = Debug|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Debug|x64.Build.0 = Debug|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Debug|x86.Build.0 = Debug|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Release|ARM.Build.0 = Release|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Release|ARM64.Build.0 = Release|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Release|x64.ActiveCfg = Release|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Release|x64.Build.0 = Release|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Release|x86.ActiveCfg = Release|Any CPU
+		{A48719BB-9D9A-45AD-B5EE-F96DCAE64C21}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

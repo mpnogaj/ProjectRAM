@@ -9,12 +9,12 @@ namespace Common
 {
     public static class Complexity
     {
-        public static int Lcost(string x)
+        public static long Lcost(string x)
         {
             if (x == "?") return 0;
             if (x == "0") return 1;
             BigInteger bX = BigInteger.Parse(x);
-            return (int)Math.Floor(BigInteger.Log10(BigInteger.Abs(bX))) + 1;
+            return (long)Math.Floor(BigInteger.Log10(BigInteger.Abs(bX))) + 1;
         }
 
         public static string M(string x)
@@ -22,22 +22,18 @@ namespace Common
             return Interpreter.Memory[x];
         }
 
-        public static int T(ArgumentType a, string x)
+        public static long T(ArgumentType a, string x)
         {
-            switch(a)
+            return a switch
             {
-                case ArgumentType.Const:
-                    return Lcost(x);
-                case ArgumentType.DirectAddress:
-                    return Lcost(x) + Lcost(M(x));
-                case ArgumentType.IndirectAddress:
-                    return Lcost(x) + Lcost(M(x)) + Lcost(M(M(x)));
-                default:
-                    return 0;
-            }
+                ArgumentType.Const => Lcost(x),
+                ArgumentType.DirectAddress => Lcost(x) + Lcost(M(x)),
+                ArgumentType.IndirectAddress => Lcost(x) + Lcost(M(x)) + Lcost(M(M(x))),
+                _ => 0,
+            };
         }
 
-        public static int CommandComplexity(Command x, ref int i)
+        public static long CommandComplexity(Command x, ref int i)
         {
             switch (x.CommandType)
             {
@@ -74,9 +70,9 @@ namespace Common
             }
         }
 
-        public static int CountLogarithmicTimeComplexity()
+        public static long CountLogarithmicTimeComplexity()
         {
-            int complexity = 0;
+            long complexity = 0;
             int i = 0;
             foreach(Command command in Interpreter.ExecutedCommands)
             {
@@ -87,10 +83,10 @@ namespace Common
 
         public static int CountUniformTimeComplexity() => Interpreter.ExecutedCommands.Count;
 
-        public static int CountLogarithmicMemoryCoplexity()
+        public static long CountLogarithmicMemoryCoplexity()
         {
-            int complexity = 0;
-            foreach(var memory in Interpreter.MaxMemory.Select(k => k.Value))
+            long complexity = 0;
+            foreach(var memory in Interpreter.MaxMemory.Select(k => k.Value).Where(x => x != ""))
             {
                 complexity += Lcost(memory);
             }
