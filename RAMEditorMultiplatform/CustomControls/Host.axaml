@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:edit="using:AvaloniaEdit"
              x:Class="RAMEditorMultiplatform.CustomControls.Host">
   <Grid Background="#FFDD99">
     <Grid.Styles>
@@ -18,58 +19,75 @@
       <ColumnDefinition Width="1"/>
       <ColumnDefinition Width="8*" MinWidth="400"/>
     </Grid.ColumnDefinitions>
-    
-    <Grid Grid.Column="0"/>
+
+    <Grid Grid.Column="0" Margin="8, 0, 8, 0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="1*" MaxHeight="50"/>
+        <RowDefinition Height="9*"/>
+        <RowDefinition Height="50" MinHeight="50" MaxHeight="50"/>
+      </Grid.RowDefinitions>
+      <TextBlock Grid.Row="0" Text="Memory" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      <StackPanel Grid.Row="1" Orientation="Vertical">
+        <StackPanel.Styles>
+          <Style Selector="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+          </Style>
+          <Style Selector="Border">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+          </Style>
+        </StackPanel.Styles>
+        <Grid ColumnDefinitions="*, *">
+          <Border Grid.Column="0" Background="White">
+            <TextBlock Text="Address"/>
+          </Border>
+          <Border Grid.Column="1" Background="White">
+            <TextBlock Text="Value"/>
+          </Border>
+        </Grid>
+      </StackPanel>
+    </Grid>
     <GridSplitter Width="1" Grid.Column="1" ResizeDirection="Columns" VerticalAlignment="Stretch"/>
-    <Grid Grid.Column="2" Margin="8, 0, 8, 0">
+    <Grid x:Name="LeftColumn" Grid.Column="2">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="4"/>
+        <RowDefinition Height="0" MaxHeight="400"/>
+      </Grid.RowDefinitions>
       <Grid.Styles>
         <Style Selector="TextBox">
           <Setter Property="Background" Value="White"/>
         </Style>
-        <Style Selector="TextBox:pointerover /template/Border">
+        <Style Selector="TextBox:pointerover/template/Border">
           <Setter Property="Background" Value="White"/>
         </Style>
       </Grid.Styles>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="10*" MinHeight="400"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition MaxHeight="400"/>
-      </Grid.RowDefinitions>
-      <Grid Grid.Row="0" RowDefinitions="2*,8*,2*">
-        <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Bottom" Margin="0, 0, 0, 25" Spacing="15">
+      <DockPanel Grid.Row="0" LastChildFill="True">
+        <!--Input tape-->
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical" VerticalAlignment="Bottom" Margin="8, 8, 8, 5" Spacing="10">
           <TextBlock
               HorizontalAlignment="Center"
               Text="Input tape"/>
-          <ScrollViewer HorizontalScrollBarVisibility="Visible">
-            <TextBox
-              x:Name="InputTape"/>
-          </ScrollViewer>
+          <TextBox/>
         </StackPanel>
-        <!--Code-->
-        <DockPanel Grid.Row="1" LastChildFill="True">
-          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TextBox
-                x:Name="Code"
-                AcceptsReturn="True"
-                AcceptsTab="True"
-                DockPanel.Dock="Top"/>
-          </ScrollViewer>
-        </DockPanel>
         <!--Output tape-->
-        <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Top" Margin="0, 25, 0, 0" Spacing="15">
-          <ScrollViewer HorizontalScrollBarVisibility="Visible">
-            <TextBox
-                x:Name="OutputTape"
-                IsReadOnly="True"/>
-          </ScrollViewer>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" VerticalAlignment="Top" Margin="8, 5, 8, 8" Spacing="10" IsEnabled="False">
+          <TextBox
+              IsReadOnly="True"/>
           <TextBlock
               HorizontalAlignment="Center"
               Text="Output tape"/>
         </StackPanel>
-      </Grid>
-      
-      <GridSplitter Grid.Row="1" ResizeDirection="Rows" Height="4"/>
-      <Grid Grid.Row="2"/>
+        <!--Code-->
+        <TextBox DockPanel.Dock="Top" Margin="8, 5, 8, 5"
+            AcceptsReturn="True"
+            TextWrapping="Wrap"
+            FontFamily="Arial"
+            AcceptsTab="True"/>
+      </DockPanel>
+      <GridSplitter Height="5" Grid.Row="1" ResizeDirection="Rows"/>
+      <Grid Grid.Row="2" Background="AliceBlue"/>
     </Grid>
   </Grid>
 </UserControl>
