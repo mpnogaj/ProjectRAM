@@ -12,7 +12,10 @@
                 var obj = JSON.parse(res);
                 if (obj.Success) {
                     var returnUrl = getParamValue('ReturnUrl');
-                    returnUrl = returnUrl.replaceAll('%2F', '/')
+                    returnUrl = returnUrl.replace(/%2F/g, '/')
+                    if (returnUrl.startsWith("/User/")) {
+                        returnUrl = "/";
+                    }
                     toastr.options.onHidden = function () { window.location.replace(returnUrl) }
                     toastr.success(obj.Message);
                 }

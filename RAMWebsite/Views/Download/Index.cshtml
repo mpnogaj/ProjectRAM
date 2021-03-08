@@ -26,7 +26,7 @@
                         @Html.Raw(f.Length / 1000.0) kb
                     </th>
                     <th class="align-middle">
-                        <a class="btn btn-primary" asp-action="DownloadItem" asp-route-fileName="@file">
+                        <a class="btn btn-primary" asp-action="DownloadItem" asp-route-fileName="@file.Substring(DOWNLOAD_FOLDER.Length)">
                             Pobierz
                         </a>
                     </th>

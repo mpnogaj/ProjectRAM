@@ -16,9 +16,23 @@ namespace RAMEditor.Windows
             InitializeComponent();
             var args = Environment.GetCommandLineArgs();
             var userArgs = args.Skip(1);
+            DiscordPresence.DiscordRPC.Initialize("817494043662614569", "default", "Test");
+            this.Files.SelectionChanged += (sender, e) =>
+            {
+                if (Files.SelectedIndex == -1)
+                {
+                    DiscordPresence.DiscordRPC.Update("", "Śpi");
+                }
+                else
+                {
+                    var selectedTab = Logic.Logic.GetSelectedTab(this.Files);
+                    string fileName = Logic.Logic.GetOpenedProgramName(selectedTab);
+                    DiscordPresence.DiscordRPC.Update(fileName, "Pisze");
+                }
+            };
             if (!userArgs.Any())
             {
-                Logic.Logic.CreateTabPage("NEW RAMCode");
+                Logic.Logic.CreateTabPage("NEW");
             }
             else
             {

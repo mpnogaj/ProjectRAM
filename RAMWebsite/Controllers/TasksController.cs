@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using RAMWebsite.Helpers;
+using System.IO;
 
 using Common;
 using System.Runtime.InteropServices;
@@ -18,6 +19,8 @@ namespace RAMWebsite.Controllers
 {
     public class TasksController : Controller
     {
+        const string CODES_PATH = @"wwwroot/downloads/codes/";
+
         private readonly AppDbContext _appDbContext;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
@@ -134,7 +137,8 @@ namespace RAMWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> Submit(string id, string code, IFormFile file)
         {
-            StringCollection sc;
+            StringCollection sc = new StringCollection();
+
             if(file == null)
             {
                 if(String.IsNullOrWhiteSpace(code))
@@ -146,7 +150,7 @@ namespace RAMWebsite.Controllers
             else
             {
                 sc = Converter.IFormFileToStringCollection(file);
-            }
+            }         
             List<Command> CommandList = Creator.CreateCommandList(sc);
             Models.Task task = await _appDbContext.Tasks.FirstOrDefaultAsync(t => t.Id == id);
             List<Test> tests = await _appDbContext.Tests.Where(t => t.TaskId == task.Id).ToListAsync();
@@ -169,7 +173,7 @@ namespace RAMWebsite.Controllers
                     token));
                 t.Wait(5000);
                 //***
-                if(t.Result == null)
+                if(!Interpreter.Executed)
                 {
                     //niezaliczony
                     taskSolved = false;
@@ -182,7 +186,7 @@ namespace RAMWebsite.Controllers
                 }
                 else
                 {
-                    string tape = Creator.CreateOutputTapeFromQueue(t.Result.Item1);
+                    string tape = Creator.CreateOutputTapeFromQueue(Interpreter.OutputTape);
                     if(tape == test.Output)
                     {
                         report.ReportRows.Add(new ReportRow
@@ -200,7 +204,6 @@ namespace RAMWebsite.Controllers
                         });
                         taskSolved = false;
                     }
-                    
                 }
             }
             report.Passed = taskSolved;
@@ -219,6 +222,12 @@ namespace RAMWebsite.Controllers
                 _appDbContext.Tasks.Update(task);
             }
             await _appDbContext.SaveChangesAsync();
+
+            //Pisz kod do pliku
+            using (StreamWriter sr = new StreamWriter($"{CODES_PATH}{report.Id}.RAMCode"))
+            {
+                await sr.WriteAsync(string.Join('\n', sc.Cast<string>()));
+            }
             //Wygeneruj raport
             return RedirectToAction("Report", new { id = report.Id });
         }

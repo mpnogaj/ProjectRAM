@@ -189,6 +189,16 @@ namespace RAMEditor.Logic
             };
         }
 
+        public static string GetHeaderPage(TabItem tab)
+        {
+            return (tab.Header as ContentControl).Content as string;
+        }
+
+        public static string GetOpenedProgramName(TabItem tab)
+        {
+            return GetHeaderPage(tab) + ".RAMCode"; 
+        }
+
         /// <summary>
         /// Change font size in text box
         /// </summary>

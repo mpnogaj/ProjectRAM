@@ -12,6 +12,7 @@ namespace RAMEditor
         protected override void OnExit(ExitEventArgs e)
         {
             Settings.Default.Save();
+            DiscordPresence.DiscordRPC.Shutdown();
             base.OnExit(e);
         }
 

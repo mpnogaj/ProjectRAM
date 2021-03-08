@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using RAMWebsite.Data;
 using System.Linq;
+using System.Security.Claims;
 
 namespace RAMWebsite.Controllers
 {
@@ -22,15 +23,24 @@ namespace RAMWebsite.Controllers
             return JsonConvert.SerializeObject(_appDbContext.Tasks);
         }
 
+        [Route("user_id")]
+        public string GetUserId()
+        {
+            if(User.Identity.IsAuthenticated)
+            {
+                return JsonConvert.SerializeObject(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
+            return "";
+        }
+
         [Route("reports/{userId}/{taskId}")]
         public string Reports(string userId, string taskId)
         {
-            return JsonConvert.SerializeObject(
-                _appDbContext.Reports
-                .Where(r => r.AuthorId == userId && r.Task.Id == taskId));
+            var reports = _appDbContext.Reports.Where(r => r.AuthorId == userId && r.Task.Id == taskId).ToList();
+            return JsonConvert.SerializeObject(reports);
         }
 
-        [Route("/report_rows/{reportId}")]
+        [Route("report_rows/{reportId}")]
         public string ReportRows(string reportId)
         {
             return JsonConvert.SerializeObject(

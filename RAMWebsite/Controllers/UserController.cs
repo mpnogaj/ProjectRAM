@@ -83,6 +83,17 @@ namespace RAMWebsite.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public JsonResult UsernameDoesNotExists(string UserName)
+        {
+            User u = _userManager.FindByNameAsync(UserName).Result;
+            bool contains = u != null;
+            if (!contains)
+            {
+                return Json("Ta nazwa użytkownika nie istnieje");
+            }
+            return Json(true);
+        }
+
         public JsonResult DuplicateUsername(string UserName)
         {
             User u = _userManager.FindByNameAsync(UserName).Result;

@@ -71,6 +71,15 @@ body {
 }
 
 
+.templates{
+    visibility: collapse
+}
+
+.nav-link {
+    cursor: pointer
+}
+
+/* For particular element from class ex for one button*/
 .cursor-pointer {
     cursor: pointer
 }

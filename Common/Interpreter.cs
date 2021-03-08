@@ -18,6 +18,8 @@ namespace Common
         public static Queue<string> OutputTape = new Queue<string>();
         public static List<Command> ExecutedCommands = new List<Command>();
 
+        public static bool Executed = false;
+
         /// <summary>
         /// Funkcja do skakania. Preszukuje wszystkie komendy i jeżeli znajdzie etykiete to skacze do niej.
         /// </summary>
@@ -73,6 +75,7 @@ namespace Common
             OutputTape = new Queue<string>();
             InputTape = new Queue<string>();
             ReadableInputTape = new List<string>();
+            Executed = false;
 
             if (commands != null)
             {
@@ -93,6 +96,7 @@ namespace Common
                     break;
                 }
             }
+            Executed = true;
         }
 
         /// <summary>

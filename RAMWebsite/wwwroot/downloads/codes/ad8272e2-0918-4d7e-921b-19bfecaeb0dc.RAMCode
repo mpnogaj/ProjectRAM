@@ -1,0 +1,4 @@
+read 0
+read 1
+add 1
+write 0

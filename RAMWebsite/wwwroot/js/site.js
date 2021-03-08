@@ -1,4 +1,12 @@
-﻿function objectifyForm(formArray, first, last) {
+﻿//Internet Explorer support
+if (!String.prototype.startsWith) {
+    String.prototype.startsWith = function (searchString, position) {
+        position = position || 0;
+        return this.indexOf(searchString, position) === position;
+    };
+}
+
+function objectifyForm(formArray, first, last) {
     //serialize data function
     var returnArray = {};
     for (var i = first; i < last; i++) {
@@ -18,3 +26,27 @@ function getParamValue(param) {
         }
     }
 }
+
+$(function () {
+    $("#logoutBtn").click(function () {
+        $.ajax({
+            url: '/api/actions/logout',
+            method: 'post',
+            contentType: 'application/json',
+            success: function (res) {
+                var obj = JSON.parse(res);
+                if (obj.Success) {
+                    window.location.replace("/");
+                }
+                else {
+                    toastr.error(obj.Message);
+                }
+            },
+            error: function (res) {
+                toastr.error("Coś poszło nie tak. Sprobuj ponownie za kilka minut")
+            }
+        });
+    })
+})
+
+

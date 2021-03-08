@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\DiscordRPC\DiscordPresence.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 

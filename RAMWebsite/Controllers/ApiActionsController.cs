@@ -27,12 +27,12 @@ namespace RAMWebsite.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<string> Login(User u, bool remember = false)
+        public async Task<string> Login(PartialUser u)
         {
             User user = await _userManager.FindByNameAsync(u.UserName);
             if(user != null)
             {
-                var res = await _signInManager.PasswordSignInAsync(user, user.Password, remember, false);
+                var res = await _signInManager.PasswordSignInAsync(user, u.Password, u.RememberMe, false);
                 if(res.Succeeded)
                 {
                     return JsonConvert.SerializeObject(new Status
@@ -71,6 +71,27 @@ namespace RAMWebsite.Controllers
             {
                 Success = false,
                 Message = res.Errors.First().Description
+            });
+        }
+
+        [HttpPost]
+        [Route("logout")]
+        public async Task<string> Logout()
+        {
+            bool isSignedIn = _signInManager.IsSignedIn(User);
+            if (isSignedIn)
+            {
+                await _signInManager.SignOutAsync();
+                return JsonConvert.SerializeObject(new Status
+                {
+                    Success = true,
+                    Message = "Pomyślnie wylogowano"
+                });
+            }
+            return JsonConvert.SerializeObject(new Status
+            {
+                Success = false,
+                Message = "Coś poszło nie tak"
             });
         }
     }
