@@ -2,6 +2,8 @@ Common - biblioteka z rónymi rónościami (interpreter, wyjątki i inne szmery 
 ------
 DLL - floder z bibliotekami. Tylko jedna biblioteka. Okienko wyboru czcionki
 ------
+DiscordRPC - submodule repozytorium zawierającego bbliotekę do ustawiania statusu na Discordzie
+------
 Icons - ikonki
 ------
 RAMConsole - program w wersji konsolowej. Używa czystego .NET 5. Działa Windows, Mac i Linux
