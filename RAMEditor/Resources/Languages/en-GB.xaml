@@ -86,4 +86,6 @@
 
     <system:String x:Key="addressFont">Address column font</system:String>
     <system:String x:Key="valueFont">Value column font</system:String>
+
+    <system:String x:Key="discordRPC">Show status on Discord</system:String>
 </ResourceDictionary>

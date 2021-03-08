@@ -41,6 +41,10 @@
                         <TextBlock Text="{StaticResource useSimpleEditor}" Margin="5"/>
                         <CheckBox x:Name="EditorBox" VerticalAlignment="Center" Margin="10, 5, 5, 5"/>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{StaticResource discordRPC}" Margin="5"/>
+                        <CheckBox x:Name="DiscordBox" VerticalAlignment="Center" Margin="10, 5, 5, 5"/>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Header="{StaticResource color}">

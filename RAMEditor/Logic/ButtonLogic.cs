@@ -36,7 +36,7 @@ namespace RAMEditor.Logic
         #region File Page
         public static readonly CommandBase NewFileClick = new CommandBase(() =>
         {
-            Logic.CreateTabPage("NEW RAMCode");
+            Logic.CreateTabPage();
         }, null);
 
         public static readonly CommandBase OpenFileClick = new CommandBase(() =>

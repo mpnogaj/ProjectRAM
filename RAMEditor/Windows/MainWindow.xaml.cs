@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RAMEditor.Properties;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -11,28 +12,22 @@ namespace RAMEditor.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
+        public const string DEFAULT_FILE = "NEW";
+
         public MainWindow()
         {
             InitializeComponent();
             var args = Environment.GetCommandLineArgs();
             var userArgs = args.Skip(1);
-            DiscordPresence.DiscordRPC.Initialize("817494043662614569", "default", "Test");
-            this.Files.SelectionChanged += (sender, e) =>
+            if (Settings.Default.UseDiscordRPC)
             {
-                if (Files.SelectedIndex == -1)
-                {
-                    DiscordPresence.DiscordRPC.Update("", "Śpi");
-                }
-                else
-                {
-                    var selectedTab = Logic.Logic.GetSelectedTab(this.Files);
-                    string fileName = Logic.Logic.GetOpenedProgramName(selectedTab);
-                    DiscordPresence.DiscordRPC.Update(fileName, "Pisze");
-                }
-            };
+                InitializeDiscord();
+            }
             if (!userArgs.Any())
             {
-                Logic.Logic.CreateTabPage("NEW");
+                Logic.Logic.CreateTabPage(DEFAULT_FILE);
+                this.Files.SelectedIndex = 0;
+                UpdateStatus();
             }
             else
             {
@@ -45,6 +40,36 @@ namespace RAMEditor.Windows
                         Logic.Logic.CreateTabPage(Path.GetFileNameWithoutExtension(arg), arg);
                     }
                 }
+            }
+        }
+
+        public void InitializeDiscord()
+        {
+            DiscordPresence.DiscordRPC.Initialize("817494043662614569", "default", "Test");
+            this.Files.SelectionChanged += (sender, e) => UpdateStatus();
+        }
+
+        public void DeinitializeDiscord()
+        {
+            DiscordPresence.DiscordRPC.Shutdown();
+            this.Files.SelectionChanged -= (sender, e) => UpdateStatus();
+        }
+
+        private void UpdateStatus()
+        {
+            if (!Settings.Default.UseDiscordRPC)
+            {
+                return;
+            }
+            if (Files.SelectedIndex == -1)
+            {
+                DiscordPresence.DiscordRPC.Update("", "Śpi");
+            }
+            else
+            {
+                var selectedTab = Logic.Logic.GetSelectedTab(this.Files);
+                string fileName = Logic.Logic.GetOpenedProgramName(selectedTab);
+                DiscordPresence.DiscordRPC.Update(fileName, "Pisze");
             }
         }
 

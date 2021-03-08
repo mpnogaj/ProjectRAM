@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RAMEditor" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RAMEditor.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="Language" Type="System.String" Scope="User">
@@ -155,7 +155,6 @@
     <Setting Name="SE5FontWeight" Type="System.String" Scope="User">
       <Value Profile="(Default)">Normal</Value>
     </Setting>
-
     <Setting Name="AddressFontColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#000000</Value>
     </Setting>
@@ -168,7 +167,6 @@
     <Setting Name="AddressFontWeight" Type="System.String" Scope="User">
       <Value Profile="(Default)">Normal</Value>
     </Setting>
-
     <Setting Name="ValueFontColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#000000</Value>
     </Setting>
@@ -180,6 +178,9 @@
     </Setting>
     <Setting Name="ValueFontWeight" Type="System.String" Scope="User">
       <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="UseDiscordRPC" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -120,7 +120,7 @@ namespace RAMEditor.Logic
         /// Creates new tab page
         /// </summary>
         /// <param name="header">Tab's header</param>
-        public static void CreateTabPage(string header)
+        public static void CreateTabPage(string header = "")
         {
             MenuItem menuItemToAdd = new MenuItem { Header = "Close", InputGestureText = "Ctrl+W" };
             menuItemToAdd.Click += ButtonLogic.CloseTabClick;
@@ -128,11 +128,12 @@ namespace RAMEditor.Logic
             contextMenu.Items.Add(menuItemToAdd);
 
             TabControl tc = GetMainWindow().Files;
+            string tabName = header == "" ? MainWindow.DEFAULT_FILE : header;
             tc.Items.Add(new TabItem
             {
                 Header = new ContentControl
                 {
-                    Content = header,
+                    Content = tabName,
                     ContextMenu = contextMenu
                 },
                 Content = new Host()
