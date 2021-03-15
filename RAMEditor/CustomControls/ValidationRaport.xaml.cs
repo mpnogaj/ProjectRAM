@@ -1,4 +1,5 @@
 ﻿using Common;
+using RAMEditor.Properties;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -29,7 +30,7 @@ namespace RAMEditor.CustomControls
 
             foreach (var ex in list)
             {
-                vm.Exceptions.Add(ex.Message);
+                vm.Exceptions.Add(ex.LocalizedMessage(Settings.Default.Language));
             }
         }
     }

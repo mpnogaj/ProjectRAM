@@ -18,7 +18,6 @@ namespace RAMEditor.Windows
         private int[] _customColors = new int[16];
         Settings s = Settings.Default;
 
-
         public Options()
         {
             InitializeComponent();
@@ -236,8 +235,8 @@ namespace RAMEditor.Windows
         private void RevertToDefault_OnClick(object sender, RoutedEventArgs e)
         {
             var dialog = MessageBox.Show(
-                "Are you sure you want to restore the default settings. This cannot be undone!",
-                "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                App.String("defaultSettingsWarning"),
+                App.String("warning"), MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (dialog == MessageBoxResult.Yes)
             {
                 Settings.Default.Reset();

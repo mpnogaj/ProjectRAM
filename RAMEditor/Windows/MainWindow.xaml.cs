@@ -13,12 +13,16 @@ namespace RAMEditor.Windows
     public partial class MainWindow : Window
     {
         public const string DEFAULT_FILE = "NEW";
+        public static readonly ResourceDictionary LANGUAGE = Application.Current.Resources.MergedDictionaries[0];
+
 
         public MainWindow()
         {
             InitializeComponent();
+            App.Log("Initialized main window");
             var args = Environment.GetCommandLineArgs();
             var userArgs = args.Skip(1);
+            App.Log($"Arguments: {userArgs}");
             if (Settings.Default.UseDiscordRPC)
             {
                 InitializeDiscord();
@@ -45,18 +49,21 @@ namespace RAMEditor.Windows
 
         public void InitializeDiscord()
         {
+            App.Log("Initializing Discord");
             DiscordPresence.DiscordRPC.Initialize("817494043662614569", "default", "Test");
             this.Files.SelectionChanged += (sender, e) => UpdateStatus();
         }
 
         public void DeinitializeDiscord()
         {
+            App.Log("Deinitializing Discord");
             DiscordPresence.DiscordRPC.Shutdown();
             this.Files.SelectionChanged -= (sender, e) => UpdateStatus();
         }
 
         private void UpdateStatus()
         {
+            App.Log("Updating status");
             if (!Settings.Default.UseDiscordRPC)
             {
                 return;
@@ -93,6 +100,7 @@ namespace RAMEditor.Windows
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                App.Log($"User dropped {files.Length} files");
                 foreach (string file in files)
                 {
                     Logic.Logic.CreateTabPage(Path.GetFileNameWithoutExtension(file), file);

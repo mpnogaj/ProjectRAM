@@ -5,6 +5,7 @@
     <system:String x:Key="ok">Ok</system:String>
     <system:String x:Key="cancel">Cancel</system:String>
     <system:String x:Key="close">Close</system:String>
+    <system:String x:Key="error">Error</system:String>
     <system:String x:Key="author">Author</system:String>
     <system:String x:Key="website">Website</system:String>
     <system:String x:Key="email">Email</system:String>
@@ -34,8 +35,8 @@
     <system:String x:Key="exit">Exit</system:String>
 
     <system:String x:Key="address">Address</system:String>
+    
     <system:String x:Key="value">Value</system:String>
-
     <system:String x:Key="line">Line</system:String>
     <system:String x:Key="label">Label</system:String>
     <system:String x:Key="command">Command</system:String>
@@ -88,4 +89,20 @@
     <system:String x:Key="valueFont">Value column font</system:String>
 
     <system:String x:Key="discordRPC">Show status on Discord</system:String>
+
+    <system:String x:Key="warning">Warning</system:String>
+    <system:String x:Key="defaultSettingsWarning">Are you sure you want to restore the default settings. This cannot be undone!</system:String>
+
+    <system:String x:Key="openFilePrompt">Select RAM Code file to open</system:String>
+    <system:String x:Key="ramCodeFile">RAM Code files</system:String>
+    <system:String x:Key="unknownError">Unknown error</system:String>
+
+    <system:String x:Key="saveFilePrompt">Save RAM Code</system:String>
+
+    <system:String x:Key="noErrors">No errors found</system:String>
+
+    <system:String x:Key="selectTextFile">Select text file</system:String>
+    <system:String x:Key="saveTextFile">Save text file</system:String>
+
+    <system:String x:Key="textFile">Text file</system:String>
 </ResourceDictionary>

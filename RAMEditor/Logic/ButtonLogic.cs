@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using RAMEditor.CustomControls;
 using RAMEditor.Helpers;
+using RAMEditor.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -42,8 +43,8 @@ namespace RAMEditor.Logic
         public static readonly CommandBase OpenFileClick = new CommandBase(() =>
         {
             OpenFileDialog ofd = Logic.PrepareOpenFileDialog(
-                "Select RAM Code to open",
-                "RAM Code files (*.RAMCode)|*.RAMCode");
+                App.String("openFilePrompt"),
+                $"{App.String("ramCodeFile")} (*.RAMCode)|*.RAMCode");
             if (ofd.ShowDialog() == true)
             {
                 Logic.CreateTabPage(
@@ -70,8 +71,8 @@ namespace RAMEditor.Logic
             Host h = Logic.GetHost();
             TabItem ti = Logic.GetMainWindow().Files.SelectedItem as TabItem;
             SaveFileDialog sfd = Logic.PrepareSaveFileDialog(
-                "Save RAM Code",
-                "RAM Code files (*.RAMCode)|*.RAMCode");
+                App.String("saveFilePrompt"),
+                $"{App.String("ramCodeFile")} (*.RAMCode)|*.RAMCode");
             if (sfd.ShowDialog() != true)
             {
                 return;
@@ -122,7 +123,6 @@ namespace RAMEditor.Logic
             else
             {
                 var codeLines = Creator.CreateCommandList(Logic.GetStringCollectionFromTextEditor(code));
-                //var codeLines = se.ConvertToCode(Logic.GetStringCollectionFromTextEditor(code));
                 if (codeLines.Count <= 0)
                 {
                     codeLines.Add(new Command
@@ -145,7 +145,7 @@ namespace RAMEditor.Logic
                 List<RamInterpreterException> ex = Logic.CheckIfValid();
                 if (ex.Count == 0)
                 {
-                    MessageBox.Show("Wszystko dobrze");
+                    MessageBox.Show(App.String("noErrors"));
                     Logic.GetHost().BottomDock.ValidationRaport.SetExceptions(null);
                     return;
                 }
@@ -156,7 +156,7 @@ namespace RAMEditor.Logic
             }
             catch
             {
-                Logic.ShowErrorMessage("Error", "Unknown error.");
+                Logic.ShowErrorMessage(App.String("error"), App.String("unknownError"));
             }
         },
             () => FileNeeded() && !Logic.GetHost().IsProgramRunning);
@@ -168,10 +168,10 @@ namespace RAMEditor.Logic
             {
                 await Task.Run(() => { Logic.RunProgram(parent, _tokenSource.Token); });
             }
-            catch (OperationCanceledException) { /*Ignore*/}
+            catch (OperationCanceledException) { /*Ignore*/ }
             catch (RamInterpreterException ex)
             {
-                Logic.ShowErrorMessage("Error", ex.Message);
+                Logic.ShowErrorMessage(App.String("error"), ex.LocalizedMessage(Settings.Default.Language));
                 if (_tokenSource != null)
                 {
                     _tokenSource.Cancel();
@@ -213,7 +213,7 @@ namespace RAMEditor.Logic
         public static readonly CommandBase ClearMemoryClick = new CommandBase(Logic.ClearMemory, FileNeeded);
         public static readonly CommandBase MemoryExportClick = new CommandBase(() =>
         {
-            SaveFileDialog sfd = Logic.PrepareSaveFileDialog("Save text file", "Text file|*.*");
+            SaveFileDialog sfd = Logic.PrepareSaveFileDialog(App.String("saveTextFile"), $"{App.String("textFile")}|*.*");
             if (sfd.ShowDialog() != true)
             {
                 return;
@@ -230,7 +230,7 @@ namespace RAMEditor.Logic
         }, FileNeeded);
         public static readonly CommandBase MemoryImportClick = new CommandBase(() =>
         {
-            OpenFileDialog ofd = Logic.PrepareOpenFileDialog("Select text file", "Text file|*.*");
+            OpenFileDialog ofd = Logic.PrepareOpenFileDialog(App.String("selectTextFile"), $"{App.String("textFile")}|*.*");
             if (ofd.ShowDialog() != true)
             {
                 return;
@@ -257,7 +257,7 @@ namespace RAMEditor.Logic
         public static readonly CommandBase ClearInputTapeClick = new CommandBase(Logic.ClearInputTape, FileNeeded);
         public static readonly CommandBase InputTapeImportClick = new CommandBase(() =>
         {
-            OpenFileDialog ofd = Logic.PrepareOpenFileDialog("Select text file", "Text file|*.*");
+            OpenFileDialog ofd = Logic.PrepareOpenFileDialog(App.String("selectTextFile"), $"{App.String("textFile")}|*.*");
             if (ofd.ShowDialog() != true)
             {
                 return;
@@ -281,7 +281,7 @@ namespace RAMEditor.Logic
         }, FileNeeded);
         public static readonly CommandBase InputTapeExportClick = new CommandBase(() =>
         {
-            SaveFileDialog sfd = Logic.PrepareSaveFileDialog("Save text file", "Text file|*.*");
+            SaveFileDialog sfd = Logic.PrepareSaveFileDialog(App.String("saveTextFile"), $"{App.String("textFile")}|*.*");
             if (sfd.ShowDialog() != true)
             {
                 return;
@@ -301,7 +301,7 @@ namespace RAMEditor.Logic
         public static readonly CommandBase ClearOutputTapeClick = new CommandBase(Logic.ClearOutputTape, FileNeeded);
         public static readonly CommandBase OutputTapeExportClick = new CommandBase(() =>
         {
-            SaveFileDialog sfd = Logic.PrepareSaveFileDialog("Save text file", "Text file|*.*");
+            SaveFileDialog sfd = Logic.PrepareSaveFileDialog(App.String("saveTextFile"), $"{App.String("textFile")}|*.*");
             if (sfd.ShowDialog() != true)
             {
                 return;

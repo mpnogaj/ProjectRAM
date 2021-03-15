@@ -71,11 +71,11 @@ namespace RAMEditor.Logic
             title.FontSize = 22;
 
             var header = t.RowGroups[0].Rows[1];
-            header.Cells.Add(new FlowDocCell(new Paragraph(new Run("Line")), true));
-            header.Cells.Add(new FlowDocCell(new Paragraph(new Run("Label")), true));
-            header.Cells.Add(new FlowDocCell(new Paragraph(new Run("Command")), true));
-            header.Cells.Add(new FlowDocCell(new Paragraph(new Run("Value")), true));
-            header.Cells.Add(new FlowDocCell(new Paragraph(new Run("Comment")), true));
+            header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("line"))), true));
+            header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("label"))), true));
+            header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("command"))), true));
+            header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("value"))), true));
+            header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("comment"))), true));
 
 
             rows = bUsingTextEditor() ?
@@ -90,7 +90,7 @@ namespace RAMEditor.Logic
                 var currRow = t.RowGroups[0].Rows[j];
                 currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run((j - 1).ToString())), false));
                 currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Label)), false));
-                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.CommandType.ToString())), false));
+                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.CommandType != CommandType.Null ? row.CommandType.ToString() : "")), false));
                 currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Argument)), false));
                 currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Comment)), false));
                 j++;
@@ -122,7 +122,7 @@ namespace RAMEditor.Logic
         /// <param name="header">Tab's header</param>
         public static void CreateTabPage(string header = "")
         {
-            MenuItem menuItemToAdd = new MenuItem { Header = "Close", InputGestureText = "Ctrl+W" };
+            MenuItem menuItemToAdd = new MenuItem { Header = App.String("close"), InputGestureText = "Ctrl+W" };
             menuItemToAdd.Click += ButtonLogic.CloseTabClick;
             ContextMenu contextMenu = new ContextMenu();
             contextMenu.Items.Add(menuItemToAdd);
@@ -152,7 +152,7 @@ namespace RAMEditor.Logic
         /// <param name="filePath">Path to file</param>
         public static void CreateTabPage(string header, string filePath)
         {
-            MenuItem menuItemToAdd = new MenuItem { Header = "Close" };
+            MenuItem menuItemToAdd = new MenuItem { Header = App.String("close") };
             menuItemToAdd.Click += ButtonLogic.CloseTabClick;
             ContextMenu contextMenu = new ContextMenu();
             contextMenu.Items.Add(menuItemToAdd);
@@ -179,7 +179,7 @@ namespace RAMEditor.Logic
         /// <param name="name">New header</param>
         public static void ChangeHeaderPage(TabItem tab, string name)
         {
-            MenuItem menuItemToAdd = new MenuItem { Header = "Close" };
+            MenuItem menuItemToAdd = new MenuItem { Header = App.String("close") };
             menuItemToAdd.Click += ButtonLogic.CloseTabClick;
             ContextMenu contextMenu = new ContextMenu();
             contextMenu.Items.Add(menuItemToAdd);
