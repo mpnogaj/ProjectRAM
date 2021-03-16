@@ -13,6 +13,27 @@ namespace RAMEditor.CustomControls
     /// </summary>
     public partial class SimpleEditor : INotifyPropertyChanged
     {
+        private readonly List<string> _availableCommands = new List<string>
+        {
+            "load",
+            "store",
+            "read",
+            "write",
+            "add",
+            "sub",
+            "mult",
+            "div",
+            "load",
+            "jump",
+            "jzero",
+            "jgtz",
+            "halt"
+        };
+        public List<string> AvailableCommands
+        {
+            get => _availableCommands;
+        }
+
         private ObservableCollection<Command> _lines;
         public ObservableCollection<Command> Lines
         {
@@ -113,25 +134,5 @@ namespace RAMEditor.CustomControls
                 PropertyChanged(this, e);
             }
         }
-    }
-
-    public class Commands
-    {
-        public static IEnumerable<string> CommandsList => new List<string>
-        {
-            "load",
-            "store",
-            "read",
-            "write",
-            "add",
-            "sub",
-            "mult",
-            "div",
-            "load",
-            "jump",
-            "jzero",
-            "jgtz",
-            "halt"
-        };
     }
 }

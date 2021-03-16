@@ -12,6 +12,11 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <!--https://stackoverflow.com/a/45946550-->
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="availableCommands" Source="{Binding AvailableCommands}"/>
+    </UserControl.Resources>
+    
     <DataGrid x:Name="Editor"
               CanUserAddRows="False" 
               CanUserDeleteRows="True" 
@@ -57,7 +62,7 @@
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
             <DataGridComboBoxColumn IsReadOnly="False" Width="*" MinWidth="50" Header="{StaticResource command}"
-                                    ItemsSource="{x:Static commands:Commands.CommandsList}"
+                                    ItemsSource="{Binding Source={StaticResource availableCommands}}"
                                     SelectedItemBinding="{Binding 
                                     Path=CommandName, 
                                     Mode=TwoWay, 
