@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace RAMEditor
 {
@@ -17,6 +18,7 @@ namespace RAMEditor
         {
             Settings.Default.Save();
             DiscordPresence.DiscordRPC.Shutdown();
+            Log("Shutting down");
             logger.Close();
             base.OnExit(e);
         }
@@ -27,7 +29,7 @@ namespace RAMEditor
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
-            logger = new StreamWriter(@"logs/RAMEditor.txt");
+            logger = new StreamWriter(@$"logs/RAMEditor_{DateTime.Now.ToShortDateString()}.txt");
             Log("Application started");
             //Set language
             ResourceDictionary rd = new ResourceDictionary();
@@ -42,8 +44,32 @@ namespace RAMEditor
             }
             lang = rd;
             var source = rd.Source.ToString();
-            Log($"Selected language. Language: {source.Substring(source.Length - 10, 5)}");
+            Log($"Selected language: {source.Substring(source.Length - 10, 5)}");
             this.Resources.MergedDictionaries.Add(rd);
+
+            Settings.Default.SettingsLoaded += (sender, e) => Log("Settings loaded");
+            Settings.Default.SettingsSaving += (sender, e) => Log("Settings saved");
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) => LogExceptionAndExit(e.ExceptionObject as Exception);
+            this.DispatcherUnhandledException += (sender, e) => LogExceptionAndExit(e.Exception);
+            TaskScheduler.UnobservedTaskException += (sender, e) => LogExceptionAndExit(e.Exception);
+        }
+
+        public static void LogExceptionAndExit(Exception ex)
+        {
+            LogException(ex);
+            App.Log("Fatal error!");
+            Current.Shutdown();
+        }
+
+        public static void LogException(Exception ex)
+        {
+            string day = DateTime.Now.ToShortDateString();
+            Log($"An unhandled exception occured. Message: {ex.Message}. Stack trace saved to file: RAMEditor_StackTrace_{day}.txt");
+            using (StreamWriter sw = new StreamWriter(@$"logs/RAMEditor_StackTrace_{day}.txt"))
+            {
+                sw.Write(ex.StackTrace);
+            }
         }
     }
 }

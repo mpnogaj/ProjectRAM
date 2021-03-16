@@ -95,7 +95,7 @@
 
     <system:String x:Key="openFilePrompt">Select RAM Code file to open</system:String>
     <system:String x:Key="ramCodeFile">RAM Code files</system:String>
-    <system:String x:Key="unknownError">Unknown error</system:String>
+    <system:String x:Key="unknownError">Unknown error. More info can be found in logs</system:String>
 
     <system:String x:Key="saveFilePrompt">Save RAM Code</system:String>
 

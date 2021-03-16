@@ -79,7 +79,7 @@
     <system:String x:Key="openFilePrompt">Wybierz plik kodu RAM do otwarcia</system:String>
     <system:String x:Key="ramCodeFile">Plik kodu RAM</system:String>
 
-    <system:String x:Key="unknownError">Nieznany błąd</system:String>
+    <system:String x:Key="unknownError">Nieznany błąd. Szczegółowe informacje znjadują się w logach</system:String>
 
     <system:String x:Key="saveFilePrompt">Zapisz kod RAM</system:String>
     <system:String x:Key="noErrors">Nie znaleziono żadnych błędów</system:String>

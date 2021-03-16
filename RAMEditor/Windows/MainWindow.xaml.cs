@@ -110,11 +110,11 @@ namespace RAMEditor.Windows
 
         private void Files_OnDragOver(object sender, DragEventArgs e)
         {
+            App.Log("User tries to drop files");
             bool dropEnabled = true;
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-
                 foreach (string file in files)
                 {
                     if (Path.GetExtension(file) != ".RAMCode")
@@ -130,6 +130,7 @@ namespace RAMEditor.Windows
             }
 
             if (dropEnabled) return;
+            App.Log("User tried to drop invalid item");
             e.Effects = DragDropEffects.None;
             e.Handled = true;
         }

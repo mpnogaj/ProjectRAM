@@ -4,6 +4,7 @@ using RAMEditor.CustomControls;
 using RAMEditor.Helpers;
 using RAMEditor.Properties;
 using RAMEditor.Windows;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
@@ -20,10 +21,12 @@ namespace RAMEditor.Logic
         /// </summary>
         public static void ShowOptionsWindow()
         {
+            App.Log("Showing options window");
             new Options
             {
                 Owner = Application.Current.MainWindow
             }.ShowDialog();
+            App.Log("Window closed");
         }
 
         /// <summary>
@@ -31,69 +34,81 @@ namespace RAMEditor.Logic
         /// </summary>
         public static void ShowAboutWindow()
         {
+            App.Log("Showing about window");
             new About
             {
                 Owner = Application.Current.MainWindow
             }.ShowDialog();
+            App.Log("Window closed");
         }
 
         public static FlowDocument GetFlowDocument()
         {
             FlowDocument doc = new FlowDocument();
-            Table t = new Table
+            try
             {
-                CellSpacing = 0
-            };
-            var host = GetHost();
-            t.BorderThickness = new Thickness(7);
-            List<Command> rows = new List<Command>();
-            doc.Blocks.Add(t);
-            const int columns = 5;
-            var glc = new GridLengthConverter();
-            t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("50") });
-            t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("130") });
-            t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("90") });
-            t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("130") });
-            t.Columns.Add(new TableColumn { Width = GridLength.Auto });
-            for (int i = 1; i < columns; i++)
-            {
+                App.Log("Creating printable document");
+                Table t = new Table
+                {
+                    CellSpacing = 0
+                };
+                var host = GetHost();
+                t.BorderThickness = new Thickness(7);
+                doc.Blocks.Add(t);
+                const int columns = 5;
+                var glc = new GridLengthConverter();
+                t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("50") });
+                t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("130") });
+                t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("90") });
+                t.Columns.Add(new TableColumn { Width = (GridLength)glc.ConvertFromString("130") });
                 t.Columns.Add(new TableColumn { Width = GridLength.Auto });
-            }
-            t.RowGroups.Add(new TableRowGroup());
-            t.RowGroups[0].Rows.Add(new TableRow());
-            t.RowGroups[0].Rows.Add(new TableRow());
-
-            ContentControl cc = GetSelectedTab(GetMainWindow().Files).Header as ContentControl;
-            string programName = cc.Content.ToString();
-            t.RowGroups[0].Rows[0].Cells.Add(new FlowDocCell(new Paragraph(new Run(programName)), true));
-            var title = t.RowGroups[0].Rows[0].Cells[0];
-            title.ColumnSpan = columns;
-            title.FontSize = 22;
-
-            var header = t.RowGroups[0].Rows[1];
-            header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("line"))), true));
-            header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("label"))), true));
-            header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("command"))), true));
-            header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("value"))), true));
-            header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("comment"))), true));
-
-
-            rows = bUsingTextEditor() ?
-                Creator.CreateCommandList(
-                    host.GetText())
-                : GetSimpleEditorLines();
-
-            int j = 2;
-            foreach (var row in rows)
-            {
+                for (int i = 1; i < columns; i++)
+                {
+                    t.Columns.Add(new TableColumn { Width = GridLength.Auto });
+                }
+                t.RowGroups.Add(new TableRowGroup());
                 t.RowGroups[0].Rows.Add(new TableRow());
-                var currRow = t.RowGroups[0].Rows[j];
-                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run((j - 1).ToString())), false));
-                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Label)), false));
-                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.CommandType != CommandType.Null ? row.CommandType.ToString() : "")), false));
-                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Argument)), false));
-                currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Comment)), false));
-                j++;
+                t.RowGroups[0].Rows.Add(new TableRow());
+
+                ContentControl cc = GetSelectedTab(GetMainWindow().Files).Header as ContentControl;
+                string programName = cc.Content.ToString();
+                t.RowGroups[0].Rows[0].Cells.Add(new FlowDocCell(new Paragraph(new Run(programName)), true));
+                var title = t.RowGroups[0].Rows[0].Cells[0];
+                title.ColumnSpan = columns;
+                title.FontSize = 22;
+
+                var header = t.RowGroups[0].Rows[1];
+                header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("line"))), true));
+                header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("label"))), true));
+                header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("command"))), true));
+                header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("value"))), true));
+                header.Cells.Add(new FlowDocCell(new Paragraph(new Run(App.String("comment"))), true));
+
+                List<Command> rows = bUsingTextEditor() ?
+                    Creator.CreateCommandList(
+                        host.GetText())
+                    : GetSimpleEditorLines();
+
+                int j = 2;
+                App.Log("Template created. Adding rows");
+                foreach (var row in rows)
+                {
+                    t.RowGroups[0].Rows.Add(new TableRow());
+                    var currRow = t.RowGroups[0].Rows[j];
+                    currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run((j - 1).ToString())), false));
+                    currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Label)), false));
+                    currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.CommandType != CommandType.Null ? row.CommandType.ToString() : "")), false));
+                    currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Argument)), false));
+                    currRow.Cells.Add(new FlowDocCell(new Paragraph(new Run(row.Comment)), false));
+                    j++;
+                }
+                App.Log("Document created succesfully");
+            }
+            catch (Exception ex)
+            {
+                App.LogException(ex);
+                ShowErrorMessage(App.String("error"), App.String("unknownError"));
+                doc = new FlowDocument();
             }
             return doc;
         }
@@ -120,13 +135,14 @@ namespace RAMEditor.Logic
         /// Creates new tab page
         /// </summary>
         /// <param name="header">Tab's header</param>
-        public static void CreateTabPage(string header = "")
+        /// <param name="filePath">Path to file</param>
+        public static void CreateTabPage(string header = "", string filePath = "")
         {
+            App.Log("Creating new page");
             MenuItem menuItemToAdd = new MenuItem { Header = App.String("close"), InputGestureText = "Ctrl+W" };
             menuItemToAdd.Click += ButtonLogic.CloseTabClick;
             ContextMenu contextMenu = new ContextMenu();
             contextMenu.Items.Add(menuItemToAdd);
-
             TabControl tc = GetMainWindow().Files;
             string tabName = header == "" ? MainWindow.DEFAULT_FILE : header;
             tc.Items.Add(new TabItem
@@ -136,40 +152,14 @@ namespace RAMEditor.Logic
                     Content = tabName,
                     ContextMenu = contextMenu
                 },
-                Content = new Host()
+                Content = filePath == "" ? new Host() : new Host(filePath)
             });
 
             if (tc.SelectedItem == null)
             {
                 tc.SelectedIndex = 0;
             }
-        }
-
-        /// <summary>
-        /// Creates new tab page and loads a file as text
-        /// </summary>
-        /// <param name="header">Tab's header</param>
-        /// <param name="filePath">Path to file</param>
-        public static void CreateTabPage(string header, string filePath)
-        {
-            MenuItem menuItemToAdd = new MenuItem { Header = App.String("close") };
-            menuItemToAdd.Click += ButtonLogic.CloseTabClick;
-            ContextMenu contextMenu = new ContextMenu();
-            contextMenu.Items.Add(menuItemToAdd);
-            TabControl tc = GetMainWindow().Files;
-            tc.Items.Add(new TabItem
-            {
-                Header = new ContentControl
-                {
-                    Content = header,
-                    ContextMenu = contextMenu
-                },
-                Content = new Host(filePath)
-            });
-            if (tc.SelectedItem == null)
-            {
-                tc.SelectedIndex = 0;
-            }
+            App.Log("Page created");
         }
 
         /// <summary>
@@ -179,6 +169,7 @@ namespace RAMEditor.Logic
         /// <param name="name">New header</param>
         public static void ChangeHeaderPage(TabItem tab, string name)
         {
+            App.Log("Changing page header");
             MenuItem menuItemToAdd = new MenuItem { Header = App.String("close") };
             menuItemToAdd.Click += ButtonLogic.CloseTabClick;
             ContextMenu contextMenu = new ContextMenu();
@@ -188,6 +179,7 @@ namespace RAMEditor.Logic
                 Content = name,
                 ContextMenu = contextMenu
             };
+            App.Log("Header changed");
         }
 
         public static string GetHeaderPage(TabItem tab)
@@ -197,7 +189,7 @@ namespace RAMEditor.Logic
 
         public static string GetOpenedProgramName(TabItem tab)
         {
-            return GetHeaderPage(tab) + ".RAMCode"; 
+            return GetHeaderPage(tab) + ".RAMCode";
         }
 
         /// <summary>
@@ -207,6 +199,7 @@ namespace RAMEditor.Logic
         /// <param name="offset">Value to add to current font size</param>
         public static void ChangeZoom(int offset)
         {
+            App.Log("Changing zoom");
             if (bUsingTextEditor())
             {
                 if (Settings.Default.TBFontSize > 1 || offset >= 0)
@@ -238,6 +231,7 @@ namespace RAMEditor.Logic
                 }
             }
             Settings.Default.Save();
+            App.Log("Zoom changed");
         }
 
         /// <summary>
@@ -252,16 +246,12 @@ namespace RAMEditor.Logic
         /// Close tab
         /// </summary>
         /// <param name="tb">Reference to tab to be closed</param>
-        public static void CloseTab(TabItem tb)
+        public static void CloseTab(TabItem tb = null)
         {
+            App.Log("Closing page");
             TabControl tc = tb.Parent as TabControl;
-            ((TabControl)tb.Parent).Items.Remove(tb);
-        }
-
-        public static void CloseTab()
-        {
-            TabControl tc = GetMainWindow().Files;
-            tc.Items.Remove(tc.SelectedItem);
+            tc.Items.Remove(tb == null ? tc.SelectedItem : tb);
+            App.Log("Page closed");
         }
 
         /// <summary>
@@ -284,17 +274,29 @@ namespace RAMEditor.Logic
         /// <summary>
         /// Clears memory
         /// </summary>
-        public static void ClearMemory() { GetHost().Memory.Children.Clear(); }
+        public static void ClearMemory() 
+        {
+            GetHost().Memory.Children.Clear();
+            App.Log("Memory cleared");
+        }
 
         /// <summary>
         /// Clears input tape
         /// </summary>
-        public static void ClearInputTape() { GetHost().InputTape.Text = string.Empty; }
+        public static void ClearInputTape() 
+        {
+            GetHost().InputTape.Text = string.Empty;
+            App.Log("Input tape cleared");
+        }
 
         /// <summary>
         /// Clears output tape
         /// </summary>
-        public static void ClearOutputTape() { GetHost().OutputTape.Text = string.Empty; }
+        public static void ClearOutputTape() 
+        {
+            GetHost().OutputTape.Text = string.Empty;
+            App.Log("Output tape cleared");
+        }
 
         /// <summary>
         /// Creates SaveFileDialog object
@@ -333,6 +335,7 @@ namespace RAMEditor.Logic
         /// <param name="parent">Host control where the program is written in</param>
         public static void RunProgram(Host parent, CancellationToken token)
         {
+            App.Log("Preparing to run the program");
             List<Command> commands = new List<Command>();
             Queue<string> input = new Queue<string>();
             parent.Dispatcher.Invoke(() =>
@@ -351,9 +354,10 @@ namespace RAMEditor.Logic
                 }
                 input = Creator.CreateInputTapeFromString(parent.InputTape.Text);
             });
-
+            App.Log("Preparations completed. Running the program");
             token.ThrowIfCancellationRequested();
             Interpreter.RunCommands(commands, input, token);
+            App.Log("Program executed. Showing results");
             token.ThrowIfCancellationRequested();
             Queue<string> output = Interpreter.OutputTape;
             Dictionary<string, string> memory = Interpreter.Memory;
@@ -375,6 +379,7 @@ namespace RAMEditor.Logic
                 }
                 parent.BottomDock.ComplexityReport.UpdateData(Interpreter.ExecutedCommands, Interpreter.Memory);
             });
+            App.Log("Results showed");
         }
 
         /// <summary>
@@ -388,6 +393,7 @@ namespace RAMEditor.Logic
 
         public static List<RamInterpreterException> CheckIfValid()
         {
+            App.Log("validating program");
             Host parent = GetHost();
             StringCollection sc;
             if (parent.SimpleEditor.Visibility == Visibility.Visible)
@@ -398,7 +404,7 @@ namespace RAMEditor.Logic
             {
                 sc = parent.GetText();
             }
-
+            App.Log("Validation completed");
             return Validator.ValidateProgram(Creator.CreateCommandList(sc));
         }
 
@@ -421,12 +427,14 @@ namespace RAMEditor.Logic
         {
             var host = GetHost();
             host.BottomDockRow.Height = new GridLength(0);
+            App.Log("Hid bottom dock");
         }
 
         public static void ShowBottomDock()
         {
             var host = GetHost();
             host.BottomDockRow.Height = new GridLength(200);
+            App.Log("Showed bottom dock");
         }
 
         public static StringCollection GetStringCollectionFromTextEditor(TextBox txtEditor)

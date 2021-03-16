@@ -117,7 +117,6 @@ namespace RAMEditor.CustomControls
 
     public class Commands
     {
-
         public static IEnumerable<string> CommandsList => new List<string>
         {
             "load",
