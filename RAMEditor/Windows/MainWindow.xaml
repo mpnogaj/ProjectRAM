@@ -154,11 +154,11 @@
                             <Image Source="../Resources/Images/export.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="{StaticResource importFromFile}" Command="{x:Static logic:ButtonLogic.MemoryImportClick}">
+                    <!--<MenuItem Header="{StaticResource importFromFile}" Command="{x:Static logic:ButtonLogic.MemoryImportClick}">
                         <MenuItem.Icon>
                             <Image Source="../Resources/Images/import.png"/>
                         </MenuItem.Icon>
-                    </MenuItem>
+                    </MenuItem>-->
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="{StaticResource inputTape}">
@@ -248,6 +248,5 @@
         <Grid Margin="10, 0, 10, 10">
             <TabControl x:Name="Files" DockPanel.Dock="Top" Background="{Binding Source={x:Static properties:Settings.Default}, Path=TCBackground}" AllowDrop="True" DragOver="Files_OnDragOver" Drop="Files_Drop"/>
         </Grid>
-
     </DockPanel>
 </Window>

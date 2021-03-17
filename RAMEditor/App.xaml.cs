@@ -13,6 +13,7 @@ namespace RAMEditor
     {
         private static ResourceDictionary lang;
         private static StreamWriter logger;
+        const string DATE_FORMAT = "dd.MM.yy_HH.mm.ss";
 
         protected override void OnExit(ExitEventArgs e)
         {
@@ -29,10 +30,10 @@ namespace RAMEditor
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
-            logger = new StreamWriter(@$"logs/RAMEditor_{DateTime.Now.ToShortDateString()}.txt");
+            logger = new StreamWriter(@$"logs/RAMEditor_{DateTime.Now.ToString(DATE_FORMAT)}.txt");
             Log("Application started");
             //Set language
-            ResourceDictionary rd = new ResourceDictionary();
+            var rd = new ResourceDictionary();
             switch (Settings.Default.Language)
             {
                 case "en-GB":
@@ -64,12 +65,11 @@ namespace RAMEditor
 
         public static void LogException(Exception ex)
         {
-            string day = DateTime.Now.ToShortDateString();
+            string day = DateTime.Now.ToString(DATE_FORMAT);
             Log($"An unhandled exception occured. Message: {ex.Message}. Stack trace saved to file: RAMEditor_StackTrace_{day}.txt");
-            using (StreamWriter sw = new StreamWriter(@$"logs/RAMEditor_StackTrace_{day}.txt"))
-            {
-                sw.Write(ex.StackTrace);
-            }
+            using var sw = new StreamWriter(@$"logs/RAMEditor_StackTrace_{day}.txt");
+            sw.Write(ex.StackTrace);
+            sw.Close();
         }
     }
 }

@@ -22,26 +22,26 @@ namespace RAMEditor.Logic
         private static CancellationTokenSource _tokenSource;
 
         public static RoutedEventHandler CloseTabClick => CloseTab_Click;
-        private static void CloseTab_Click(object sender, RoutedEventArgs e) =>
-            Logic.CloseTab(Logic.GetTabItemFromMenuItem(sender as MenuItem));
-
         public static RoutedEventHandler HideBottomTabControlClick => HideBottomTabControl_Click;
-        private static void HideBottomTabControl_Click(object sender, RoutedEventArgs e) =>
-            Logic.HideBottomDock();
 
-        public static readonly CommandBase AboutClick = new CommandBase(Logic.ShowAboutWindow, null);
-        public static readonly CommandBase OptionsClick = new CommandBase(Logic.ShowOptionsWindow, null);
+        private static void CloseTab_Click(object sender, RoutedEventArgs e) => Logic.CloseTab(Logic.GetTabItemFromMenuItem(sender as MenuItem));
 
-        public static readonly CommandBase CloseTab = new CommandBase(() => { Logic.CloseTab(); }, FileNeeded);
+        private static void HideBottomTabControl_Click(object sender, RoutedEventArgs e) => Logic.HideBottomDock();
+
+        public static readonly CommandBase AboutClick = new(Logic.ShowAboutWindow, null);
+
+        public static readonly CommandBase OptionsClick = new(Logic.ShowOptionsWindow, null);
+
+        public static readonly CommandBase CloseTab = new(() => { Logic.CloseTab(); }, FileNeeded);
         #endregion
 
         #region File Page
-        public static readonly CommandBase NewFileClick = new CommandBase(() =>
+        public static readonly CommandBase NewFileClick = new(() =>
         {
             Logic.CreateTabPage();
         }, null);
 
-        public static readonly CommandBase OpenFileClick = new CommandBase(() =>
+        public static readonly CommandBase OpenFileClick = new(() =>
         {
             App.Log("Opening file");
             OpenFileDialog ofd = Logic.PrepareOpenFileDialog(
@@ -56,7 +56,7 @@ namespace RAMEditor.Logic
             App.Log("File opened");
         }, null);
 
-        public static readonly CommandBase SaveFileClick = new CommandBase(() =>
+        public static readonly CommandBase SaveFileClick = new(() =>
         {
             var host = Logic.GetHost();
             if (host.CodeFilePath == null)
@@ -68,7 +68,7 @@ namespace RAMEditor.Logic
             Save(host, host.CodeFilePath);
         }, FileNeeded);
 
-        public static readonly CommandBase SaveFileAsClick = new CommandBase(() =>
+        public static readonly CommandBase SaveFileAsClick = new(() =>
         {
             Host h = Logic.GetHost();
             TabItem ti = Logic.GetMainWindow().Files.SelectedItem as TabItem;
@@ -85,21 +85,21 @@ namespace RAMEditor.Logic
             App.Log($"Saved file as {sfd.FileName}, at {sfd.FileName}");
         }, FileNeeded);
 
-        public static readonly CommandBase ExitClick = new CommandBase(Logic.Exit, null);
+        public static readonly CommandBase ExitClick = new(Logic.Exit, null);
         #endregion
 
         #region View Page
-        public static readonly CommandBase ZoomInClick = new CommandBase(() =>
+        public static readonly CommandBase ZoomInClick = new(() =>
         {
             Logic.ChangeZoom(1);
         }, FileNeeded);
 
-        public static readonly CommandBase ZoomOutClick = new CommandBase(() =>
+        public static readonly CommandBase ZoomOutClick = new(() =>
         {
             Logic.ChangeZoom(-1);
         }, FileNeeded);
 
-        public static readonly CommandBase SwitchEditorsClick = new CommandBase(() =>
+        public static readonly CommandBase SwitchEditorsClick = new(() =>
         {
             App.Log("Switching editors");
             var host = Logic.GetHost();
@@ -143,7 +143,7 @@ namespace RAMEditor.Logic
         #endregion
 
         #region Program Page
-        public static readonly CommandBase VerifyClick = new CommandBase(() =>
+        public static readonly CommandBase VerifyClick = new(() =>
         {
             try
             {
@@ -164,9 +164,9 @@ namespace RAMEditor.Logic
                 App.LogException(ex);
                 Logic.ShowErrorMessage(App.String("error"), App.String("unknownError"));
             }
-        },
-            () => FileNeeded() && !Logic.GetHost().IsProgramRunning);
-        public static readonly AsyncCommandBase RunClick = new AsyncCommandBase(async () =>
+        }, () => FileNeeded() && !Logic.GetHost().IsProgramRunning);
+
+        public static readonly AsyncCommandBase RunClick = new(async () =>
         {
             _tokenSource = new CancellationTokenSource();
             Host parent = Logic.GetHost();
@@ -191,13 +191,13 @@ namespace RAMEditor.Logic
             {
                 parent.IsProgramRunning = false;
             }
-        },
-            () => FileNeeded() && !Logic.GetHost().IsProgramRunning);
-        public static readonly CommandBase CancelClick = new CommandBase(() => _tokenSource?.Cancel(),
-            () => FileNeeded() && Logic.GetHost().IsProgramRunning);
-        public static readonly CommandBase PrintClick = new CommandBase(() =>
+        }, () => FileNeeded() && !Logic.GetHost().IsProgramRunning);
+
+        public static readonly CommandBase CancelClick = new(() => _tokenSource?.Cancel(), () => FileNeeded() && Logic.GetHost().IsProgramRunning);
+
+        public static readonly CommandBase PrintClick = new(() =>
         {
-            PrintDialog pd = new PrintDialog();
+            var pd = new PrintDialog();
             App.Log("Print dialog showed");
             if (pd.ShowDialog() == true)
             {
@@ -221,9 +221,10 @@ namespace RAMEditor.Logic
         #endregion
 
         #region Data Page
-        //Memory
-        public static readonly CommandBase ClearMemoryClick = new CommandBase(Logic.ClearMemory, FileNeeded);
-        public static readonly CommandBase MemoryExportClick = new CommandBase(() =>
+        #region Memory
+        public static readonly CommandBase ClearMemoryClick = new(Logic.ClearMemory, FileNeeded);
+
+        public static readonly CommandBase MemoryExportClick = new(() =>
         {
             SaveFileDialog sfd = Logic.PrepareSaveFileDialog(App.String("saveTextFile"), $"{App.String("textFile")}|*.*");
             if (sfd.ShowDialog() != true)
@@ -232,7 +233,7 @@ namespace RAMEditor.Logic
             }
 
             UIElementCollection memory = Logic.GetHost().Memory.Children;
-            using (StreamWriter sw = new StreamWriter(sfd.FileName))
+            using (var sw = new StreamWriter(sfd.FileName))
             {
                 foreach (MemoryGrid mg in memory)
                 {
@@ -243,7 +244,7 @@ namespace RAMEditor.Logic
         }, FileNeeded);
 
         //Experimental feature
-        public static readonly CommandBase MemoryImportClick = new CommandBase(() =>
+        public static readonly CommandBase MemoryImportClick = new(() =>
         {
             OpenFileDialog ofd = Logic.PrepareOpenFileDialog(App.String("selectTextFile"), $"{App.String("textFile")}|*.*");
             if (ofd.ShowDialog() != true)
@@ -253,25 +254,26 @@ namespace RAMEditor.Logic
 
             UIElementCollection memory = Logic.GetHost().Memory.Children;
             memory.Clear();
-            using (StreamReader sr = new StreamReader(ofd.FileName))
+            using var sr = new StreamReader(ofd.FileName);
+            string line;
+            while ((line = sr.ReadLine()) != null)
             {
-                string line;
-                while ((line = sr.ReadLine()) != null)
+                if (line == string.Empty)
                 {
-                    if (line == string.Empty)
-                    {
-                        continue;
-                    }
-
-                    string[] data = line.Split(';');
-                    memory.Add(new MemoryGrid(new Cell(data[1], data[0])));
+                    continue;
                 }
-            }
-        }, FileNeeded);
 
-        //Input tape
-        public static readonly CommandBase ClearInputTapeClick = new CommandBase(Logic.ClearInputTape, FileNeeded);
-        public static readonly CommandBase InputTapeImportClick = new CommandBase(() =>
+                string[] data = line.Split(';');
+                memory.Add(new MemoryGrid(new Cell(data[1], data[0])));
+            }
+            sr.Close();
+        }, FileNeeded);
+        #endregion
+
+        #region Input Tape
+        public static readonly CommandBase ClearInputTapeClick = new(Logic.ClearInputTape, FileNeeded);
+
+        public static readonly CommandBase InputTapeImportClick = new(() =>
         {
             OpenFileDialog ofd = Logic.PrepareOpenFileDialog(App.String("selectTextFile"), $"{App.String("textFile")}|*.*");
             if (ofd.ShowDialog() != true)
@@ -280,7 +282,7 @@ namespace RAMEditor.Logic
             }
 
             string input = string.Empty;
-            using (StreamReader sr = new StreamReader(ofd.FileName))
+            using (var sr = new StreamReader(ofd.FileName))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)
@@ -296,7 +298,8 @@ namespace RAMEditor.Logic
             Logic.GetHost().InputTape.Text = input;
             App.Log($"Input tape imported from {ofd.FileName}");
         }, FileNeeded);
-        public static readonly CommandBase InputTapeExportClick = new CommandBase(() =>
+
+        public static readonly CommandBase InputTapeExportClick = new(() =>
         {
             SaveFileDialog sfd = Logic.PrepareSaveFileDialog(App.String("saveTextFile"), $"{App.String("textFile")}|*.*");
             if (sfd.ShowDialog() != true)
@@ -306,7 +309,7 @@ namespace RAMEditor.Logic
 
             string inputTape = Logic.GetHost().InputTape.Text;
             string[] tape = inputTape.Split(' ');
-            using (StreamWriter sw = new StreamWriter(sfd.FileName))
+            using (var sw = new StreamWriter(sfd.FileName))
             {
                 foreach (string s in tape)
                 {
@@ -315,9 +318,11 @@ namespace RAMEditor.Logic
             }
             App.Log($"Input tape exported to {sfd.FileName}");
         }, FileNeeded);
-        //Output tape
-        public static readonly CommandBase ClearOutputTapeClick = new CommandBase(Logic.ClearOutputTape, FileNeeded);
-        public static readonly CommandBase OutputTapeExportClick = new CommandBase(() =>
+        #endregion
+
+        #region Output Tape
+        public static readonly CommandBase ClearOutputTapeClick = new(Logic.ClearOutputTape, FileNeeded);
+        public static readonly CommandBase OutputTapeExportClick = new(() =>
         {
             SaveFileDialog sfd = Logic.PrepareSaveFileDialog(App.String("saveTextFile"), $"{App.String("textFile")}|*.*");
             if (sfd.ShowDialog() != true)
@@ -327,7 +332,7 @@ namespace RAMEditor.Logic
 
             string outputTape = Logic.GetHost().OutputTape.Text;
             string[] tape = outputTape.Split(' ');
-            using (StreamWriter sw = new StreamWriter(sfd.FileName))
+            using (var sw = new StreamWriter(sfd.FileName))
             {
                 foreach (string s in tape)
                 {
@@ -336,6 +341,7 @@ namespace RAMEditor.Logic
             }
             App.Log($"Output tape exported to {sfd.FileName}");
         }, FileNeeded);
+        #endregion
         #endregion
 
         #region Helpers

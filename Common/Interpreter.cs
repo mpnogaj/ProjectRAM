@@ -7,18 +7,20 @@ namespace Common
     public static class Interpreter
     {
         /// <summary>
-        /// Variables whitch can be read after executin program
+        /// Variables whitch can be read after executing program
         /// Cleared and initialized at the begging of the program
         /// </summary>
-        public static List<Command> Program = new List<Command>();
-        public static Dictionary<string, string> Memory = new Dictionary<string, string>();
-        public static Dictionary<string, string> MaxMemory = new Dictionary<string, string>();
-        public static List<string> ReadableInputTape = new List<string>();
-        public static Queue<string> InputTape = new Queue<string>();
-        public static Queue<string> OutputTape = new Queue<string>();
-        public static List<Command> ExecutedCommands = new List<Command>();
-
-        public static bool Executed = false;
+#pragma warning disable CA2211 // Non-constant fields should not be visible
+        public static List<Command> Program = new();
+        public static Dictionary<string, string> Memory = new();
+        public static Dictionary<string, string> MaxMemory = new();
+        public static List<string> ReadableInputTape = new();
+        public static Queue<string> InputTape = new();
+        public static Queue<string> OutputTape = new();
+        public static List<Command> ExecutedCommands = new();
+        public static Dictionary<string, int> JumpMap = new();
+        public static bool Executed;
+#pragma warning restore CA2211 // Non-constant fields should not be visible
 
         /// <summary>
         /// Funkcja do skakania. Preszukuje wszystkie komendy i jeżeli znajdzie etykiete to skacze do niej.
@@ -29,17 +31,35 @@ namespace Common
         /// <returns>Indeks komendy do której skoczyć</returns>
         private static int Jump(string lbl, int index)
         {
-            int i = 0;
-            foreach (Command command in Program)
+            if(JumpMap.ContainsKey(lbl))
             {
-                if (command.Label == lbl)
+                return JumpMap[lbl] - 1;
+            }
+            //foreach (Command command in Program)
+            //{
+            //    if (command.Label == lbl)
+            //    {
+            //        //w pętli for znowu zwięszke 'i' więc się wyrówna.
+            //        return i - 1;
+            //    }
+            //    i++;
+            //}
+            throw new LabelDoesntExistExcpetion(Program[index].Line, lbl);
+        }
+
+        private static Dictionary<string, int> MapLabels()
+        {
+            int i = 0;
+            Dictionary<string, int> labels = new();
+            foreach(Command command in Program)
+            {
+                if (!string.IsNullOrWhiteSpace(command.Label))
                 {
-                    //w pętli for znowu zwięszke 'i' więc się wyrówna.
-                    return i - 1;
+                    labels.Add(command.Label, i);
                 }
                 i++;
             }
-            throw new LabelDoesntExistExcpetion(Program[index].Line, lbl);
+            return labels;
         }
 
         private static string GetValue(Command c, string formatedArg, Dictionary<string, string> memory)
@@ -76,7 +96,7 @@ namespace Common
             InputTape = new Queue<string>();
             ReadableInputTape = new List<string>();
             Executed = false;
-
+            JumpMap = MapLabels();
             if (commands != null)
             {
                 Program = commands;

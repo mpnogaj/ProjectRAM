@@ -27,11 +27,11 @@ namespace RAMConsole
                 {
                     inputTape = Creator.CreateInputTapeFromFile(o.InputTapePath);
                 }
-                CancellationTokenSource cts = new CancellationTokenSource();
+                var cts = new CancellationTokenSource();
                 try
                 {
-                    Queue<string> outputTape =
-                                       Interpreter.RunCommands(Creator.CreateCommandList(args[0]), inputTape, cts.Token).Item1;
+                    Interpreter.RunCommands(Creator.CreateCommandList(args[0]), inputTape, cts.Token);
+                    Queue<string> outputTape = Interpreter.OutputTape;
                     while (outputTape.Count > 0)
                     {
                         Console.Write($"{outputTape.Dequeue()} ");
@@ -41,18 +41,18 @@ namespace RAMConsole
                 {
                     result = -1;
                     Console.WriteLine(rie.Message);
-                    Console.WriteLine("Exit code {0}", result);
+                    Console.WriteLine($"Exit code {result}");
                 }
 
             }).WithNotParsed(errs =>
             {
-                Console.WriteLine("errors {0}", errs.Count());
+                Console.WriteLine($"errors {errs.Count()}", errs.Count());
                 if (errs.Any(x => x is HelpRequestedError || x is VersionRequestedError))
                 {
                     result = -1;
                 }
 
-                Console.WriteLine("Exit code {0}", result);
+                Console.WriteLine($"Exit code {result}");
             });
             return result;
         }
