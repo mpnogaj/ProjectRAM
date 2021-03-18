@@ -1,19 +1,21 @@
-﻿using System;
-using System.Printing;
-using System.Windows.Controls;
+﻿using Avalonia.Threading;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Threading;
 
-namespace RAMEditor.Helpers
+namespace RAMEditorMultiplatform.Helpers
 {
-    public class CommandBase : ICommand
+    public class ParameterBaseCommand<T> : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        private readonly Action _execute;
+        private readonly Action<T> _execute;
         private readonly Func<bool> _canExecute;
         private readonly DispatcherTimer _canExecuteChangedTimer;
 
-        public CommandBase(Action execute, Func<bool> canExecute)
+        public ParameterBaseCommand(Action<T> execute, Func<bool> canExecute)
         {
             _execute = execute;
             _canExecute = canExecute;
@@ -41,7 +43,7 @@ namespace RAMEditor.Helpers
 
         public void Execute(object parameter)
         {
-            _execute();
+            _execute((T)parameter);
         }
     }
 }

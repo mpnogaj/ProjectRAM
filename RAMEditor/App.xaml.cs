@@ -30,6 +30,10 @@ namespace RAMEditor
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
+            if (!Directory.Exists("logs"))
+            {
+                Directory.CreateDirectory("logs");
+            }
             logger = new StreamWriter(@$"logs/RAMEditor_{DateTime.Now.ToString(DATE_FORMAT)}.txt");
             Log("Application started");
             //Set language

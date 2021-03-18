@@ -3,9 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using System;
+using RAMEditorMultiplatform.ViewModels;
 using System.IO;
 
-namespace RAMEditorMultiplatform.Windows
+namespace RAMEditorMultiplatform.Views
 {
     public class MainWindow : Window
     {
@@ -17,8 +18,9 @@ namespace RAMEditorMultiplatform.Windows
 #if DEBUG
             this.AttachDevTools();
 #endif
-            Files = this.FindControl<TabControl>("Files");
-            Logic.Logic.MainWindow = this;
+            this.DataContext = new MainWindowViewModel();
+            //Files = this.FindControl<TabControl>("Files");
+            //Logic.Logic.MainWindow = this;
             Logic.Logic.CreateNewPage();
         }
 
@@ -26,7 +28,5 @@ namespace RAMEditorMultiplatform.Windows
         {
             AvaloniaXamlLoader.Load(this);
         }
-
-        
     }
 }

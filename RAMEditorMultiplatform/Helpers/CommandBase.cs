@@ -1,10 +1,8 @@
-﻿using System;
-using System.Printing;
-using System.Windows.Controls;
+﻿using Avalonia.Threading;
+using System;
 using System.Windows.Input;
-using System.Windows.Threading;
 
-namespace RAMEditor.Helpers
+namespace RAMEditorMultiplatform.Helpers
 {
     public class CommandBase : ICommand
     {

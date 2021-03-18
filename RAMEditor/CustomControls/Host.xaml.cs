@@ -45,7 +45,6 @@ namespace RAMEditor.CustomControls
                 {
                     Mouse.OverrideCursor = null;
                 }
-                var mw = Logic.Logic.GetMainWindow();
                 this.InputTape.IsEnabled = !value;
             }
         }
