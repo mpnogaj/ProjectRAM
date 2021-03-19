@@ -9,8 +9,8 @@ namespace RAMEditorMultiplatform.ViewModels
 {
     public class HostViewModel : ViewModelBase
     {
-        private static HostViewModel _instance;
-        public static HostViewModel Instance { get => _instance; }
+        private HostViewModel _instance;
+        public HostViewModel Instance { get => _instance; }
 
         private string _header;
         public string Header { get => _header; set { SetProperty(ref _header, value); } }
@@ -20,6 +20,9 @@ namespace RAMEditorMultiplatform.ViewModels
 
         private string _inputTapeString;
         public string InputTapeString { get => _inputTapeString; set { SetProperty(ref _inputTapeString, value); } }
+
+        private readonly ParameterBaseCommand<HostViewModel> _closePage = new(Logic.Logic.ClosePage, () => true);
+        public ParameterBaseCommand<HostViewModel> ClosePage { get => _closePage; }
 
         public HostViewModel()
         {

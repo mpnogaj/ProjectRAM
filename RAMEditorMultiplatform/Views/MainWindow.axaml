@@ -240,14 +240,7 @@
               </ContentControl.Content>
               <ContentControl.ContextMenu>
                 <ContextMenu>
-                  <MenuItem Header="Close" InputGesture="Ctrl + W">
-                    <!--https://github.com/AvaloniaUI/Avalonia/issues/3100#issuecomment-753452752-->
-                    <MenuItem.Styles>
-                      <Style Selector="MenuItem.SubItems MenuItem">
-                        <Setter Property="Command" Value="{Binding ClosePage}"/>
-                        <Setter Property="CommandParameter" Value="{Binding Page}"/>
-                      </Style>
-                    </MenuItem.Styles>
+                  <MenuItem Header="Close" InputGesture="Ctrl + W" Command="{Binding ClosePage}" CommandParameter="{Binding}">
                   </MenuItem>
                 </ContextMenu>
               </ContentControl.ContextMenu>

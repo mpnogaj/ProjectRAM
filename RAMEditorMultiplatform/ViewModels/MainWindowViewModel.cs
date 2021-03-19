@@ -41,7 +41,6 @@ namespace RAMEditorMultiplatform.ViewModels
             _instance = this;
             _pages = new ObservableCollection<HostViewModel>();
             _page = null;
-
         }
     }
 }

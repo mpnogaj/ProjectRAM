@@ -1,6 +1,5 @@
 ﻿using RAMEditorMultiplatform.Views;
 using RAMEditorMultiplatform.ViewModels;
-using RAMEditorMultiplatform.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
