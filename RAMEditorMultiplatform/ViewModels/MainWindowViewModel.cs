@@ -4,39 +4,42 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RAMEditorMultiplatform.Models;
+using RAMEditorMultiplatform.ViewModels;
 using RAMEditorMultiplatform.Helpers;
 
 namespace RAMEditorMultiplatform.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public string DEFAULT_HEADER { get => "NEW RAMCode"; }
+        public static string DEFAULT_HEADER { get => "NEW RAMCode"; }
 
         private static MainWindowViewModel _instance;
         public static MainWindowViewModel Instance { get => _instance; }
 
-        private ObservableCollection<TabPageModel> _pages;
-        public ObservableCollection<TabPageModel> Pages
+        private ObservableCollection<HostViewModel> _pages;
+        public ObservableCollection<HostViewModel> Pages
         {
             get => _pages;
             set { SetProperty(ref _pages, value); }
         }
 
-        private TabPageModel _page;
-        public TabPageModel Page
+        private HostViewModel _page;
+        public HostViewModel Page
         {
             get => _page;
             set { SetProperty(ref _page, value); }
         }
 
-        private ParameterBaseCommand<string> _addPage = new(Logic.Logic.CreateNewPage, null);
+        private readonly ParameterBaseCommand<string> _addPage = new(Logic.Logic.CreateNewPage, () => true);
         public ParameterBaseCommand<string> AddPageCommand { get => _addPage; }
+
+        private readonly ParameterBaseCommand<HostViewModel> _closePage = new(Logic.Logic.ClosePage, () => true);
+        public ParameterBaseCommand<HostViewModel> ClosePage { get => _closePage; }
 
         public MainWindowViewModel()
         {
             _instance = this;
-            _pages = new ObservableCollection<TabPageModel>();
+            _pages = new ObservableCollection<HostViewModel>();
             _page = null;
 
         }

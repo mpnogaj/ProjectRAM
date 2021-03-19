@@ -3,7 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:imaging="clr-namespace:Avalonia.Media.Imaging;assembly=Avalonia.Visuals"
+        xmlns:controls="using:RAMEditorMultiplatform.CustomControls"
         xmlns:logic="using:RAMEditorMultiplatform.Logic"
+        xmlns:viewmodels="using:RAMEditorMultiplatform.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="RAMEditorMultiplatform.Views.MainWindow"
         Title="RAM Editor" Height="600" Width="800"
@@ -238,15 +240,23 @@
               </ContentControl.Content>
               <ContentControl.ContextMenu>
                 <ContextMenu>
-                  <MenuItem Header="Close" InputGesture="Ctrl + W"/>
+                  <MenuItem Header="Close" InputGesture="Ctrl + W">
+                    <!--https://github.com/AvaloniaUI/Avalonia/issues/3100#issuecomment-753452752-->
+                    <MenuItem.Styles>
+                      <Style Selector="MenuItem.SubItems MenuItem">
+                        <Setter Property="Command" Value="{Binding ClosePage}"/>
+                        <Setter Property="CommandParameter" Value="{Binding Page}"/>
+                      </Style>
+                    </MenuItem.Styles>
+                  </MenuItem>
                 </ContextMenu>
               </ContentControl.ContextMenu>
             </ContentControl>
           </DataTemplate>
         </TabControl.ItemTemplate>
         <TabControl.ContentTemplate>
-          <DataTemplate>
-            <TextBlock>s</TextBlock>
+          <DataTemplate DataType="{x:Type viewmodels:HostViewModel}">
+            <controls:Host/>
           </DataTemplate>
         </TabControl.ContentTemplate>
       </TabControl>
