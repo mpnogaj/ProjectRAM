@@ -9,6 +9,8 @@
     <Grid.Styles>
       <Style Selector="GridSplitter">
         <Setter Property="Background" Value="LightGray"/>
+        <Setter Property="MinWidth" Value="2"/>
+        <Setter Property="MinHeight" Value="2"/>
       </Style>
       <Style Selector="GridSplitter:pointerover:pressed">
         <Setter Property="Background" Value="Gray"/>
@@ -46,9 +48,29 @@
             <TextBlock Text="Value"/>
           </Border>
         </Grid>
+        <ItemsControl Items="{Binding Memory}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition MinWidth="25" Width="*"/>
+                  <ColumnDefinition MaxWidth="1" Width="1"/>
+                  <ColumnDefinition MinWidth="25" Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Background="White">
+                  <TextBlock Text="{Binding Address}"/>
+                </Border>
+                <GridSplitter Width="1" Grid.Column="1" ResizeDirection="Columns" VerticalAlignment="Stretch" Background="Black"/>
+                <Border Grid.Column="2" Background="White">
+                  <TextBlock Text="{Binding Value}"/>
+                </Border>
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
       </StackPanel>
     </Grid>
-    <GridSplitter Width="1" Grid.Column="1" ResizeDirection="Columns" VerticalAlignment="Stretch"/>
+    <GridSplitter Width="3" Grid.Column="1" ResizeDirection="Columns" VerticalAlignment="Stretch"/>
     <Grid x:Name="LeftColumn" Grid.Column="2">
       <Grid.RowDefinitions>
         <RowDefinition Height="*"/>
@@ -74,7 +96,8 @@
         <!--Output tape-->
         <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" VerticalAlignment="Top" Margin="8, 5, 8, 8" Spacing="10" IsEnabled="False">
           <TextBox
-              IsReadOnly="True"/>
+              IsReadOnly="True"
+              Text="{Binding OutputTapeString}"/>
           <TextBlock
               HorizontalAlignment="Center"
               Text="Output tape"/>
@@ -84,9 +107,10 @@
             AcceptsReturn="True"
             TextWrapping="Wrap"
             FontFamily="Arial"
-            AcceptsTab="True"/>
+            AcceptsTab="True"
+            Text="{Binding ProgramString}"/>
       </DockPanel>
-      <GridSplitter Height="5" Grid.Row="1" ResizeDirection="Rows"/>
+      <GridSplitter Height="3" Grid.Row="1" ResizeDirection="Rows"/>
       <Grid Grid.Row="2" Background="AliceBlue"/>
     </Grid>
   </Grid>

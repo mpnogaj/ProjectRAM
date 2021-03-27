@@ -10,6 +10,11 @@
         x:Class="RAMEditorMultiplatform.Views.MainWindow"
         Title="RAM Editor" Height="600" Width="800"
         MinHeight="450" MinWidth="550">
+  <Window.Styles>
+    <Style Selector="GridSplitter">
+      <Setter Property="MinWidth" Value="2"/>
+    </Style>
+  </Window.Styles>
   <DockPanel LastChildFill="True" Margin="0, 0, 0, 10">
     <DockPanel.Styles>
       <Style Selector="TabItem">
@@ -89,12 +94,12 @@
           </MenuItem.Icon>
         </MenuItem>
         <Separator/>
-        <MenuItem Header="Run program" InputGesture="F5">
+        <MenuItem Header="Run program" InputGesture="F5" Command="{Binding RunProgram}">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/run.png"/>
           </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="Stop program" InputGesture="Shift+F5">
+        <MenuItem Header="Stop program" InputGesture="Shift+F5" Command="{Binding StopProgram}">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/stop2.png"/>
           </MenuItem.Icon>

@@ -17,7 +17,4 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\Images\*" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
 </Project>

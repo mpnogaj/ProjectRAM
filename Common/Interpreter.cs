@@ -96,10 +96,10 @@ namespace Common
             InputTape = new Queue<string>();
             ReadableInputTape = new List<string>();
             Executed = false;
-            JumpMap = MapLabels();
             if (commands != null)
             {
                 Program = commands;
+                JumpMap = MapLabels();
             }
             Memory.Add("0", string.Empty);
             MaxMemory.Add("0", string.Empty);

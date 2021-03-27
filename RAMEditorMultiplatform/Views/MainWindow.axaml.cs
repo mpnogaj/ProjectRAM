@@ -18,9 +18,8 @@ namespace RAMEditorMultiplatform.Views
 #if DEBUG
             this.AttachDevTools();
 #endif
+            Logic.Logic.MainWindow = this;
             this.DataContext = new MainWindowViewModel();
-            //Files = this.FindControl<TabControl>("Files");
-            //Logic.Logic.MainWindow = this;
             Logic.Logic.CreateNewPage();
         }
 
