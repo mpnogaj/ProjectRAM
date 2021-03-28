@@ -13,7 +13,7 @@ namespace RAMEditorMultiplatform.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public static string DEFAULT_HEADER { get => "NEW RAMCode"; }
+        public static string DEFAULT_HEADER { get => "NEW"; }
 
         private static MainWindowViewModel _instance;
         public static MainWindowViewModel Instance { get => _instance; }
@@ -32,8 +32,17 @@ namespace RAMEditorMultiplatform.ViewModels
             set { SetProperty(ref _page, value); }
         }
 
-        private readonly ParameterBaseCommand<string> _addPage = new(Logic.Logic.CreateNewPage, () => true);
+        private readonly ParameterBaseCommand<string> _addPage;
         public ParameterBaseCommand<string> AddPageCommand { get => _addPage; }
+
+        private readonly CommandBase _openFile;
+        public CommandBase OpenFile { get => _openFile; }
+
+        private readonly ParameterBaseCommand<HostViewModel> _saveFileAs;
+        public ParameterBaseCommand<HostViewModel> SaveFileAs { get => _saveFileAs; }
+
+        private readonly ParameterBaseCommand<HostViewModel> _saveFile;
+        public ParameterBaseCommand<HostViewModel> SaveFile { get => _saveFile; }
 
         private readonly AsyncCommandBase _runProgram;
         public AsyncCommandBase RunProgram { get => _runProgram; }
@@ -46,6 +55,21 @@ namespace RAMEditorMultiplatform.ViewModels
             _instance = this;
             _pages = new ObservableCollection<HostViewModel>();
             _page = null;
+
+            _addPage = new(Logic.Logic.CreateNewPage, () => true);
+            _openFile = new(Logic.Logic.OpenFile, () => true);
+            _saveFileAs = new(Logic.Logic.SaveFileAs, () => IsFileOpened());
+            _saveFile = new((page) =>
+            {
+                if (string.IsNullOrEmpty(page.Path))
+                {
+                    Logic.Logic.SaveFileAs(page);
+                }
+                else
+                {
+                    Logic.Logic.SaveToFile(page.Path, page.ProgramString);
+                }
+            }, () => IsFileOpened());
 
             _runProgram = new(async () =>
             {
@@ -62,7 +86,7 @@ namespace RAMEditorMultiplatform.ViewModels
                     Page.ProgrammRunning = false;
                     Logic.Logic.SetCursor(StandardCursorType.Arrow);
                 }
-            }, () => { try { return !Page.ProgrammRunning; } catch (NullReferenceException) { return false; } });
+            }, () => IsFileOpened() && !IsProgramRunning());
 
             _stopProgram = new(() =>
             {
@@ -70,7 +94,17 @@ namespace RAMEditorMultiplatform.ViewModels
 #pragma warning disable CS8602 // Dereference of a possibly null reference. 
                 Page.Token.Cancel();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-            }, () => { try { return Page.ProgrammRunning; } catch (NullReferenceException) { return false; } });
+            }, () => IsFileOpened() && IsProgramRunning());
+        }
+
+        private bool IsFileOpened()
+        {
+            return Page != null;
+        }
+
+        private bool IsProgramRunning()
+        {
+            return Page.ProgrammRunning;
         }
     }
 }

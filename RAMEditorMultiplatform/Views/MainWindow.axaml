@@ -41,18 +41,18 @@
           </MenuItem.Icon>
         </MenuItem>
         <Separator/>
-        <MenuItem Header="Open file" InputGesture="Ctrl+O">
+        <MenuItem Header="Open file" InputGesture="Ctrl+O" Command="{Binding OpenFile}">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/openFile.png"/>
           </MenuItem.Icon>
         </MenuItem>
         <Separator/>
-        <MenuItem Header="Save file" InputGesture="Ctrl+S">
+        <MenuItem Header="Save file" InputGesture="Ctrl+S" Command="{Binding SaveFile}" CommandParameter="{Binding Page}">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/save.png"/>
           </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="Save file as" InputGesture="Ctrl+Shift+S">
+        <MenuItem Header="Save file as" InputGesture="Ctrl+Shift+S" Command="{Binding SaveFileAs}" CommandParameter="{Binding Page}">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/saveAs.png"/>
           </MenuItem.Icon>

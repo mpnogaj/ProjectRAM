@@ -35,11 +35,12 @@ namespace RAMEditorMultiplatform.ViewModels
         private bool _programmRunning;
         public bool ProgrammRunning { get => _programmRunning; set { SetProperty(ref _programmRunning, value); } }
 
+        private string _path;
+        public string Path { get => _path; set { SetProperty(ref _path, value); } }
+
         private readonly ParameterBaseCommand<HostViewModel> _closePage;
         public ParameterBaseCommand<HostViewModel> ClosePage { get => _closePage; }
-
-        
-            
+    
         public HostViewModel()
         {
             //_instance = this;

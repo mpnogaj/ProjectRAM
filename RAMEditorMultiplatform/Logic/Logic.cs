@@ -17,15 +17,28 @@ using System.Threading;
 using RAMEditorMultiplatform.Models;
 using System.Collections.ObjectModel;
 using Avalonia.Input;
+using System.IO;
 
 namespace RAMEditorMultiplatform.Logic
 {
     public static class Logic
     {
+        public static readonly List<FileDialogFilter> RAMCODE_FILTER = new List<FileDialogFilter>
+        {
+            new FileDialogFilter
+            {
+                Name = "RAMCode file",
+                Extensions = new List<string>()
+                {
+                    "RAMCode"
+                }
+            }
+        };
+
 
         public static MainWindow? MainWindow { get; set; }
 
-        public static void CreateNewPage(string header = "NEW RAMCode")
+        public static void CreateNewPage(string header = "NEW")
         {
             MainWindowViewModel.Instance.Pages.Add(new HostViewModel
             {
@@ -76,6 +89,62 @@ namespace RAMEditorMultiplatform.Logic
                 });
             }
             host.Memory = newMemory;
+        }
+
+        public static async void SaveFileAs(HostViewModel file)
+        {
+            var sfd = new SaveFileDialog
+            {
+                InitialFileName = file.Header,
+                Title = "Save file",
+                Filters = RAMCODE_FILTER
+            };
+
+            var res = await sfd.ShowAsync(GetAppInstance().MainWindow);
+            if (!string.IsNullOrEmpty(res))
+            {
+                file.Path = res;
+                SaveToFile(res, file.ProgramString);
+            }
+        }
+        
+        public static void SaveToFile(string file, string content)
+        {
+            using(StreamWriter sw = new StreamWriter(file))
+            {
+                sw.Write(content);
+            }
+        }
+
+        public static async void OpenFile()
+        {
+            var ofd = new OpenFileDialog
+            {
+                Title = "Open file",
+                AllowMultiple = true,
+                Filters = RAMCODE_FILTER
+            };
+            var files = await ofd.ShowAsync(GetAppInstance().MainWindow);
+            foreach(var file in files)
+            {
+                if (!string.IsNullOrWhiteSpace(file))
+                {
+                    MainWindowViewModel.Instance.Pages.Add(new HostViewModel
+                    {
+                        Header = Path.GetFileNameWithoutExtension(file),
+                        Path = file,
+                        ProgramString = ReadFromFile(file)
+                    });
+                }
+            }
+        }
+
+        public static string ReadFromFile(string file)
+        {
+            using(StreamReader sr = new StreamReader(file))
+            {
+                return sr.ReadToEnd();
+            }
         }
 
         public static IClassicDesktopStyleApplicationLifetime GetAppInstance()

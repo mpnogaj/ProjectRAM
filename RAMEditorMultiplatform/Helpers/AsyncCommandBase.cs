@@ -29,11 +29,11 @@ namespace RAMEditorMultiplatform.Helpers
             {
                 Interval = new TimeSpan(0, 0, 1),
             };
-            _canExecuteChangedTimer.Tick += _canExecuteChangedTimer_Tick;
+            _canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
             _canExecuteChangedTimer.Start();
         }
 
-        private void _canExecuteChangedTimer_Tick(object sender, EventArgs e)
+        private void CanExecuteChangedTimer_Tick(object sender, EventArgs e)
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -68,12 +68,12 @@ namespace RAMEditorMultiplatform.Helpers
             }
         }
 
-        bool ICommand.CanExecute(object parameter)
+        bool ICommand.CanExecute(object? parameter)
         {
             return CanExecute();
         }
 
-        void ICommand.Execute(object parameter)
+        void ICommand.Execute(object? parameter)
         {
             ExecuteAsync();
         }
