@@ -64,19 +64,19 @@
           </MenuItem.Icon>
         </MenuItem>
         <Separator/>
-        <MenuItem Header="Exit" InputGesture="Alt+F4" Command="{x:Static logic:ButtonLogic.ExitClick}">
+        <MenuItem Header="Exit" InputGesture="Alt+F4" Command="{Binding CloseProgram}">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/exit.png"/>
           </MenuItem.Icon>
         </MenuItem>
       </MenuItem>
       <MenuItem Header="View">
-        <MenuItem Header="Zoom in" InputGesture="Ctrl++">
+        <MenuItem Header="Zoom in" Command="{Binding IncreaseFontSize}" InputGesture="Ctrl++">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/zoomIn.png"/>
           </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="Zoom out" InputGesture="Ctrl+-">
+        <MenuItem Header="Zoom out" Command="{Binding DecreaseFontSize}" InputGesture="Ctrl+-">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/zoomOut.png"/>
           </MenuItem.Icon>

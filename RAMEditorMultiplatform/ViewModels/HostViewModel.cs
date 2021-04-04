@@ -38,6 +38,9 @@ namespace RAMEditorMultiplatform.ViewModels
         private string _path;
         public string Path { get => _path; set { SetProperty(ref _path, value); } }
 
+        private int _fontSize;
+        public int FontSize { get => _fontSize; set { SetProperty(ref _fontSize, value); } }
+
         private readonly ParameterBaseCommand<HostViewModel> _closePage;
         public ParameterBaseCommand<HostViewModel> ClosePage { get => _closePage; }
     
@@ -49,7 +52,7 @@ namespace RAMEditorMultiplatform.ViewModels
             _inputTapeString = string.Empty;
             _programString = string.Empty;
             _programmRunning = false;
-
+            _fontSize = 13;
             _closePage = new(Logic.Logic.ClosePage, () => true);     
         }
     }

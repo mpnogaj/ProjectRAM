@@ -50,12 +50,21 @@ namespace RAMEditorMultiplatform.ViewModels
         private readonly CommandBase _stopProgram;
         public CommandBase StopProgram { get => _stopProgram; }
 
+        private readonly CommandBase _closeProgram;
+        public CommandBase CloseProgram { get => _closeProgram; }
+
+        private readonly CommandBase _increaseFontSize;
+        public CommandBase IncreaseFontSize { get => _increaseFontSize; }
+
+        private readonly CommandBase _decreaseFontSize;
+        public CommandBase DecreaseFontSize { get => _decreaseFontSize; }
+
         public MainWindowViewModel()
         {
             _instance = this;
             _pages = new ObservableCollection<HostViewModel>();
             _page = null;
-
+            
             _addPage = new(Logic.Logic.CreateNewPage, () => true);
             _openFile = new(Logic.Logic.OpenFile, () => true);
             _saveFileAs = new(Logic.Logic.SaveFileAs, () => IsFileOpened());
@@ -70,6 +79,10 @@ namespace RAMEditorMultiplatform.ViewModels
                     Logic.Logic.SaveToFile(page.Path, page.ProgramString);
                 }
             }, () => IsFileOpened());
+            _closeProgram = new(Logic.Logic.Exit, () => true);
+
+            _increaseFontSize = new(() => Logic.Logic.ChangeFontSize(Page, 1), IsFileOpened);
+            _decreaseFontSize = new(() => Logic.Logic.ChangeFontSize(Page, -1), () => IsFileOpened() && Page.FontSize > 1);
 
             _runProgram = new(async () =>
             {

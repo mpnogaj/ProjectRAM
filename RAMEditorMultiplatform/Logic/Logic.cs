@@ -147,6 +147,11 @@ namespace RAMEditorMultiplatform.Logic
             }
         }
 
+        public static void ChangeFontSize(HostViewModel page, int offset)
+        {
+            page.FontSize += offset;
+        }
+
         public static IClassicDesktopStyleApplicationLifetime GetAppInstance()
         {
             return (IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime;

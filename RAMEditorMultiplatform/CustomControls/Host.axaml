@@ -108,7 +108,9 @@
             TextWrapping="Wrap"
             FontFamily="Arial"
             AcceptsTab="True"
-            Text="{Binding ProgramString}"/>
+            FontSize="{Binding FontSize}"
+            Text="{Binding ProgramString}"
+            KeyUp="Fixer"/>
       </DockPanel>
       <GridSplitter Height="3" Grid.Row="1" ResizeDirection="Rows"/>
       <Grid Grid.Row="2" Background="AliceBlue"/>
