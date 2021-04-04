@@ -8,6 +8,9 @@ using RAMEditorMultiplatform.ViewModels;
 using RAMEditorMultiplatform.Helpers;
 using System.Threading;
 using Avalonia.Input;
+using System.IO;
+using L = RAMEditorMultiplatform.Logic.Logic;
+using Avalonia.Controls;
 
 namespace RAMEditorMultiplatform.ViewModels
 {
@@ -118,6 +121,30 @@ namespace RAMEditorMultiplatform.ViewModels
         private bool IsProgramRunning()
         {
             return Page.ProgrammRunning;
+        }
+
+        public void FileOver(object sender, DragEventArgs e)
+        {
+            bool dropEnabled = false;
+            if(e.Data != null && e.Data.GetDataFormats().Where(format => format == DataFormats.FileNames).Any())
+            {
+                if (e.Data.GetFileNames() != null && e.Data.GetFileNames().Where(name => Path.GetExtension(name) == ".RAMCode").Any())
+                {
+                    dropEnabled = true;
+                }
+                System.Diagnostics.Debug.WriteLine(e.Data.GetFileNames().ToList().ToString());
+            }
+            if (dropEnabled) return;
+            e.DragEffects = DragDropEffects.None;
+            e.Handled = true;
+        }
+
+        public void FileDropped(object sender, DragEventArgs e)
+        {
+#pragma warning disable CS8604 // Possible null reference argument.
+            string[] files = e.Data.GetFileNames().Where(fileName => Path.GetExtension(fileName) == ".RAMCode").ToArray();
+#pragma warning restore CS8604 // Possible null reference argument.
+            L.LoadFiles(files);
         }
     }
 }

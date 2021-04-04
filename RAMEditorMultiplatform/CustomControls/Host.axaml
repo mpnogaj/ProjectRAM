@@ -103,6 +103,8 @@
               Text="Output tape"/>
         </StackPanel>
         <!--Code-->
+        <!--&#x0a; -> '\n'-->
+        <!--\r\n doesn't work for Windows but it should-->
         <TextBox DockPanel.Dock="Top" Margin="8, 5, 8, 5"
             AcceptsReturn="True"
             TextWrapping="Wrap"
@@ -110,7 +112,7 @@
             AcceptsTab="True"
             FontSize="{Binding FontSize}"
             Text="{Binding ProgramString}"
-            KeyUp="Fixer"/>
+            NewLine="&#x0a;"/>
       </DockPanel>
       <GridSplitter Height="3" Grid.Row="1" ResizeDirection="Rows"/>
       <Grid Grid.Row="2" Background="AliceBlue"/>

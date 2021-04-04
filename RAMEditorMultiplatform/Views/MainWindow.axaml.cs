@@ -10,8 +10,6 @@ namespace RAMEditorMultiplatform.Views
 {
     public class MainWindow : Window
     {
-        public TabControl Files;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -21,11 +19,18 @@ namespace RAMEditorMultiplatform.Views
             Logic.Logic.MainWindow = this;
             this.DataContext = new MainWindowViewModel();
             Logic.Logic.CreateNewPage();
+            var Files = this.FindControl<TabControl>("Files");
+            Files.AddHandler(DragDrop.DropEvent, File_Drop);
+            Files.AddHandler(DragDrop.DragOverEvent, File_Drag_Over);
         }
 
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
         }
+
+        private void File_Drop(object sender, DragEventArgs e) => MainWindowViewModel.Instance.FileDropped(sender, e);
+
+        private void File_Drag_Over(object sender, DragEventArgs e) => MainWindowViewModel.Instance.FileOver(sender, e);
     }
 }

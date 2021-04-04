@@ -1,23 +1,17 @@
-﻿using RAMEditorMultiplatform.Views;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
+using Common;
+using RAMEditorMultiplatform.Models;
 using RAMEditorMultiplatform.ViewModels;
-using System.Collections.Specialized;
+using RAMEditorMultiplatform.Views;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Avalonia;
-using Avalonia.FreeDesktop;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Controls;
-using RAMEditorMultiplatform.CustomControls;
-using Common;
-using System.Threading;
-using RAMEditorMultiplatform.Models;
 using System.Collections.ObjectModel;
-using Avalonia.Input;
+using System.Collections.Specialized;
 using System.IO;
+using System.Threading;
 
 namespace RAMEditorMultiplatform.Logic
 {
@@ -72,7 +66,7 @@ namespace RAMEditorMultiplatform.Logic
             ct.ThrowIfCancellationRequested();
             Queue<string> _output = Interpreter.OutputTape;
             string finalOutput = "";
-            foreach(string s in _output)
+            foreach (string s in _output)
             {
                 finalOutput += s + " ";
             }
@@ -80,7 +74,7 @@ namespace RAMEditorMultiplatform.Logic
             host.OutputTapeString = finalOutput;
             host.Memory.Clear();
             var newMemory = new ObservableCollection<MemoryCell>();
-            foreach(var memoryRow in Interpreter.Memory)
+            foreach (var memoryRow in Interpreter.Memory)
             {
                 newMemory.Add(new MemoryCell
                 {
@@ -107,10 +101,10 @@ namespace RAMEditorMultiplatform.Logic
                 SaveToFile(res, file.ProgramString);
             }
         }
-        
+
         public static void SaveToFile(string file, string content)
         {
-            using(StreamWriter sw = new StreamWriter(file))
+            using (StreamWriter sw = new StreamWriter(file))
             {
                 sw.Write(content);
             }
@@ -125,7 +119,16 @@ namespace RAMEditorMultiplatform.Logic
                 Filters = RAMCODE_FILTER
             };
             var files = await ofd.ShowAsync(GetAppInstance().MainWindow);
-            foreach(var file in files)
+            if (files == null)
+            {
+                return;
+            }
+            LoadFiles(files);
+        }
+
+        public static void LoadFiles(string[] files)
+        {
+            foreach (string file in files)
             {
                 if (!string.IsNullOrWhiteSpace(file))
                 {
@@ -141,7 +144,7 @@ namespace RAMEditorMultiplatform.Logic
 
         public static string ReadFromFile(string file)
         {
-            using(StreamReader sr = new StreamReader(file))
+            using (StreamReader sr = new StreamReader(file))
             {
                 return sr.ReadToEnd();
             }
