@@ -81,7 +81,7 @@
             <Image Source="/Assets/Images/zoomOut.png"/>
           </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="Switch editor" InputGesture="Ctrl+Q">
+        <MenuItem Header="Switch editor" Command="{Binding SwitchEditors}" InputGesture="Ctrl+Q">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/switch.png"/>
           </MenuItem.Icon>
@@ -107,7 +107,7 @@
       </MenuItem>
       <MenuItem Header="Data">
         <MenuItem Header="Memory">
-          <MenuItem Header="Clear">
+          <MenuItem Header="Clear" Command="{Binding Clear}" CommandParameter="memory">
             <MenuItem.Icon>
               <Image Source="/Assets/Images/clear.png"/>
             </MenuItem.Icon>
@@ -125,7 +125,7 @@
           </MenuItem>
         </MenuItem>
         <Separator/>
-        <MenuItem Header="Input tape">
+        <MenuItem Header="Input tape" Command="{Binding Clear}" CommandParameter="inputTape">
           <MenuItem Header="Clear">
             <MenuItem.Icon>
               <Image Source="/Assets/Images/clear.png"/>
@@ -144,7 +144,7 @@
           </MenuItem>
         </MenuItem>
         <MenuItem Header="Output tape">
-          <MenuItem Header="Clear">
+          <MenuItem Header="Clear" Command="{Binding Clear}" CommandParameter="outputTape">
             <MenuItem.Icon>
               <Image Source="/Assets/Images/clear.png"/>
             </MenuItem.Icon>

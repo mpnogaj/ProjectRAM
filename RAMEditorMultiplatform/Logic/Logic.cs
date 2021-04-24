@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Common;
+using RAMEditorMultiplatform.Converters;
 using RAMEditorMultiplatform.Models;
 using RAMEditorMultiplatform.ViewModels;
 using RAMEditorMultiplatform.Views;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace RAMEditorMultiplatform.Logic
@@ -28,7 +30,6 @@ namespace RAMEditorMultiplatform.Logic
                 }
             }
         };
-
 
         public static MainWindow? MainWindow { get; set; }
 
@@ -58,9 +59,17 @@ namespace RAMEditorMultiplatform.Logic
             HostViewModel host = MainWindowViewModel.Instance.Page;
             string _input = host.InputTapeString;
             string _program = host.ProgramString;
-            var sc = new StringCollection();
-            sc.AddRange(_program.Split(Environment.NewLine));
-            List<Command> commands = Creator.CreateCommandList(sc);
+            List<Command> commands = new List<Command>();
+            if (host.SimpleEditorUsage)
+            {
+                commands = ProgramLineToCommandConverter.ProgramLinesToCommands(host.SimpleEditorViewModel.Program.ToList());
+            }
+            else
+            {
+                var sc = new StringCollection();
+                sc.AddRange(_program.Split('\n'));
+                commands = Creator.CreateCommandList(sc);
+            }  
             ct.ThrowIfCancellationRequested();
             Interpreter.RunCommands(commands, Creator.CreateInputTapeFromString(_input), ct);
             ct.ThrowIfCancellationRequested();
@@ -140,6 +149,11 @@ namespace RAMEditorMultiplatform.Logic
                     });
                 }
             }
+        }
+
+        public static string TapeToString(Queue<string> tape)
+        {
+            return string.Join(", ", tape.ToArray());
         }
 
         public static string ReadFromFile(string file)

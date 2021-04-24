@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 
 namespace Common
 {
@@ -10,6 +11,18 @@ namespace Common
     /// </summary>
     public static class Creator
     {
+        public static StringCollection CreateStringCollection(string text, string separator)
+        {
+            var outCollection = new StringCollection();
+            outCollection.AddRange(text.Split(separator));
+            return outCollection;
+        }
+
+        public static string StringCollectionToString(StringCollection collection, string join)
+        {
+            return string.Join(join, collection);
+        }
+
         /// <summary>
         /// Create list of commands
         /// </summary>

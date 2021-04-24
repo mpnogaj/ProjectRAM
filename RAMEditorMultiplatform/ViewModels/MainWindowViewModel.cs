@@ -62,45 +62,57 @@ namespace RAMEditorMultiplatform.ViewModels
         private readonly CommandBase _decreaseFontSize;
         public CommandBase DecreaseFontSize { get => _decreaseFontSize; }
 
+        private readonly CommandBase _switchEditors;
+        public CommandBase SwitchEditors { get => _switchEditors; }
+
+        private readonly ParameterBaseCommand<string> _clear;
+        public ParameterBaseCommand<string> Clear { get => _clear; }
+
+        private readonly ParameterBaseCommand<string> _export;
+        public ParameterBaseCommand<string> Export { get => _export; }
+
+        private readonly CommandBase _import;
+        public CommandBase Import { get => _import; }
+
         public MainWindowViewModel()
         {
             _instance = this;
             _pages = new ObservableCollection<HostViewModel>();
             _page = null;
-            
-            _addPage = new(Logic.Logic.CreateNewPage, () => true);
-            _openFile = new(Logic.Logic.OpenFile, () => true);
-            _saveFileAs = new(Logic.Logic.SaveFileAs, () => IsFileOpened());
+
+            _addPage = new(L.CreateNewPage, () => true);
+            _openFile = new(L.OpenFile, () => true);
+            _saveFileAs = new(L.SaveFileAs, () => IsFileOpened());
             _saveFile = new((page) =>
             {
                 if (string.IsNullOrEmpty(page.Path))
                 {
-                    Logic.Logic.SaveFileAs(page);
+                    L.SaveFileAs(page);
                 }
                 else
                 {
-                    Logic.Logic.SaveToFile(page.Path, page.ProgramString);
+                    L.SaveToFile(page.Path, page.ProgramString);
                 }
             }, () => IsFileOpened());
-            _closeProgram = new(Logic.Logic.Exit, () => true);
+            _closeProgram = new(L.Exit, () => true);
 
-            _increaseFontSize = new(() => Logic.Logic.ChangeFontSize(Page, 1), IsFileOpened);
-            _decreaseFontSize = new(() => Logic.Logic.ChangeFontSize(Page, -1), () => IsFileOpened() && Page.FontSize > 1);
+            _increaseFontSize = new(() => L.ChangeFontSize(Page, 1), IsFileOpened);
+            _decreaseFontSize = new(() => L.ChangeFontSize(Page, -1), () => IsFileOpened() && Page.FontSize > 1);
 
             _runProgram = new(async () =>
             {
                 Page.Token = new CancellationTokenSource();
                 try
                 {
-                    Logic.Logic.SetCursor(StandardCursorType.Wait);
+                    L.SetCursor(StandardCursorType.Wait);
                     Page.ProgrammRunning = true;
-                    await Task.Run(() => { Logic.Logic.RunProgram(Page.Token.Token); });
+                    await Task.Run(() => { L.RunProgram(Page.Token.Token); });
                 }
                 catch (OperationCanceledException) { /*Ignore*/ }
                 finally
                 {
                     Page.ProgrammRunning = false;
-                    Logic.Logic.SetCursor(StandardCursorType.Arrow);
+                    L.SetCursor(StandardCursorType.Arrow);
                 }
             }, () => IsFileOpened() && !IsProgramRunning());
 
@@ -111,6 +123,37 @@ namespace RAMEditorMultiplatform.ViewModels
                 Page.Token.Cancel();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             }, () => IsFileOpened() && IsProgramRunning());
+
+            _switchEditors = new(() =>
+            {
+                Page.HandleEditorSwitch();
+            }, () => IsFileOpened() && !IsProgramRunning());
+
+            _clear = new((target) =>
+            {
+                switch (target)
+                {
+                    case "memory":
+                        this.Page.Memory = new();
+                        break;
+                    case "inputTape":
+                        this.Page.InputTapeString = string.Empty;
+                        break;
+                    case "outputTape":
+                        this.Page.OutputTapeString = string.Empty;
+                        break;
+                }
+            }, () => IsFileOpened() && !IsProgramRunning());
+
+            _import = new(() => 
+            { 
+
+            }, () => IsFileOpened() && !IsProgramRunning());
+
+            _export = new((traget) =>
+            {
+                
+            }, () => IsFileOpened() && !IsProgramRunning());
         }
 
         private bool IsFileOpened()

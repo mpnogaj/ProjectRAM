@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="using:RAMEditorMultiplatform.CustomControls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="RAMEditorMultiplatform.CustomControls.SimpleEditor"
+             Initialized="Loaded"
+             Background="White">
+  <Border BorderBrush="Black" BorderThickness="2">
+    <DataGrid CanUserSortColumns="False" KeyDown="OnKeyDown" RowBackground="White" AlternatingRowBackground="White" Items="{Binding Program, Mode=TwoWay}" SelectionMode="Extended">
+      <DataGrid.Styles>
+        <Style Selector="DataGrid">
+          <Setter Property="GridLinesVisibility" Value="All"/>
+          <Setter Property="VerticalGridLinesBrush" Value="LightGray"/>
+          <Setter Property="HorizontalGridLinesBrush" Value="LightGray"/>
+        </Style>
+        <Style Selector="DataGridColumnHeader">
+          <Setter Property="HorizontalContentAlignment" Value="Center"/>
+          <Setter Property="AreSeparatorsVisible" Value="True"/>
+          <Setter Property="SeparatorBrush" Value="LightGray"/>
+          <Setter Property="FontSize" Value="14"/>
+          <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        <Style Selector="DataGridCell">
+          <Setter Property="Padding" Value="1"/> 
+        </Style>
+        <Style Selector="ComboBox">
+          <Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
+        <Style Selector="AutoCompleteBox:pointerover">
+          <Setter Property="Background" Value="White"/>
+        </Style>
+      </DataGrid.Styles>
+      <DataGrid.Columns>
+        <DataGridTextColumn IsReadOnly="True" Width="50" MinWidth="75" Header="Line" Binding="{Binding Line}"/>
+        <DataGridTemplateColumn Width="*" Header="Label">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBox Text="{Binding Label}"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn Width="*" Header="Command">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <AutoCompleteBox MinimumPrefixLength="0" Items="{Binding Path=DataContext.AvailableCommands, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Text="{Binding Command}"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn Width="*" Header="Argument">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBox Text="{Binding Argument}"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn Width="*" Header="Comment">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBox Text="{Binding Comment}"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Border>
+</UserControl>

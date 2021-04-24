@@ -2,9 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="using:RAMEditorMultiplatform.CustomControls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:edit="using:AvaloniaEdit"
              x:Class="RAMEditorMultiplatform.CustomControls.Host">
+  <!--#FFDD99-->
+  <!--#2B2B2B-->
   <Grid Background="#FFDD99">
     <Grid.Styles>
       <Style Selector="GridSplitter">
@@ -102,10 +105,11 @@
               HorizontalAlignment="Center"
               Text="Output tape"/>
         </StackPanel>
-        <!--Code-->
-        <!--&#x0a; -> '\n'-->
-        <!--\r\n doesn't work for Windows but it should-->
-        <TextBox DockPanel.Dock="Top" Margin="8, 5, 8, 5"
+        <!--
+        &#x0a; -> '\n'
+        \r\n doesn't work for Windows but it should-->
+        <Grid DockPanel.Dock="Top">
+          <TextBox  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsVisible="{Binding !SimpleEditorUsage}" Margin="8, 5, 8, 5"
             AcceptsReturn="True"
             TextWrapping="Wrap"
             FontFamily="Arial"
@@ -113,8 +117,10 @@
             FontSize="{Binding FontSize}"
             Text="{Binding ProgramString}"
             NewLine="&#x0a;"/>
+          <controls:SimpleEditor HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsVisible="{Binding Path=DataContext.SimpleEditorUsage, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Margin="8, 5, 8, 5" ViewModel="{Binding SimpleEditorViewModel}" />
+        </Grid>
       </DockPanel>
-      <GridSplitter Height="3" Grid.Row="1" ResizeDirection="Rows"/>
+      <GridSplitter  Height="3" Grid.Row="1" ResizeDirection="Rows"/>
       <Grid Grid.Row="2" Background="AliceBlue"/>
     </Grid>
   </Grid>
