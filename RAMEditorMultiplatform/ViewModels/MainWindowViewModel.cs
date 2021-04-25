@@ -11,6 +11,8 @@ using Avalonia.Input;
 using System.IO;
 using L = RAMEditorMultiplatform.Logic.Logic;
 using Avalonia.Controls;
+using RAMEditorMultiplatform.Converters;
+using System.Text.RegularExpressions;
 
 namespace RAMEditorMultiplatform.ViewModels
 {
@@ -28,80 +30,79 @@ namespace RAMEditorMultiplatform.ViewModels
             set { SetProperty(ref _pages, value); }
         }
 
-        private HostViewModel _page;
-        public HostViewModel Page
+        private HostViewModel? _page;
+        public HostViewModel? Page
         {
             get => _page;
             set { SetProperty(ref _page, value); }
         }
 
-        private readonly ParameterBaseCommand<string> _addPage;
-        public ParameterBaseCommand<string> AddPageCommand { get => _addPage; }
+        private readonly RelayCommand _addPage;
+        public RelayCommand AddPageCommand { get => _addPage; }
 
-        private readonly CommandBase _openFile;
-        public CommandBase OpenFile { get => _openFile; }
+        private readonly RelayCommand _openFile;
+        public RelayCommand OpenFile { get => _openFile; }
 
-        private readonly ParameterBaseCommand<HostViewModel> _saveFileAs;
-        public ParameterBaseCommand<HostViewModel> SaveFileAs { get => _saveFileAs; }
+        private readonly RelayCommand _saveFileAs;
+        public RelayCommand SaveFileAs { get => _saveFileAs; }
 
-        private readonly ParameterBaseCommand<HostViewModel> _saveFile;
-        public ParameterBaseCommand<HostViewModel> SaveFile { get => _saveFile; }
+        private readonly RelayCommand _saveFile;
+        public RelayCommand SaveFile { get => _saveFile; }
 
-        private readonly AsyncCommandBase _runProgram;
-        public AsyncCommandBase RunProgram { get => _runProgram; }
+        private readonly AsyncRelayCommand _runProgram;
+        public AsyncRelayCommand RunProgram { get => _runProgram; }
 
-        private readonly CommandBase _stopProgram;
-        public CommandBase StopProgram { get => _stopProgram; }
+        private readonly RelayCommand _stopProgram;
+        public RelayCommand StopProgram { get => _stopProgram; }
 
-        private readonly CommandBase _closeProgram;
-        public CommandBase CloseProgram { get => _closeProgram; }
+        private readonly RelayCommand _closeProgram;
+        public RelayCommand CloseProgram { get => _closeProgram; }
 
-        private readonly CommandBase _increaseFontSize;
-        public CommandBase IncreaseFontSize { get => _increaseFontSize; }
+        private readonly RelayCommand _increaseFontSize;
+        public RelayCommand IncreaseFontSize { get => _increaseFontSize; }
 
-        private readonly CommandBase _decreaseFontSize;
-        public CommandBase DecreaseFontSize { get => _decreaseFontSize; }
+        private readonly RelayCommand _decreaseFontSize;
+        public RelayCommand DecreaseFontSize { get => _decreaseFontSize; }
 
-        private readonly CommandBase _switchEditors;
-        public CommandBase SwitchEditors { get => _switchEditors; }
+        private readonly RelayCommand _switchEditors;
+        public RelayCommand SwitchEditors { get => _switchEditors; }
 
-        private readonly ParameterBaseCommand<string> _clear;
-        public ParameterBaseCommand<string> Clear { get => _clear; }
+        private readonly RelayCommand<string> _clear;
+        public RelayCommand<string> Clear { get => _clear; }
 
-        private readonly ParameterBaseCommand<string> _export;
-        public ParameterBaseCommand<string> Export { get => _export; }
+        private readonly AsyncRelayCommand<string> _export;
+        public AsyncRelayCommand<string> Export { get => _export; }
 
-        private readonly CommandBase _import;
-        public CommandBase Import { get => _import; }
+        private readonly AsyncRelayCommand _import;
+        public AsyncRelayCommand Import { get => _import; }
 
         public MainWindowViewModel()
         {
             _instance = this;
             _pages = new ObservableCollection<HostViewModel>();
             _page = null;
-
-            _addPage = new(L.CreateNewPage, () => true);
-            _openFile = new(L.OpenFile, () => true);
-            _saveFileAs = new(L.SaveFileAs, () => IsFileOpened());
-            _saveFile = new((page) =>
+            _addPage = new(() => L.CreateNewPage(DEFAULT_HEADER));
+            _openFile = new(() => L.OpenFile());
+            _saveFileAs = new(() => L.SaveFileAs(Page!), () => IsFileOpened());
+            _saveFile = new(() =>
             {
-                if (string.IsNullOrEmpty(page.Path))
+                if (string.IsNullOrEmpty(Page!.Path))
                 {
-                    L.SaveFileAs(page);
+                    L.SaveFileAs(Page!);
                 }
                 else
                 {
-                    L.SaveToFile(page.Path, page.ProgramString);
+                    L.WriteToFile(Page!.Path, Page!.ProgramString);
                 }
             }, () => IsFileOpened());
             _closeProgram = new(L.Exit, () => true);
 
-            _increaseFontSize = new(() => L.ChangeFontSize(Page, 1), IsFileOpened);
-            _decreaseFontSize = new(() => L.ChangeFontSize(Page, -1), () => IsFileOpened() && Page.FontSize > 1);
+            _increaseFontSize = new(() => Page!.FontSize += 1, IsFileOpened);
+            _decreaseFontSize = new(() => Page!.FontSize -= 1, () => IsFileOpened() && Page!.FontSize > 1);
 
             _runProgram = new(async () =>
             {
-                Page.Token = new CancellationTokenSource();
+                Page!.Token = new CancellationTokenSource();
                 try
                 {
                     L.SetCursor(StandardCursorType.Wait);
@@ -118,15 +119,12 @@ namespace RAMEditorMultiplatform.ViewModels
 
             _stopProgram = new(() =>
             {
-                //Program won't be stopped when it's not running. Token is created when user runs the program.
-#pragma warning disable CS8602 // Dereference of a possibly null reference. 
-                Page.Token.Cancel();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                Page!.Token!.Cancel();
             }, () => IsFileOpened() && IsProgramRunning());
 
             _switchEditors = new(() =>
             {
-                Page.HandleEditorSwitch();
+                Page!.HandleEditorSwitch();
             }, () => IsFileOpened() && !IsProgramRunning());
 
             _clear = new((target) =>
@@ -134,25 +132,65 @@ namespace RAMEditorMultiplatform.ViewModels
                 switch (target)
                 {
                     case "memory":
-                        this.Page.Memory = new();
+                        Page!.Memory = new();
                         break;
                     case "inputTape":
-                        this.Page.InputTapeString = string.Empty;
+                        Page!.InputTapeString = string.Empty;
                         break;
                     case "outputTape":
-                        this.Page.OutputTapeString = string.Empty;
+                        Page!.OutputTapeString = string.Empty;
                         break;
                 }
             }, () => IsFileOpened() && !IsProgramRunning());
 
-            _import = new(() => 
-            { 
+            _import = new(async () => 
+            {
+                OpenFileDialog ofd = new()
+                {
+                    AllowMultiple = false,
+                    Title = "Open memory file",
+                    Filters = L.TEXT_FILE_FILTER
+                };
+
+                var res = await ofd.ShowAsync(L.GetAppInstance().MainWindow);
+                if(res.Length > 0)
+                {
+                    string content = L.ReadFromFile(res[0]);
+                    Page!.InputTapeString = content.Replace(",", "");
+                }
 
             }, () => IsFileOpened() && !IsProgramRunning());
 
-            _export = new((traget) =>
+            _export = new(async (target) =>
             {
-                
+                string content = string.Empty;
+                switch (target)
+                {
+                    case "memory":
+                        content = MemoryRowToStringConverter.MemoryRowsToString(new(Page!.Memory));
+                        break;
+                    case "inputTape":
+                        content = Page!.InputTapeString.Replace(" ", ", ");
+                        break;
+                    case "outputTape":
+                        content = Page!.OutputTapeString.Replace(" ", ", ");
+                        break;
+                    default:
+                        return;
+                }
+
+                SaveFileDialog sfd = new()
+                {
+                    Title = "Save file",
+                    InitialFileName = $"{Page!.Header}_{target}",
+                    Filters = L.TEXT_FILE_FILTER
+                };
+
+                var res = await sfd.ShowAsync(L.GetAppInstance().MainWindow);
+                if (!string.IsNullOrEmpty(res))
+                {
+                    L.WriteToFile(res, content);
+                }
             }, () => IsFileOpened() && !IsProgramRunning());
         }
 
@@ -171,11 +209,10 @@ namespace RAMEditorMultiplatform.ViewModels
             bool dropEnabled = false;
             if(e.Data != null && e.Data.GetDataFormats().Where(format => format == DataFormats.FileNames).Any())
             {
-                if (e.Data.GetFileNames() != null && e.Data.GetFileNames().Where(name => Path.GetExtension(name) == ".RAMCode").Any())
+                if (e.Data.GetFileNames() != null && e.Data.GetFileNames()!.Where(name => Path.GetExtension(name) == ".RAMCode").Any())
                 {
                     dropEnabled = true;
                 }
-                System.Diagnostics.Debug.WriteLine(e.Data.GetFileNames().ToList().ToString());
             }
             if (dropEnabled) return;
             e.DragEffects = DragDropEffects.None;
@@ -184,9 +221,7 @@ namespace RAMEditorMultiplatform.ViewModels
 
         public void FileDropped(object sender, DragEventArgs e)
         {
-#pragma warning disable CS8604 // Possible null reference argument.
-            string[] files = e.Data.GetFileNames().Where(fileName => Path.GetExtension(fileName) == ".RAMCode").ToArray();
-#pragma warning restore CS8604 // Possible null reference argument.
+            string[] files = e.Data.GetFileNames()!.Where(fileName => Path.GetExtension(fileName) == ".RAMCode").ToArray();
             L.LoadFiles(files);
         }
     }

@@ -9,8 +9,10 @@ namespace RAMEditorMultiplatform
 {
     public class App : Application, IControlledApplicationLifetime
     {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public event EventHandler<ControlledApplicationLifetimeStartupEventArgs> Startup;
         public event EventHandler<ControlledApplicationLifetimeExitEventArgs> Exit;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public override void Initialize()
         {

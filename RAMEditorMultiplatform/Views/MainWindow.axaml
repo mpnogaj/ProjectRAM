@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:imaging="clr-namespace:Avalonia.Media.Imaging;assembly=Avalonia.Visuals"
-        xmlns:controls="using:RAMEditorMultiplatform.CustomControls"
+        xmlns:local="using:RAMEditorMultiplatform.Views"
         xmlns:logic="using:RAMEditorMultiplatform.Logic"
         xmlns:viewmodels="using:RAMEditorMultiplatform.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -35,7 +35,7 @@
         </Style>
       </Menu.Styles>
       <MenuItem Header="File">
-        <MenuItem Header="New file" InputGesture="Ctrl+N" Command="{Binding AddPageCommand}" CommandParameter="{Binding DEFAULT_HEADER}">
+        <MenuItem Header="New file" InputGesture="Ctrl+N" Command="{Binding AddPageCommand}">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/newFile.png"/>
           </MenuItem.Icon>
@@ -47,12 +47,12 @@
           </MenuItem.Icon>
         </MenuItem>
         <Separator/>
-        <MenuItem Header="Save file" InputGesture="Ctrl+S" Command="{Binding SaveFile}" CommandParameter="{Binding Page}">
+        <MenuItem Header="Save file" InputGesture="Ctrl+S" Command="{Binding SaveFile}">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/save.png"/>
           </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="Save file as" InputGesture="Ctrl+Shift+S" Command="{Binding SaveFileAs}" CommandParameter="{Binding Page}">
+        <MenuItem Header="Save file as" InputGesture="Ctrl+Shift+S" Command="{Binding SaveFileAs}">
           <MenuItem.Icon>
             <Image Source="/Assets/Images/saveAs.png"/>
           </MenuItem.Icon>
@@ -113,14 +113,9 @@
             </MenuItem.Icon>
           </MenuItem>
           <Separator/>
-          <MenuItem Header="Export to file">
+          <MenuItem Header="Export to file" Command="{Binding Export}" CommandParameter="memory">
             <MenuItem.Icon>
               <Image Source="/Assets/Images/export.png"/>
-            </MenuItem.Icon>
-          </MenuItem>
-          <MenuItem Header="Import from file">
-            <MenuItem.Icon>
-              <Image Source="/Assets/Images/import.png"/>
             </MenuItem.Icon>
           </MenuItem>
         </MenuItem>
@@ -132,12 +127,12 @@
             </MenuItem.Icon>
           </MenuItem>
           <Separator/>
-          <MenuItem Header="Export to file">
+          <MenuItem Header="Export to file" Command="{Binding Export}" CommandParameter="inputTape">
             <MenuItem.Icon>
               <Image Source="/Assets/Images/export.png"/>
             </MenuItem.Icon>
           </MenuItem>
-          <MenuItem Header="Import from file">
+          <MenuItem Header="Import from file" Command="{Binding Import}">
             <MenuItem.Icon>
               <Image Source="/Assets/Images/import.png"/>
             </MenuItem.Icon>
@@ -150,7 +145,7 @@
             </MenuItem.Icon>
           </MenuItem>
           <Separator/>
-          <MenuItem Header="Export to file">
+          <MenuItem Header="Export to file" Command="{Binding Export}" CommandParameter="outputTape">
             <MenuItem.Icon>
               <Image Source="/Assets/Images/export.png"/>
             </MenuItem.Icon>
@@ -254,7 +249,7 @@
         </TabControl.ItemTemplate>
         <TabControl.ContentTemplate>
           <DataTemplate DataType="{x:Type viewmodels:HostViewModel}">
-            <controls:Host/>
+            <local:Host/>
           </DataTemplate>
         </TabControl.ContentTemplate>
       </TabControl>

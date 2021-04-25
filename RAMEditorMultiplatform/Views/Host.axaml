@@ -5,7 +5,7 @@
              xmlns:controls="using:RAMEditorMultiplatform.CustomControls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:edit="using:AvaloniaEdit"
-             x:Class="RAMEditorMultiplatform.CustomControls.Host">
+             x:Class="RAMEditorMultiplatform.Views.Host">
   <!--#FFDD99-->
   <!--#2B2B2B-->
   <Grid Background="#FFDD99">
@@ -117,7 +117,65 @@
             FontSize="{Binding FontSize}"
             Text="{Binding ProgramString}"
             NewLine="&#x0a;"/>
-          <controls:SimpleEditor HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsVisible="{Binding Path=DataContext.SimpleEditorUsage, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Margin="8, 5, 8, 5" ViewModel="{Binding SimpleEditorViewModel}" />
+
+          <Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsVisible="{Binding Path=DataContext.SimpleEditorUsage, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Margin="8, 5, 8, 5">
+            <DataGrid CanUserSortColumns="False" KeyDown="OnKeyDown" RowBackground="White" AlternatingRowBackground="White" Items="{Binding Path=DataContext.Program, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" SelectionMode="Extended">
+              <DataGrid.Styles>
+                <Style Selector="DataGrid">
+                  <Setter Property="GridLinesVisibility" Value="All"/>
+                  <Setter Property="VerticalGridLinesBrush" Value="LightGray"/>
+                  <Setter Property="HorizontalGridLinesBrush" Value="LightGray"/>
+                </Style>
+                <Style Selector="DataGridColumnHeader">
+                  <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                  <Setter Property="AreSeparatorsVisible" Value="True"/>
+                  <Setter Property="SeparatorBrush" Value="LightGray"/>
+                  <Setter Property="FontSize" Value="14"/>
+                  <Setter Property="Foreground" Value="Black"/>
+                </Style>
+                <Style Selector="DataGridCell">
+                  <Setter Property="Padding" Value="1"/>
+                </Style>
+                <Style Selector="ComboBox">
+                  <Setter Property="BorderBrush" Value="Transparent"/>
+                </Style>
+                <Style Selector="AutoCompleteBox">
+                  <Setter Property="Background" Value="White"/>
+                </Style>
+              </DataGrid.Styles>
+              <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Width="50" MinWidth="75" Header="Line" Binding="{Binding Line}"/>
+                <DataGridTemplateColumn Width="*" Header="Label">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <TextBox Text="{Binding Label}"/>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" Header="Command">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <AutoCompleteBox MinimumPrefixLength="0" Items="{Binding Path=DataContext.AvailableCommands, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Text="{Binding Command}"/>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" Header="Argument">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <TextBox Text="{Binding Argument}"/>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" Header="Comment">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <TextBox Text="{Binding Comment}"/>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+              </DataGrid.Columns>
+            </DataGrid>
+          </Border>
         </Grid>
       </DockPanel>
       <GridSplitter  Height="3" Grid.Row="1" ResizeDirection="Rows"/>

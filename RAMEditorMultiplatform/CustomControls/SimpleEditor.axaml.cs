@@ -32,7 +32,6 @@ namespace RAMEditorMultiplatform.CustomControls
         }
 
 
-        //Move to ViewModel
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Insert)

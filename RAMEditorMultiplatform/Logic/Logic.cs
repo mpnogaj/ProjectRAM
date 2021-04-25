@@ -24,9 +24,21 @@ namespace RAMEditorMultiplatform.Logic
             new FileDialogFilter
             {
                 Name = "RAMCode file",
-                Extensions = new List<string>()
+                Extensions = new List<string>
                 {
                     "RAMCode"
+                }
+            }
+        };
+
+        public static readonly List<FileDialogFilter> TEXT_FILE_FILTER = new List<FileDialogFilter>
+        {
+            new FileDialogFilter
+            {
+                Name = "Text file",
+                Extensions = new List<string>
+                {
+                    "txt"
                 }
             }
         };
@@ -35,10 +47,7 @@ namespace RAMEditorMultiplatform.Logic
 
         public static void CreateNewPage(string header = "NEW")
         {
-            MainWindowViewModel.Instance.Pages.Add(new HostViewModel
-            {
-                Header = header
-            });
+            MainWindowViewModel.Instance.Pages.Add(new HostViewModel(header));
         }
 
         public static void ClosePage(HostViewModel page)
@@ -62,7 +71,7 @@ namespace RAMEditorMultiplatform.Logic
             List<Command> commands = new List<Command>();
             if (host.SimpleEditorUsage)
             {
-                commands = ProgramLineToCommandConverter.ProgramLinesToCommands(host.SimpleEditorViewModel.Program.ToList());
+                commands = ProgramLineToCommandConverter.ProgramLinesToCommands(host.Program.ToList());
             }
             else
             {
@@ -82,10 +91,10 @@ namespace RAMEditorMultiplatform.Logic
             finalOutput = finalOutput.Trim();
             host.OutputTapeString = finalOutput;
             host.Memory.Clear();
-            var newMemory = new ObservableCollection<MemoryCell>();
+            var newMemory = new ObservableCollection<MemoryRow>();
             foreach (var memoryRow in Interpreter.Memory)
             {
-                newMemory.Add(new MemoryCell
+                newMemory.Add(new MemoryRow
                 {
                     Address = memoryRow.Key,
                     Value = memoryRow.Value
@@ -107,11 +116,11 @@ namespace RAMEditorMultiplatform.Logic
             if (!string.IsNullOrEmpty(res))
             {
                 file.Path = res;
-                SaveToFile(res, file.ProgramString);
+                WriteToFile(res, file.ProgramString);
             }
         }
 
-        public static void SaveToFile(string file, string content)
+        public static void WriteToFile(string file, string content)
         {
             using (StreamWriter sw = new StreamWriter(file))
             {
@@ -141,9 +150,8 @@ namespace RAMEditorMultiplatform.Logic
             {
                 if (!string.IsNullOrWhiteSpace(file))
                 {
-                    MainWindowViewModel.Instance.Pages.Add(new HostViewModel
+                    MainWindowViewModel.Instance.Pages.Add(new HostViewModel(Path.GetFileNameWithoutExtension(file))
                     {
-                        Header = Path.GetFileNameWithoutExtension(file),
                         Path = file,
                         ProgramString = ReadFromFile(file)
                     });
@@ -162,11 +170,6 @@ namespace RAMEditorMultiplatform.Logic
             {
                 return sr.ReadToEnd();
             }
-        }
-
-        public static void ChangeFontSize(HostViewModel page, int offset)
-        {
-            page.FontSize += offset;
         }
 
         public static IClassicDesktopStyleApplicationLifetime GetAppInstance()

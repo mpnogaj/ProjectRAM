@@ -6,15 +6,20 @@ using System.Threading.Tasks;
 
 namespace RAMEditorMultiplatform.Models
 {
-    public class MemoryCell
+    public class MemoryRow
     {
         public string Address { get; set; }
         public string Value { get; set; }
 
-        public MemoryCell()
+        public MemoryRow()
         {
             Address = string.Empty;
             Value = string.Empty;
+        }
+
+        public override string ToString()
+        {
+            return $"{Address}: {Value}";
         }
     }
 }

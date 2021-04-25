@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace RAMEditorMultiplatform.Converters
 {
-    public static class ProgramLineTextConverter
+    public static class ProgramLineToStringConverter
     {
-        public static List<ProgramLine> ToProgramLines(string input)
+        public static List<ProgramLine> StringToProgramLines(string input)
         {
             List<ProgramLine> output = new();
             var inputArr = input.Split('\n');
@@ -20,7 +20,7 @@ namespace RAMEditorMultiplatform.Converters
             return output;
         }
 
-        public static string ToText(List<ProgramLine> input)
+        public static string ProgramLinesToString(List<ProgramLine> input)
         {
             string output = "";
             foreach(var programLine in input)
