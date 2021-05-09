@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using RAMEditorMultiplatform.Helpers;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace RAMEditorMultiplatform.Models
 {
@@ -13,46 +13,41 @@ namespace RAMEditorMultiplatform.Models
 
         public ProgramLine(string line)
         {
-            line = line.Trim();
-            line = Regex.Replace(line, @"\s+", " ");
-            var arr = line.Split(' ');
-            int i = 0;
             try
             {
-                if (arr[i].EndsWith(':'))
+                string lineWithoutComment = line;
+                int commentPos = line.IndexOf('#');
+                if(commentPos >= 0)
                 {
-                    string sub = arr[i].Substring(0, arr[i].Length - 1);
-                    Label = string.IsNullOrEmpty(sub) ? string.Empty : sub;
-                    i++;
+                    lineWithoutComment = line.Substring(0, commentPos - 1);
+                    Comment = line.Substring(commentPos + 1).Trim();
                 }
-
-                if (Constant.AvailableCommands.Contains(arr[i].ToLower()))
+                string lineWithoutCommentAndLabel = string.Empty;
+                int labelPos = lineWithoutComment.IndexOf(':');
+                if(labelPos >= 0)
                 {
-                    Command = arr[i].ToLower();
-                    i++;
-                }
-
-                if (!arr[i].StartsWith('#'))
-                {
-                    Argument = arr[i];
-                    i++;
-                }
-
-                if (i < arr.Length)
-                {
-                    while (i < arr.Length - 1 && !arr[i].StartsWith('#')) i++;
-
-                    if (arr[i].StartsWith('#'))
+                    Label = Regex.Replace(lineWithoutComment.Substring(0, labelPos).Trim(), @"\s+", string.Empty);
+                    if(labelPos != lineWithoutComment.Length - 1)
                     {
-                        string sub = arr[i].Substring(1);
-                        Comment = string.IsNullOrEmpty(sub) ? string.Empty : sub;
-                        i++;
+                        lineWithoutCommentAndLabel = lineWithoutComment.Substring(labelPos + 1);
                     }
                 }
+                else
+                {
+                    lineWithoutCommentAndLabel = lineWithoutComment;
+                }
+
+                lineWithoutCommentAndLabel = Regex.Replace(lineWithoutCommentAndLabel, @"\s+", " ");
+                var arr = lineWithoutCommentAndLabel.Trim().Split(' ');
+                Command = arr.Length > 0 ? arr[0] : string.Empty;
+                Argument = arr.Length > 1 ? arr[1] : string.Empty;
             }
             catch
             {
-                return;
+                Label = string.Empty;
+                Command = string.Empty;
+                Argument = string.Empty;
+                Comment = string.Empty;
             }
         }
 
@@ -82,6 +77,19 @@ namespace RAMEditorMultiplatform.Models
             }
 
             return output.TrimEnd();
+        }
+        
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || obj!.GetType() != this.GetType()) return false;
+
+            ProgramLine lhs = (ProgramLine)obj;
+            return this.GetHashCode() == lhs.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Line, Label, Command, Argument, Comment);
         }
     }
 }
