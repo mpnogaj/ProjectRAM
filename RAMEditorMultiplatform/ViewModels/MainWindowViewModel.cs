@@ -106,13 +106,13 @@ namespace RAMEditorMultiplatform.ViewModels
                 try
                 {
                     L.SetCursor(StandardCursorType.Wait);
-                    Page.ProgrammRunning = true;
+                    Page.ProgramRunning = true;
                     await Task.Run(() => { L.RunProgram(Page.Token.Token); });
                 }
                 catch (OperationCanceledException) { /*Ignore*/ }
                 finally
                 {
-                    Page.ProgrammRunning = false;
+                    Page.ProgramRunning = false;
                     L.SetCursor(StandardCursorType.Arrow);
                 }
             }, () => IsFileOpened() && !IsProgramRunning());
@@ -201,7 +201,7 @@ namespace RAMEditorMultiplatform.ViewModels
 
         private bool IsProgramRunning()
         {
-            return Page.ProgrammRunning;
+            return Page.ProgramRunning;
         }
 
         public void FileOver(object sender, DragEventArgs e)

@@ -1,4 +1,6 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using System.Collections.Generic;
+using Avalonia.Controls;
 using Avalonia.Input;
 using RAMEditorMultiplatform.Converters;
 using RAMEditorMultiplatform.Helpers;
@@ -12,46 +14,118 @@ namespace RAMEditorMultiplatform.ViewModels
 {
     public class HostViewModel : ViewModelBase
     {
+        public event EventHandler EditorShowed;
+
+        protected virtual void OnEditorShowed(EventArgs e)
+        {
+            EventHandler handler = EditorShowed;
+            handler?.Invoke(this, e);
+        }
+
+
+
         public CancellationTokenSource? Token { get; set; }
 
         private ObservableCollection<MemoryRow> _memory;
-        public ObservableCollection<MemoryRow> Memory { get => _memory; set => SetProperty(ref _memory, value); }
+
+        public ObservableCollection<MemoryRow> Memory
+        {
+            get => _memory;
+            set => SetProperty(ref _memory, value);
+        }
 
         private string _header;
-        public string Header { get => _header; set => SetProperty(ref _header, value); }
+
+        public string Header
+        {
+            get => _header;
+            set => SetProperty(ref _header, value);
+        }
 
         private string _outputTapeString;
-        public string OutputTapeString { get => _outputTapeString; set => SetProperty(ref _outputTapeString, value); }
+
+        public string OutputTapeString
+        {
+            get => _outputTapeString;
+            set => SetProperty(ref _outputTapeString, value);
+        }
 
         private string _inputTapeString;
-        public string InputTapeString { get => _inputTapeString; set => SetProperty(ref _inputTapeString, value); }
+
+        public string InputTapeString
+        {
+            get => _inputTapeString;
+            set => SetProperty(ref _inputTapeString, value);
+        }
 
         private string _programString;
-        public string ProgramString { get => _programString; set => SetProperty(ref _programString, value); }
 
-        private bool _programmRunning;
-        public bool ProgrammRunning { get => _programmRunning; set => SetProperty(ref _programmRunning, value); }
+        public string ProgramString
+        {
+            get => _programString;
+            set => SetProperty(ref _programString, value);
+        }
+
+        private bool _programRunning;
+
+        public bool ProgramRunning
+        {
+            get => _programRunning;
+            set => SetProperty(ref _programRunning, value);
+        }
 
         private string? _path;
-        public string? Path { get => _path; set => SetProperty(ref _path, value); }
+
+        public string? Path
+        {
+            get => _path;
+            set => SetProperty(ref _path, value);
+        }
 
         private int _fontSize;
-        public int FontSize { get => _fontSize; set => SetProperty(ref _fontSize, value); }
 
-        private bool _simpleEditorUsage = false;
-        public bool SimpleEditorUsage { get => _simpleEditorUsage; set => SetProperty(ref _simpleEditorUsage, value); }
+        public int FontSize
+        {
+            get => _fontSize;
+            set => SetProperty(ref _fontSize, value);
+        }
 
-        private readonly RelayCommand<HostViewModel> _closePage;
-        public RelayCommand<HostViewModel> ClosePage => _closePage;
+        private bool _simpleEditorUsage;
 
-        private ObservableCollection<ProgramLine> _program = new();
-        public ObservableCollection<ProgramLine> Program { get => _program; set => SetProperty(ref _program, value); }
+        public bool SimpleEditorUsage
+        {
+            get => _simpleEditorUsage;
+            set => SetProperty(ref _simpleEditorUsage, value);
+        }
 
-        private readonly ObservableCollection<string> _availableCommands = new ObservableCollection<string>(Constant.AvailableCommands);
+        private ObservableCollection<ProgramLine> _program;
+
+        public ObservableCollection<ProgramLine> Program
+        {
+            get => _program;
+            set => SetProperty(ref _program, value);
+        }
+
+        private readonly ObservableCollection<string> _availableCommands =
+            new ObservableCollection<string>(Constant.AvailableCommands);
+
         public ObservableCollection<string> AvailableCommands => _availableCommands;
 
         private ObservableCollection<string> _labels = new ObservableCollection<string>();
-        public ObservableCollection<string> Labels { get => _labels; set => SetProperty(ref _labels, value); }
+
+        public ObservableCollection<string> Labels
+        {
+            get => _labels;
+            set => SetProperty(ref _labels, value);
+        }
+
+        private TimeSpan _delay;
+
+        public TimeSpan Delay
+        {
+            get => _delay;
+            set => SetProperty(ref _delay, value);
+        }
 
         public HostViewModel(string header)
         {
@@ -60,66 +134,76 @@ namespace RAMEditorMultiplatform.ViewModels
             _outputTapeString = string.Empty;
             _inputTapeString = string.Empty;
             _programString = string.Empty;
-            _programmRunning = false;
+            _programRunning = false;
             _fontSize = 13;
-            _closePage = new(Logic.Logic.ClosePage);
+            _simpleEditorUsage = true;
             _program = new ObservableCollection<ProgramLine>
             {
-                new ProgramLine
+                new()
                 {
                     Line = 1,
                 }
             };
+            _delay = TimeSpan.FromSeconds(1);
         }
 
         public void HandleDataGridKeyEvents(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Insert)
+            switch (e.Key)
             {
-                int index = ((DataGrid)sender).SelectedIndex;
-                if (index != -1)
-                {
-                    InsertLine(index + 1);
-                    ((DataGrid)sender).SelectedIndex++;
-                }
-                else
-                {
-                    InsertLine(Program.Count);
-                }
-                e.Handled = true;
-            }
-            else if (e.Key == Key.Delete)
-            {
-                if (!(FocusManager.Instance.Current is TextBox))
-                {
-                    ProgramLine? programLine = ((DataGrid)sender).SelectedItem as ProgramLine;
-                    int selectedIndex = ((DataGrid)sender).SelectedIndex;
-                    if (programLine != null)
+                case Key.Insert:
+                    var index = ((DataGrid) sender).SelectedIndex;
+                    if (index != -1)
                     {
-                        DeleteLine(programLine);
-                        ((DataGrid)sender).SelectedIndex = selectedIndex == 0 ? 0 : selectedIndex - 1;
+                        InsertLine(index + 1);
+                        ((DataGrid) sender).SelectedIndex++;
                     }
-                }
+                    else
+                    {
+                        InsertLine(Program.Count);
+                    }
+
+                    e.Handled = true;
+                    break;
+                case Key.Delete when FocusManager.Instance.Current is TextBox:
+                    return;
+                case Key.Delete:
+                    var programLine = ((DataGrid) sender).SelectedItem as ProgramLine;
+                    var selectedIndex = ((DataGrid) sender).SelectedIndex;
+                    if (programLine == null) return;
+                    DeleteLine(programLine);
+                    ((DataGrid) sender).SelectedIndex = selectedIndex == 0 ? 0 : selectedIndex - 1;
+                    break;
             }
         }
 
         public void HandleEditorSwitch()
         {
-            if (SimpleEditorUsage == true)
-            {
+            if (SimpleEditorUsage)
+            { 
                 ProgramString = ProgramLineToStringConverter.ProgramLinesToString(Program.ToList());
             }
             else
             {
-                Task.Run(() => Program = new(ProgramLineToStringConverter.StringToProgramLines(ProgramString))).Wait();
+                var newProgram = ProgramLineToStringConverter.StringToProgramLines(ProgramString);
+                if (newProgram.Count < 1)
+                {
+                    Program = new ObservableCollection<ProgramLine>
+                    {
+                        new(){Line = 1}
+                    };
+                }
+                else
+                {
+                    Program = new ObservableCollection<ProgramLine>(newProgram);
+                }
+                OnEditorShowed(EventArgs.Empty);
             }
             SimpleEditorUsage = !SimpleEditorUsage;
         }
-
-
         private void FixLineNumeration(int startPosition = 0)
         {
-            for (int i = startPosition; i < Program.Count; i++)
+            for (var i = startPosition; i < Program.Count; i++)
             {
                 ProgramLine currLine = Program[i];
                 Program[i] = new ProgramLine
@@ -145,17 +229,17 @@ namespace RAMEditorMultiplatform.ViewModels
             }
         }
 
-        public void InsertLine(int position)
+        private void InsertLine(int position)
         {
             Program.Insert(position, new ProgramLine());
             FixLineNumeration(position);
         }
 
-        public void DeleteLine(ProgramLine programLine)
+        private void DeleteLine(ProgramLine programLine)
         {
             if (Program.Count != 1)
             {
-                int index = Program.IndexOf(programLine);
+                var index = Program.IndexOf(programLine);
                 Program.RemoveAt(index);
                 FixLineNumeration(index);
             }
