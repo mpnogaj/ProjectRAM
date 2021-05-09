@@ -2,182 +2,219 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:RAMEditorMultiplatform.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="RAMEditorMultiplatform.Views.Host">
-  <!--#FFDD99-->
-  <!--#2B2B2B-->
-  <Grid Background="#FFDD99">
-    <Grid.Styles>
-      <Style Selector="GridSplitter">
-        <Setter Property="Background" Value="LightGray"/>
-        <Setter Property="MinWidth" Value="2"/>
-        <Setter Property="MinHeight" Value="2"/>
-      </Style>
-      <Style Selector="GridSplitter:pointerover:pressed">
-        <Setter Property="Background" Value="Gray"/>
-      </Style>
-    </Grid.Styles>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="2*" MinWidth="150"/>
-      <ColumnDefinition Width="1"/>
-      <ColumnDefinition Width="8*" MinWidth="400"/>
-    </Grid.ColumnDefinitions>
+    <!--#FFDD99-->
+    <!--#2B2B2B-->
+    <Grid Background="#FFDD99">
+        <Grid.Styles>
+            <Style Selector="GridSplitter">
+                <Setter Property="Background" Value="LightGray" />
+                <Setter Property="MinWidth" Value="2" />
+                <Setter Property="MinHeight" Value="2" />
+            </Style>
+            <Style Selector="GridSplitter:pointerover:pressed">
+                <Setter Property="Background" Value="Gray" />
+            </Style>
+        </Grid.Styles>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" MinWidth="150" />
+            <ColumnDefinition Width="1" />
+            <ColumnDefinition Width="8*" MinWidth="400" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="4" />
+            <RowDefinition Height="0" MaxHeight="400" />
+        </Grid.RowDefinitions>
 
-    <Grid Grid.Column="0" Margin="8, 0, 8, 0">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="1*" MaxHeight="50"/>
-        <RowDefinition Height="9*"/>
-        <RowDefinition Height="50" MinHeight="50" MaxHeight="50"/>
-      </Grid.RowDefinitions>
-      <TextBlock Grid.Row="0" Text="Memory" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-      <StackPanel Grid.Row="1" Orientation="Vertical">
-        <StackPanel.Styles>
-          <Style Selector="TextBlock">
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-          </Style>
-          <Style Selector="Border">
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-          </Style>
-        </StackPanel.Styles>
-        <Grid ColumnDefinitions="*, *">
-          <Border Grid.Column="0" Background="White">
-            <TextBlock Text="Address"/>
-          </Border>
-          <Border Grid.Column="1" Background="White">
-            <TextBlock Text="Value"/>
-          </Border>
+        <Grid Grid.Row="0" Grid.Column="0" Margin="8, 0, 8, 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" MaxHeight="50" />
+                <RowDefinition Height="9*" />
+                <RowDefinition Height="50" MinHeight="50" MaxHeight="50" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Memory" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <StackPanel Grid.Row="1" Orientation="Vertical">
+                <StackPanel.Styles>
+                    <Style Selector="TextBlock">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                    <Style Selector="Border">
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="BorderBrush" Value="Black" />
+                    </Style>
+                </StackPanel.Styles>
+                <Grid ColumnDefinitions="*, *">
+                    <Border Grid.Column="0" Background="White">
+                        <TextBlock Text="Address" />
+                    </Border>
+                    <Border Grid.Column="1" Background="White">
+                        <TextBlock Text="Value" />
+                    </Border>
+                </Grid>
+                <ItemsControl Items="{Binding Memory}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="models:MemoryRow">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MinWidth="25" Width="*" />
+                                    <ColumnDefinition MaxWidth="1" Width="1" />
+                                    <ColumnDefinition MinWidth="25" Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Background="White">
+                                    <TextBlock Text="{Binding Address}" />
+                                </Border>
+                                <GridSplitter Width="1" Grid.Column="1" ResizeDirection="Columns"
+                                              VerticalAlignment="Stretch" Background="Black" />
+                                <Border Grid.Column="2" Background="White">
+                                    <TextBlock Text="{Binding Value}" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </Grid>
-        <ItemsControl Items="{Binding Memory}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <Grid>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition MinWidth="25" Width="*"/>
-                  <ColumnDefinition MaxWidth="1" Width="1"/>
-                  <ColumnDefinition MinWidth="25" Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" Background="White">
-                  <TextBlock Text="{Binding Address}"/>
-                </Border>
-                <GridSplitter Width="1" Grid.Column="1" ResizeDirection="Columns" VerticalAlignment="Stretch" Background="Black"/>
-                <Border Grid.Column="2" Background="White">
-                  <TextBlock Text="{Binding Value}"/>
-                </Border>
-              </Grid>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </StackPanel>
-    </Grid>
-    <GridSplitter Width="3" Grid.Column="1" ResizeDirection="Columns" VerticalAlignment="Stretch"/>
-    <Grid x:Name="LeftColumn" Grid.Column="2">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="*"/>
-        <RowDefinition Height="4"/>
-        <RowDefinition Height="0" MaxHeight="400"/>
-      </Grid.RowDefinitions>
-      <Grid.Styles>
-        <Style Selector="TextBox">
-          <Setter Property="Background" Value="White"/>
-        </Style>
-        <Style Selector="TextBox:pointerover/template/Border">
-          <Setter Property="Background" Value="White"/>
-        </Style>
-      </Grid.Styles>
-      <DockPanel Grid.Row="0" LastChildFill="True">
-        <!--Input tape-->
-        <StackPanel DockPanel.Dock="Top" Orientation="Vertical" VerticalAlignment="Bottom" Margin="8, 8, 8, 5" Spacing="10">
-          <TextBlock
-              HorizontalAlignment="Center"
-              Text="Input tape"/>
-          <TextBox Text="{Binding InputTapeString, Mode=TwoWay}"/>
-        </StackPanel>
-        <!--Output tape-->
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" VerticalAlignment="Top" Margin="8, 5, 8, 8" Spacing="10" IsEnabled="False">
-          <TextBox
-              IsReadOnly="True"
-              Text="{Binding OutputTapeString}"/>
-          <TextBlock
-              HorizontalAlignment="Center"
-              Text="Output tape"/>
-        </StackPanel>
-        <!--
+        <GridSplitter Grid.Row="0" Width="3" Grid.Column="1" ResizeDirection="Columns" VerticalAlignment="Stretch" />
+        <Grid x:Name="LeftColumn" Grid.Row="0" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.Styles>
+                <Style Selector="TextBox">
+                    <Setter Property="Background" Value="White" />
+                </Style>
+                <Style Selector="TextBox:pointerover/template/Border">
+                    <Setter Property="Background" Value="White" />
+                </Style>
+            </Grid.Styles>
+            <DockPanel Grid.Row="0" LastChildFill="True">
+                <!--Input tape-->
+                <StackPanel DockPanel.Dock="Top" Orientation="Vertical" VerticalAlignment="Bottom" Margin="8, 8, 8, 5"
+                            Spacing="10">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Text="Input tape" />
+                    <TextBox Text="{Binding InputTapeString, Mode=TwoWay}" />
+                </StackPanel>
+                <!--Output tape-->
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" VerticalAlignment="Top" Margin="8, 5, 8, 8"
+                            Spacing="10" IsEnabled="False">
+                    <TextBox
+                        IsReadOnly="True"
+                        Text="{Binding OutputTapeString}" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Text="Output tape" />
+                </StackPanel>
+                <!--
         &#x0a; -> '\n'
         \r\n doesn't work for Windows but it should-->
-        <Grid DockPanel.Dock="Top">
-          <TextBox  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsVisible="{Binding !SimpleEditorUsage}" Margin="8, 5, 8, 5"
-            AcceptsReturn="True"
-            TextWrapping="Wrap"
-            FontFamily="Arial"
-            AcceptsTab="True"
-            FontSize="{Binding FontSize}"
-            Text="{Binding ProgramString}"
-            NewLine="&#x0a;"/>
+                <Grid DockPanel.Dock="Top">
+                    <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                             IsVisible="{Binding !SimpleEditorUsage}" Margin="8, 5, 8, 5"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             FontFamily="Arial"
+                             AcceptsTab="True"
+                             FontSize="{Binding FontSize}"
+                             Text="{Binding ProgramString}"
+                             NewLine="&#x0a;" />
 
-          <Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsVisible="{Binding Path=DataContext.SimpleEditorUsage, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Margin="8, 5, 8, 5">
-            <DataGrid CanUserSortColumns="False" KeyDown="OnKeyDown" RowBackground="White" AlternatingRowBackground="White" Items="{Binding Path=DataContext.Program, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" SelectionMode="Extended">
-              <DataGrid.Styles>
-                <Style Selector="DataGrid">
-                  <Setter Property="GridLinesVisibility" Value="All"/>
-                  <Setter Property="VerticalGridLinesBrush" Value="LightGray"/>
-                  <Setter Property="HorizontalGridLinesBrush" Value="LightGray"/>
-                </Style>
-                <Style Selector="DataGridColumnHeader">
-                  <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                  <Setter Property="AreSeparatorsVisible" Value="True"/>
-                  <Setter Property="SeparatorBrush" Value="LightGray"/>
-                  <Setter Property="FontSize" Value="14"/>
-                  <Setter Property="Foreground" Value="Black"/>
-                </Style>
-                <Style Selector="DataGridCell">
-                  <Setter Property="Padding" Value="1"/>
-                </Style>
-                <Style Selector="ComboBox">
-                  <Setter Property="BorderBrush" Value="Transparent"/>
-                </Style>
-                <Style Selector="AutoCompleteBox">
-                  <Setter Property="Background" Value="White"/>
-                </Style>
-              </DataGrid.Styles>
-              <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly="True" Width="50" MinWidth="75" Header="Line" Binding="{Binding Line}"/>
-                <DataGridTemplateColumn Width="*" Header="Label">
-                  <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                      <TextBox Text="{Binding Label}"/>
-                    </DataTemplate>
-                  </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="*" Header="Command">
-                  <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                      <AutoCompleteBox MinimumPrefixLength="0" Items="{Binding Path=DataContext.AvailableCommands, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Text="{Binding Command}"/>
-                    </DataTemplate>
-                  </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="*" Header="Argument">
-                  <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                      <TextBox Text="{Binding Argument}"/>
-                    </DataTemplate>
-                  </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="*" Header="Comment">
-                  <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                      <TextBox Text="{Binding Comment}"/>
-                    </DataTemplate>
-                  </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-              </DataGrid.Columns>
-            </DataGrid>
-          </Border>
+                    <!--Simple editor-->
+                    <Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            IsVisible="{Binding Path=DataContext.SimpleEditorUsage, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            Margin="8, 5, 8, 5">
+                        <DataGrid CanUserSortColumns="False" KeyDown="OnKeyDown" RowBackground="White"
+                                  AlternatingRowBackground="White"
+                                  Items="{Binding Path=DataContext.Program, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                  SelectionMode="Extended">
+                            <DataGrid.Styles>
+                                <Style Selector="DataGrid">
+                                    <Setter Property="GridLinesVisibility" Value="All" />
+                                    <Setter Property="VerticalGridLinesBrush" Value="LightGray" />
+                                    <Setter Property="HorizontalGridLinesBrush" Value="LightGray" />
+                                </Style>
+                                <Style Selector="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    <Setter Property="AreSeparatorsVisible" Value="True" />
+                                    <Setter Property="SeparatorBrush" Value="LightGray" />
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                </Style>
+                                <Style Selector="DataGridCell">
+                                    <Setter Property="Padding" Value="1" />
+                                </Style>
+                                <Style Selector="ComboBox">
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                </Style>
+                                <Style Selector="AutoCompleteBox">
+                                    <Setter Property="Background" Value="White" />
+                                </Style>
+                            </DataGrid.Styles>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn IsReadOnly="True" Width="50" MinWidth="75" Header="Line"
+                                                    Binding="{Binding Line}" />
+                                <DataGridTemplateColumn Width="*" Header="Label">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="models:ProgramLine">
+                                            <TextBox Text="{Binding Label}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="*" Header="Command">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <AutoCompleteBox MinimumPrefixLength="0"
+                                                             Items="{Binding Path=DataContext.AvailableCommands, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                             Text="{Binding Command}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="*" Header="Argument">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="models:ProgramLine">
+                                            <TextBox Text="{Binding Argument}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="*" Header="Comment">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="models:ProgramLine">
+                                            <TextBox Text="{Binding Comment}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </Grid>
+            </DockPanel>
         </Grid>
-      </DockPanel>
-      <GridSplitter  Height="3" Grid.Row="1" ResizeDirection="Rows"/>
-      <Grid Grid.Row="2" Background="AliceBlue"/>
+        <GridSplitter Height="3" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" ResizeDirection="Rows" />
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="AliceBlue" >
+            <TabControl>
+                <TabItem Header="Validation report">
+                    <DataGrid CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserSortColumns="False" GridLinesVisibility="All">
+                        <DataGrid.Styles>
+                            <Style Selector="DataGridColumnHeader">
+                                <Setter Property="AreSeparatorsVisible" Value="True"/>
+                            </Style>
+                        </DataGrid.Styles>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Line" Binding="{Binding Line}"/>
+                            <DataGridTextColumn Header="Message" Binding="{Binding Message}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Complexity report">
+                    
+                </TabItem>
+            </TabControl>
+        </Grid>
     </Grid>
-  </Grid>
 </UserControl>
