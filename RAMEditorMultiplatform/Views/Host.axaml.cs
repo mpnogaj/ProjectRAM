@@ -1,16 +1,8 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using AvaloniaEdit;
-using System;
-using Avalonia.Data;
-using Avalonia.Markup.Xaml.Templates;
 using RAMEditorMultiplatform.ViewModels;
-using RAMEditorMultiplatform.Models;
-using Avalonia.Controls.Templates;
-using System.Collections.Generic;
+
 
 namespace RAMEditorMultiplatform.Views
 {
@@ -20,11 +12,6 @@ namespace RAMEditorMultiplatform.Views
         public Host()
         {
             InitializeComponent();
-        }
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
         }
 
         private void InitializeComponent()

@@ -125,14 +125,21 @@
                              NewLine="&#x0a;" />
 
                     <!--Simple editor-->
-                    <Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Stretch"
+                    <Border BorderBrush="Black"
+                            BorderThickness="2" 
+                            HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             IsVisible="{Binding Path=DataContext.SimpleEditorUsage, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            Background="White"
                             Margin="8, 5, 8, 5">
-                        <DataGrid x:Name="dataGrid" CanUserSortColumns="False" KeyDown="OnKeyDown" RowBackground="White"
+                        <DataGrid CanUserSortColumns="False" 
+                                  CanUserReorderColumns="False"
+                                  CanUserResizeColumns="True"
+                                  KeyDown="OnKeyDown" 
+                                  RowBackground="White"
                                   AlternatingRowBackground="White"
                                   Items="{Binding Path=DataContext.Program, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                  SelectionMode="Extended">
+                                  SelectionMode="Single">
                             <DataGrid.Styles>
                                 <Style Selector="DataGrid">
                                     <Setter Property="GridLinesVisibility" Value="All" />
@@ -145,7 +152,6 @@
                                     <Setter Property="SeparatorBrush" Value="LightGray" />
                                     <Setter Property="FontSize" Value="14" />
                                     <Setter Property="Foreground" Value="Black" />
-                                    <Setter Property="Background" Value="White"/>
                                 </Style>
                                 <Style Selector="DataGridCell">
                                     <Setter Property="Padding" Value="1" />
@@ -153,8 +159,8 @@
                             </DataGrid.Styles>
                           <DataGrid.Columns>
                             <!--Reverted due to bug-->
-                            <!--When chenging edtitor we should reinit this-->
-                            <DataGridTextColumn Header="Line" IsReadOnly="True" Binding="{Binding Line}" Width="50" MaxWidth="75"/>
+                            <!--When changing editor we should reinit this-->
+                            <DataGridTextColumn Header="Line" IsReadOnly="True" Binding="{Binding Line}" Width="75"/>
                             <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="*"/>
                             <DataGridTextColumn Header="Command" Binding="{Binding Command}" Width="*"/>
                             <DataGridTextColumn Header="Argument" Binding="{Binding Argument}" Width="*"/>

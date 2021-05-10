@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Avalonia.Controls;
 
 namespace RAMEditorMultiplatform.Helpers
 {
@@ -23,5 +20,31 @@ namespace RAMEditorMultiplatform.Helpers
             "jgtz",
             "halt"
         };
+        
+        public static readonly List<FileDialogFilter> RamcodeFilter = new List<FileDialogFilter>
+        {
+            new()
+            {
+                Name = "RAMCode file",
+                Extensions = new List<string>
+                {
+                    "RAMCode"
+                }
+            }
+        };
+
+        public static readonly List<FileDialogFilter> TextFileFilter = new List<FileDialogFilter>
+        {
+            new()
+            {
+                Name = "Text file",
+                Extensions = new List<string>
+                {
+                    "txt"
+                }
+            }
+        };
+
+        public const string DefaultHeader = "NEW";
     }
 }

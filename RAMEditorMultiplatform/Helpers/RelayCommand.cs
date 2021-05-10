@@ -8,17 +8,16 @@ namespace RAMEditorMultiplatform.Helpers
     {
         #region Fields
 
-        public event EventHandler CanExecuteChanged;
-        readonly Action<T> _execute = null;
-        readonly Func<bool> _canExecute = null;
-        private readonly DispatcherTimer _canExecuteChangedTimer;
+        public event EventHandler CanExecuteChanged = null!;
+        readonly Action<T> _execute;
+        readonly Func<bool> _canExecute;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
+        /// Initializes a new instance of <see cref="RelayCommand{T}"/>.
         /// </summary>
         /// <param name="execute">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
         /// <remarks><seealso cref="CanExecute"/> will always return true.</remarks>
@@ -37,12 +36,12 @@ namespace RAMEditorMultiplatform.Helpers
             _execute = execute;
             _canExecute = canExecute;
 
-            _canExecuteChangedTimer = new DispatcherTimer
+            DispatcherTimer canExecuteChangedTimer = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 1),
             };
-            _canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
-            _canExecuteChangedTimer.Start();
+            canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
+            canExecuteChangedTimer.Start();
         }
 
         #endregion
@@ -87,17 +86,16 @@ namespace RAMEditorMultiplatform.Helpers
     {
         #region Fields
 
-        public event EventHandler CanExecuteChanged;
-        readonly Action _execute = null;
-        readonly Func<bool> _canExecute = null;
-        private readonly DispatcherTimer _canExecuteChangedTimer;
+        public event EventHandler CanExecuteChanged = null!;
+        readonly Action _execute;
+        readonly Func<bool> _canExecute ;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
+        /// Initializes a new instance of <see cref="RelayCommand{T}"/>.
         /// </summary>
         /// <param name="execute">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
         /// <remarks><seealso cref="CanExecute"/> will always return true.</remarks>
@@ -112,12 +110,12 @@ namespace RAMEditorMultiplatform.Helpers
         {
             _execute = execute;
             _canExecute = canExecute;
-            _canExecuteChangedTimer = new DispatcherTimer
+            DispatcherTimer canExecuteChangedTimer = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 1),
             };
-            _canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
-            _canExecuteChangedTimer.Start();
+            canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
+            canExecuteChangedTimer.Start();
         }
 
         #endregion

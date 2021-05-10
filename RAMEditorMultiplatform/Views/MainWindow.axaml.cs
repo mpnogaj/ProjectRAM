@@ -16,9 +16,7 @@ namespace RAMEditorMultiplatform.Views
 #if DEBUG
             this.AttachDevTools();
 #endif
-            Logic.Logic.MainWindow = this;
-            this.DataContext = new MainWindowViewModel();
-            Logic.Logic.CreateNewPage();
+            DataContext = new MainWindowViewModel();
             var Files = this.FindControl<TabControl>("Files");
             Files.AddHandler(DragDrop.DropEvent, File_Drop);
             Files.AddHandler(DragDrop.DragOverEvent, File_Drag_Over);
@@ -29,8 +27,8 @@ namespace RAMEditorMultiplatform.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void File_Drop(object? sender, DragEventArgs e) => MainWindowViewModel.Instance.FileDropped(sender, e);
+        private void File_Drop(object? sender, DragEventArgs e) => ((MainWindowViewModel)DataContext!).FileDropped(sender, e);
 
-        private void File_Drag_Over(object? sender, DragEventArgs e) => MainWindowViewModel.Instance.FileOver(sender, e);
+        private void File_Drag_Over(object? sender, DragEventArgs e) => ((MainWindowViewModel)DataContext!).FileOver(sender, e);
     }
 }
