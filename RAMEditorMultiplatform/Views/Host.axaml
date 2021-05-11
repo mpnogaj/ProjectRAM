@@ -79,7 +79,7 @@
             </StackPanel>
         </Grid>
         <GridSplitter Grid.Row="0" Width="3" Grid.Column="1" ResizeDirection="Columns" VerticalAlignment="Stretch" />
-        <Grid x:Name="LeftColumn" Grid.Row="0" Grid.Column="2">
+        <Grid Grid.Row="0" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
@@ -114,16 +114,17 @@
         &#x0a; -> '\n'
         \r\n doesn't work for Windows but it should-->
                 <Grid DockPanel.Dock="Top">
-                    <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                             IsVisible="{Binding !SimpleEditorUsage}" Margin="8, 5, 8, 5"
+                    <TextBox HorizontalAlignment="Stretch" 
+                             VerticalAlignment="Stretch"
+                             IsVisible="{Binding !SimpleEditorUsage}" 
+                             Margin="8, 5, 8, 5"
                              AcceptsReturn="True"
                              TextWrapping="Wrap"
                              FontFamily="Arial"
                              AcceptsTab="True"
                              FontSize="{Binding FontSize}"
-                             Text="{Binding ProgramString}"
+                             Text="{Binding TextEditorProgram}"
                              NewLine="&#x0a;" />
-
                     <!--Simple editor-->
                     <Border BorderBrush="Black"
                             BorderThickness="2" 
@@ -138,7 +139,8 @@
                                   KeyDown="OnKeyDown" 
                                   RowBackground="White"
                                   AlternatingRowBackground="White"
-                                  Items="{Binding Path=DataContext.Program, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                  FontSize="{Binding FontSize}"
+                                  Items="{Binding Path=DataContext.SimpleEditorProgram, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                   SelectionMode="Single">
                             <DataGrid.Styles>
                                 <Style Selector="DataGrid">
@@ -150,7 +152,8 @@
                                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                                     <Setter Property="AreSeparatorsVisible" Value="True" />
                                     <Setter Property="SeparatorBrush" Value="LightGray" />
-                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="FontSize" Value="{Binding FontSize}" />
+                                    <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter Property="Foreground" Value="Black" />
                                 </Style>
                                 <Style Selector="DataGridCell">
@@ -160,11 +163,11 @@
                           <DataGrid.Columns>
                             <!--Reverted due to bug-->
                             <!--When changing editor we should reinit this-->
-                            <DataGridTextColumn Header="Line" IsReadOnly="True" Binding="{Binding Line}" Width="75"/>
-                            <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="*"/>
-                            <DataGridTextColumn Header="Command" Binding="{Binding Command}" Width="*"/>
-                            <DataGridTextColumn Header="Argument" Binding="{Binding Argument}" Width="*"/>
-                            <DataGridTextColumn Header="Comment" Binding="{Binding Comment}" Width="*"/>
+                            <DataGridTextColumn FontSize="{Binding FontSize}" Header="Line" IsReadOnly="True" Binding="{Binding Line}" Width="75"/>
+                            <DataGridTextColumn FontSize="{Binding FontSize}" Header="Label" Binding="{Binding Label}" Width="*"/>
+                            <DataGridTextColumn FontSize="{Binding FontSize}" Header="Command" Binding="{Binding Command}" Width="*"/>
+                            <DataGridTextColumn FontSize="{Binding FontSize}" Header="Argument" Binding="{Binding Argument}" Width="*"/>
+                            <DataGridTextColumn FontSize="{Binding FontSize}" Header="Comment" Binding="{Binding Comment}" Width="*"/>
                           </DataGrid.Columns>
                         </DataGrid>
                     </Border>
@@ -175,15 +178,19 @@
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="AliceBlue" >
             <TabControl>
                 <TabItem Header="Validation report">
-                    <DataGrid CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserSortColumns="False" GridLinesVisibility="All">
+                    <DataGrid CanUserReorderColumns="False" 
+                              CanUserResizeColumns="True" 
+                              CanUserSortColumns="False" 
+                              GridLinesVisibility="All"
+                              Items="{Binding Path=DataContext.Errors, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
                         <DataGrid.Styles>
                             <Style Selector="DataGridColumnHeader">
                                 <Setter Property="AreSeparatorsVisible" Value="True"/>
                             </Style>
                         </DataGrid.Styles>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Line" Binding="{Binding Line}"/>
-                            <DataGridTextColumn Header="Message" Binding="{Binding Message}"/>
+                            <DataGridTextColumn Width="75" Header="Line" Binding="{Binding Line}"/>
+                            <DataGridTextColumn Width="*" Header="Message" Binding="{Binding Message}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>

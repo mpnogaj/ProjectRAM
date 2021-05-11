@@ -124,6 +124,13 @@ namespace RAMEditorMultiplatform.ViewModels
             get => _import;
         }
 
+        private readonly RelayCommand _validate;
+        
+        public RelayCommand Validate
+        {
+            get => _validate;
+        }
+
         public MainWindowViewModel()
         {
             _pages = new ObservableCollection<HostViewModel>();
@@ -154,7 +161,7 @@ namespace RAMEditorMultiplatform.ViewModels
                 }
                 else
                 {
-                    Essentials.WriteToFile(Page!.Path, Page!.ProgramString);
+                    Essentials.WriteToFile(Page!.Path, Page!.GetProgramString());
                 }
             }, () => IsFileOpened());
             _closeProgram = new(Essentials.Exit, () => true);
@@ -251,6 +258,22 @@ namespace RAMEditorMultiplatform.ViewModels
                 }
             }, () => IsFileOpened() && !IsProgramRunning());
 
+            _validate = new(() =>
+            {
+                var exceptions = GetAllErrors(Page!);
+                var errorList = new ObservableCollection<ErrorLine>();
+                foreach (var exception in exceptions)
+                {
+                    errorList.Add(new ErrorLine{Line = exception.Line, Message = exception.LocalizedMessage("pl-PL")});
+                }
+
+                if (errorList.Count == 0)
+                {
+                    errorList.Add(new ErrorLine{Message = "Everything is alright"});
+                }
+                Page!.Errors = errorList;
+            }, () => !IsProgramRunning() && IsFileOpened());
+
             CreateEmptyPage();
         }
 
@@ -295,13 +318,10 @@ namespace RAMEditorMultiplatform.ViewModels
 
         private void CreatePageWithCode(string code, string header = Constant.DefaultHeader)
         {
-            Pages.Add(new HostViewModel(header)
-            {
-                ProgramString = code
-            });
+            Pages.Add(new HostViewModel(header, code));
         }
 
-        public void CreateCodePagesFromFiles(string[] files)
+        private void CreateCodePagesFromFiles(string[] files)
         {
             foreach (string file in files)
             {
@@ -310,6 +330,15 @@ namespace RAMEditorMultiplatform.ViewModels
                     CreatePageWithCode(Essentials.ReadFromFile(file), Path.GetFileNameWithoutExtension(file));
                 }
             }
+        }
+
+        private List<RamInterpreterException> GetAllErrors(HostViewModel page)
+        {
+            var file = page ?? Page!;
+            var programString = file.GetProgramString();
+            var stringCollection = Creator.CreateStringCollection(programString, "\n");
+            var program = Creator.CreateCommandList(stringCollection);
+            return Task.Run(() => Validator.ValidateProgram(program)).Result;
         }
 
         private async void SaveCodeFileAs(HostViewModel? page)
@@ -326,7 +355,7 @@ namespace RAMEditorMultiplatform.ViewModels
             if (!string.IsNullOrEmpty(res))
             {
                 file.Path = res;
-                Essentials.WriteToFile(res, file.ProgramString);
+                Essentials.WriteToFile(res, file.GetProgramString());
             }
         }
         
@@ -335,11 +364,11 @@ namespace RAMEditorMultiplatform.ViewModels
             var ct = token;
             HostViewModel host = Page!;
             string input = host.InputTapeString;
-            string program = host.ProgramString;
+            string program = host.TextEditorProgram;
             List<Command> commands;
             if (host.SimpleEditorUsage)
             {
-                commands = ProgramLineToCommandConverter.ProgramLinesToCommands(host.Program.ToList());
+                commands = ProgramLineToCommandConverter.ProgramLinesToCommands(host.SimpleEditorProgram.ToList());
             }
             else
             {
