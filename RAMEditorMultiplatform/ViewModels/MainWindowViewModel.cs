@@ -12,6 +12,7 @@ using Avalonia.Controls;
 using Common;
 using RAMEditorMultiplatform.Converters;
 using RAMEditorMultiplatform.Models;
+using MessageBox.Avalonia;
 
 namespace RAMEditorMultiplatform.ViewModels
 {
@@ -181,6 +182,11 @@ namespace RAMEditorMultiplatform.ViewModels
                 catch (OperationCanceledException)
                 {
                     /*Ignore*/
+                }
+                catch (RamInterpreterException ex)
+                {
+                    var msgb = MessageBoxManager.GetMessageBoxStandardWindow("Error", ex.Message, icon: MessageBox.Avalonia.Enums.Icon.Warning);
+                    msgb.ShowDialog(Essentials.GetAppInstance().MainWindow);
                 }
                 finally
                 {
