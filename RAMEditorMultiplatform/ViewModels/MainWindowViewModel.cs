@@ -172,6 +172,10 @@ namespace RAMEditorMultiplatform.ViewModels
 
             _runProgram = new(async () =>
             {
+                Validate.Execute(null);
+                if (Page!.Errors.Count > 0 && Page!.Errors[0].Line != -1)
+                    return;
+                
                 Page!.Token = new CancellationTokenSource();
                 try
                 {
