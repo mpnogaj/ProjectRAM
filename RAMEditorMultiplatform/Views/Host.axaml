@@ -19,9 +19,9 @@
             </Style>
         </Grid.Styles>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" MinWidth="150" />
-            <ColumnDefinition Width="1" />
-            <ColumnDefinition Width="8*" MinWidth="400" />
+            <ColumnDefinition Width="0" />
+            <ColumnDefinition Width="3" />
+            <ColumnDefinition Width="8*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -29,8 +29,8 @@
             <RowDefinition Height="0" MaxHeight="400" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0" Margin="8, 0, 8, 0">
-            <Grid.RowDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0" Background="AliceBlue">
+            <!--<Grid.RowDefinitions>
                 <RowDefinition Height="1*" MaxHeight="50" />
                 <RowDefinition Height="9*" />
                 <RowDefinition Height="50" MinHeight="50" MaxHeight="50" />
@@ -77,6 +77,49 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
+            <Border Height="NaN" Grid.Row="1" BorderThickness="1" Background="White" BorderBrush="LightGray">
+                <DataGrid CanUserReorderColumns="False"
+                          CanUserResizeColumns="True"
+                          CanUserSortColumns="False"
+                          GridLinesVisibility="All"
+                          HorizontalGridLinesBrush="LightGray"
+                          VerticalGridLinesBrush="LightGray"
+                          Height="NaN">
+                    <DataGrid.Styles>
+                        <Style Selector="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Padding" Value="0, 0, 0, 0"/>
+                        </Style>
+                    </DataGrid.Styles>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" Binding="{Binding Address}" Header="Address"/>
+                        <DataGridTextColumn Width="*" Binding="{Binding Value}" Header="Value"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>-->
+            <TabControl>
+                <TabItem Header="Memory">
+                    <Border BorderThickness="1" Background="White" BorderBrush="LightGray" Margin="0, 0, 0, 5">
+                        <DataGrid CanUserReorderColumns="False" 
+                                  CanUserResizeColumns="True" 
+                                  CanUserSortColumns="False" 
+                                  GridLinesVisibility="All"
+                                  AlternatingRowBackground="White"
+                                  RowBackground="White"
+                                  Items="{Binding Memory, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+                            <DataGrid.Styles>
+                                <Style Selector="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </Style>
+                            </DataGrid.Styles>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn IsReadOnly="True" Width="*" Binding="{Binding Address}" Header="Address"/>
+                                <DataGridTextColumn IsReadOnly="True" Width="*" Binding="{Binding Value}" Header="Value"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </TabItem>
+            </TabControl>
         </Grid>
         <GridSplitter Grid.Row="0" Width="3" Grid.Column="1" ResizeDirection="Columns" VerticalAlignment="Stretch" />
         <Grid Grid.Row="0" Grid.Column="2">
