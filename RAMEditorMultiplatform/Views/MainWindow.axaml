@@ -238,8 +238,7 @@
               </ContentControl.Content>
               <ContentControl.ContextMenu>
                 <ContextMenu>
-                  <MenuItem Header="Close" InputGesture="Ctrl + W" Command="{Binding ClosePage}" CommandParameter="{Binding}">
-                  </MenuItem>
+                  <MenuItem Header="Close" InputGesture="Ctrl + W" Command="{Binding ClosePage}" CommandParameter="{Binding}"/>
                 </ContextMenu>
               </ContentControl.ContextMenu>
             </ContentControl>

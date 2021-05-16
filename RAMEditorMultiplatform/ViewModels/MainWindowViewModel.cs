@@ -18,6 +18,8 @@ namespace RAMEditorMultiplatform.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        public static MainWindowViewModel Instance { get; private set; }
+        
         private ObservableCollection<HostViewModel> _pages;
 
         public ObservableCollection<HostViewModel> Pages
@@ -132,8 +134,16 @@ namespace RAMEditorMultiplatform.ViewModels
             get => _validate;
         }
 
+        /*private readonly RelayCommand<HostViewModel> _closePage;
+
+        public RelayCommand<HostViewModel> ClosePage
+        {
+            get => _closePage;
+        }*/
+
         public MainWindowViewModel()
         {
+            Instance = this;
             _pages = new ObservableCollection<HostViewModel>();
             _page = null;
             _addPage = new(() => CreateEmptyPage());
@@ -189,13 +199,14 @@ namespace RAMEditorMultiplatform.ViewModels
                 }
                 catch (RamInterpreterException ex)
                 {
-                    var msgb = MessageBoxManager.GetMessageBoxStandardWindow("Error", ex.Message, icon: MessageBox.Avalonia.Enums.Icon.Warning);
-                    msgb.ShowDialog(Essentials.GetAppInstance().MainWindow);
+                    var msgb = MessageBoxManager.GetMessageBoxStandardWindow("Error", ex.Message, icon: MessageBox.Avalonia.Enums.Icon.Warning, windowStartupLocation: WindowStartupLocation.CenterOwner);
+                    await msgb.ShowDialog(Essentials.GetAppInstance().MainWindow);
                 }
                 finally
                 {
                     Page.ProgramRunning = false;
                     Essentials.SetCursor(StandardCursorType.Arrow);
+                    Page!.Memory = MemoryDictionaryToMemoryRowConverter.MemoryDictionaryToMemoryRows(Interpreter.Memory);
                 }
             }, () => IsFileOpened() && !IsProgramRunning());
 
@@ -284,6 +295,11 @@ namespace RAMEditorMultiplatform.ViewModels
                 Page!.Errors = errorList;
             }, () => !IsProgramRunning() && IsFileOpened());
 
+            /*_closePage = new((page) =>
+            {
+                Pages.Remove(page);
+            }, () => true);*/
+            
             CreateEmptyPage();
         }
 
@@ -321,14 +337,22 @@ namespace RAMEditorMultiplatform.ViewModels
             CreateCodePagesFromFiles(files);
         }
 
-        private void CreateEmptyPage(string header = Constant.DefaultHeader)
+        private void ClosePage(HostViewModel page)
         {
-            Pages.Add(new HostViewModel(header));
+            Pages!.Remove(page);
         }
 
-        private void CreatePageWithCode(string code, string header = Constant.DefaultHeader)
+        private void CreateEmptyPage(string header = Constant.DefaultHeader)
         {
-            Pages.Add(new HostViewModel(header, code));
+            Pages.Add(new HostViewModel(header, ClosePage));
+        }
+
+        private void CreatePageWithCode(string code, string path, string header = Constant.DefaultHeader)
+        {
+            Pages.Add(new HostViewModel(header, code, ClosePage)
+            {
+                Path = path
+            });
         }
 
         private void CreateCodePagesFromFiles(string[] files)
@@ -337,7 +361,7 @@ namespace RAMEditorMultiplatform.ViewModels
             {
                 if (!string.IsNullOrWhiteSpace(file))
                 {
-                    CreatePageWithCode(Essentials.ReadFromFile(file), Path.GetFileNameWithoutExtension(file));
+                    CreatePageWithCode(Essentials.ReadFromFile(file), file, Path.GetFileNameWithoutExtension(file));
                 }
             }
         }
@@ -367,18 +391,19 @@ namespace RAMEditorMultiplatform.ViewModels
                 file.Path = res;
                 Essentials.WriteToFile(res, file.GetProgramString());
             }
+
+            file.Header = Path.GetFileNameWithoutExtension(res);
         }
-        
+
         private void CreateAndRunProgram(CancellationToken token)
         {
             var ct = token;
-            HostViewModel host = Page!;
-            string input = host.InputTapeString;
-            string program = host.TextEditorProgram;
+            string input = Page!.InputTapeString;
+            string program = Page!.TextEditorProgram;
             List<Command> commands;
-            if (host.SimpleEditorUsage)
+            if (Page!.SimpleEditorUsage)
             {
-                commands = ProgramLineToCommandConverter.ProgramLinesToCommands(host.SimpleEditorProgram.ToList());
+                commands = ProgramLineToCommandConverter.ProgramLinesToCommands(Page!.SimpleEditorProgram.ToList());
             }
             else
             {
@@ -396,18 +421,8 @@ namespace RAMEditorMultiplatform.ViewModels
                 finalOutput += s + " ";
             }
             finalOutput = finalOutput.Trim();
-            host.OutputTapeString = finalOutput;
-            host.Memory.Clear();
-            var newMemory = new ObservableCollection<MemoryRow>();
-            foreach (var (add, value) in Interpreter.Memory)
-            {
-                newMemory.Add(new MemoryRow
-                {
-                    Address = add,
-                    Value = value
-                });
-            }
-            host.Memory = newMemory;
+            Page!.OutputTapeString = finalOutput;
+            Page!.Memory = MemoryDictionaryToMemoryRowConverter.MemoryDictionaryToMemoryRows(Interpreter.Memory);
         }
     }
 }

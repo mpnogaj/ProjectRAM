@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using Avalonia.Controls;
 using Avalonia.Input;
 using RAMEditorMultiplatform.Converters;
 using RAMEditorMultiplatform.Helpers;
@@ -113,9 +114,17 @@ namespace RAMEditorMultiplatform.ViewModels
             get => _errors;
             set => SetProperty(ref _errors, value);
         }
+        
+        private readonly RelayCommand<HostViewModel> _closePage;
 
-        public HostViewModel(string header)
+        public RelayCommand<HostViewModel> ClosePage
         {
+            get => _closePage;
+        }
+
+        public HostViewModel(string header, Action<HostViewModel> closePageAction)
+        {
+            _closePage = new(closePageAction, () => true);
             _header = header;
             _memory = new ObservableCollection<MemoryRow>();
             _outputTapeString = string.Empty;
@@ -133,7 +142,7 @@ namespace RAMEditorMultiplatform.ViewModels
             };
         }
 
-        public HostViewModel(string header, string code) : this(header)
+        public HostViewModel(string header, string code, Action<HostViewModel> closePageAction) : this(header, closePageAction)
         {
             _textEditorProgram = code;
             foreach (var line in code.Split('\n'))
