@@ -44,7 +44,7 @@ namespace Common
             //    }
             //    i++;
             //}
-            throw new LabelDoesntExistExcpetion(Program[index].Line, lbl);
+            throw new LabelDoesntExistException(Program[index].Line, lbl);
         }
 
         private static Dictionary<string, int> MapLabels()

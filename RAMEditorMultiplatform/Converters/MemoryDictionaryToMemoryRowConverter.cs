@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
-using Avalonia.Input;
 using RAMEditorMultiplatform.Models;
 
 namespace RAMEditorMultiplatform.Converters

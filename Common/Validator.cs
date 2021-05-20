@@ -104,7 +104,7 @@ namespace Common
 
                     if (requiredLabels.Contains(commands[i].Argument))
                     {
-                        exceptions.Add(new LabelDoesntExistExcpetion(commands[i].Line, commands[i].Argument));
+                        exceptions.Add(new LabelDoesntExistException(commands[i].Line, commands[i].Argument));
                     }
                 }
             }
