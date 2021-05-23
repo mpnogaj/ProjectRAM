@@ -13,13 +13,12 @@ using Common;
 using RAMEditorMultiplatform.Converters;
 using RAMEditorMultiplatform.Models;
 using MessageBox.Avalonia;
+using Essentials = RAMEditorMultiplatform.Helpers.Essentials;
 
 namespace RAMEditorMultiplatform.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public static MainWindowViewModel Instance { get; private set; }
-        
         private ObservableCollection<HostViewModel> _pages;
 
         public ObservableCollection<HostViewModel> Pages
@@ -143,7 +142,6 @@ namespace RAMEditorMultiplatform.ViewModels
 
         public MainWindowViewModel()
         {
-            Instance = this;
             _pages = new ObservableCollection<HostViewModel>();
             _page = null;
             _addPage = new(() => CreateEmptyPage());
@@ -155,7 +153,7 @@ namespace RAMEditorMultiplatform.ViewModels
                     AllowMultiple = true,
                     Filters = Constant.RamcodeFilter
                 };
-                var files = await ofd.ShowAsync(Essentials.GetAppInstance().MainWindow);
+                var files = await ofd.ShowAsync(Essentials.GetAppDesktopLifetime().MainWindow);
                 if (files == null)
                 {
                     return;
@@ -185,7 +183,7 @@ namespace RAMEditorMultiplatform.ViewModels
                 Validate.Execute(null);
                 if (Page!.Errors.Count > 0 && Page!.Errors[0].Line != -1)
                     return;
-                
+                TogglePageStatus();
                 Page!.Token = new CancellationTokenSource();
                 try
                 {
@@ -200,17 +198,18 @@ namespace RAMEditorMultiplatform.ViewModels
                 catch (RamInterpreterException ex)
                 {
                     var msgb = MessageBoxManager.GetMessageBoxStandardWindow("Error", ex.Message, icon: MessageBox.Avalonia.Enums.Icon.Warning, windowStartupLocation: WindowStartupLocation.CenterOwner);
-                    await msgb.ShowDialog(Essentials.GetAppInstance().MainWindow);
+                    await msgb.ShowDialog(Essentials.GetAppDesktopLifetime().MainWindow);
                 }
                 finally
                 {
                     Page.ProgramRunning = false;
                     Essentials.SetCursor(StandardCursorType.Arrow);
                     Page!.Memory = MemoryDictionaryToMemoryRowConverter.MemoryDictionaryToMemoryRows(Interpreter.Memory);
+                    TogglePageStatus();
                 }
             }, () => IsFileOpened() && !IsProgramRunning());
 
-            _stopProgram = new(() => { Page!.Token!.Cancel(); }, () => IsFileOpened() && IsProgramRunning());
+            _stopProgram = new(() => { Page!.Token!.Cancel(); TogglePageStatus(); }, () => IsFileOpened() && IsProgramRunning());
 
             _switchEditors = new(() => { Page!.HandleEditorSwitch(); }, () => IsFileOpened() && !IsProgramRunning());
 
@@ -239,7 +238,7 @@ namespace RAMEditorMultiplatform.ViewModels
                     Filters = Constant.TextFileFilter
                 };
 
-                var res = await ofd.ShowAsync(Essentials.GetAppInstance().MainWindow);
+                var res = await ofd.ShowAsync(Essentials.GetAppDesktopLifetime().MainWindow);
                 if (res.Length > 0)
                 {
                     string content = Essentials.ReadFromFile(res[0]);
@@ -272,7 +271,7 @@ namespace RAMEditorMultiplatform.ViewModels
                     Filters = Constant.TextFileFilter
                 };
 
-                var res = await sfd.ShowAsync(Essentials.GetAppInstance().MainWindow);
+                var res = await sfd.ShowAsync(Essentials.GetAppDesktopLifetime().MainWindow);
                 if (!string.IsNullOrEmpty(res))
                 {
                     Essentials.WriteToFile(res, content);
@@ -385,7 +384,7 @@ namespace RAMEditorMultiplatform.ViewModels
                 Filters = Constant.RamcodeFilter
             };
 
-            var res = await sfd.ShowAsync(Essentials.GetAppInstance().MainWindow);
+            var res = await sfd.ShowAsync(Essentials.GetAppDesktopLifetime().MainWindow);
             if (!string.IsNullOrEmpty(res))
             {
                 file.Path = res;
@@ -423,6 +422,18 @@ namespace RAMEditorMultiplatform.ViewModels
             finalOutput = finalOutput.Trim();
             Page!.OutputTapeString = finalOutput;
             Page!.Memory = MemoryDictionaryToMemoryRowConverter.MemoryDictionaryToMemoryRows(Interpreter.Memory);
+        }
+
+        private void TogglePageStatus()
+        {
+            for (var i = 0; i < Pages.Count; i++)
+            {
+                var page = Pages[i];
+                if (page != Page)
+                {
+                    page.IsBlocked = !page.IsBlocked;
+                }
+            }
         }
     }
 }

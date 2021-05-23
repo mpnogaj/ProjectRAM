@@ -47,23 +47,23 @@ namespace Common
 
                 case CommandType.Write:
                 case CommandType.Load:
-                    return T(x.ArgumentType, x.FormatedArg());
+                    return T(x.ArgumentType, x.FormattedArg());
 
                 case CommandType.Sub:
                 case CommandType.Add:
                 case CommandType.Mult:
                 case CommandType.Div:
-                    return T(x.ArgumentType, x.FormatedArg()) + Lcost(M("0"));
+                    return T(x.ArgumentType, x.FormattedArg()) + Lcost(M("0"));
 
                 case CommandType.Store:
-                    if (x.ArgumentType == ArgumentType.DirectAddress) return Lcost(M("0")) + Lcost(x.FormatedArg());
-                    return Lcost(M("0")) + Lcost(x.FormatedArg()) + Lcost(M(x.FormatedArg()));
+                    if (x.ArgumentType == ArgumentType.DirectAddress) return Lcost(M("0")) + Lcost(x.FormattedArg());
+                    return Lcost(M("0")) + Lcost(x.FormattedArg()) + Lcost(M(x.FormattedArg()));
 
                 case CommandType.Read:
                     string input = Interpreter.ReadableInputTape[i];
                     i++;
-                    if (x.ArgumentType == ArgumentType.DirectAddress) return Lcost(input) + Lcost(x.FormatedArg());
-                    return Lcost(input) + Lcost(x.FormatedArg()) + Lcost(M(x.FormatedArg()));
+                    if (x.ArgumentType == ArgumentType.DirectAddress) return Lcost(input) + Lcost(x.FormattedArg());
+                    return Lcost(input) + Lcost(x.FormattedArg()) + Lcost(M(x.FormattedArg()));
 
                 default:
                     return 0;

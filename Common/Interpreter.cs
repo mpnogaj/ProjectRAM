@@ -7,7 +7,7 @@ namespace Common
     public static class Interpreter
     {
         /// <summary>
-        /// Variables whitch can be read after executing program
+        /// Variables which can be read after executing program
         /// Cleared and initialized at the begging of the program
         /// </summary>
 #pragma warning disable CA2211 // Non-constant fields should not be visible
@@ -25,7 +25,6 @@ namespace Common
         /// <summary>
         /// Funkcja do skakania. Preszukuje wszystkie komendy i jeżeli znajdzie etykiete to skacze do niej.
         /// </summary>
-        /// <param name="c">Lista komend</param>
         /// <param name="lbl">Etykieta do wyszukania</param>
         /// <param name="index">Numer linii</param>
         /// <returns>Indeks komendy do której skoczyć</returns>
@@ -108,7 +107,13 @@ namespace Common
                 InputTape = inputTape;
                 ReadableInputTape = InputTape == null ? new List<string>() : new List<string>(InputTape.ToArray());
             }
-            for (int i = 0; i < commands.Count; i++)
+
+            for (var i = 0; i < commands.Count; i++)
+            {
+                commands[i].ArgumentType = Command.GetArgumentType(commands[i].Argument);
+            }
+            
+            for (var i = 0; i < commands.Count; i++)
             {
                 token.ThrowIfCancellationRequested();
                 if (RunCommand(ref i))
@@ -122,21 +127,18 @@ namespace Common
         /// <summary>
         /// Run single command
         /// </summary>
-        /// <param name="commands">List of another commands (for Jump)</param>
-        /// <param name="inputTape">Input tape</param>
-        /// <param name="outputTape">Output tape</param>
-        /// <param name="memory">Memory</param>
         /// <param name="i">Index of current command in list</param>
         /// <returns>Should end program</returns>
         public static bool RunCommand(ref int i)
         {
             Command command = Program[i];
-            ExecutedCommands.Add(command);
+            //
+            //ExecutedCommands.Add(command);
             bool exists;
             BigInteger value;
             //argument
-            command.ArgumentType = Command.GetArgumentType(command.Argument);
-            string arg = command.FormatedArg();
+            //command.ArgumentType = Command.GetArgumentType(command.Argument);
+            string arg = command.FormattedArg();
             if (command.ArgumentType == ArgumentType.IndirectAddress)
             {
                 arg = Memory[arg];

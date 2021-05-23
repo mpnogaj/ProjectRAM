@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace Common
 {
@@ -59,5 +60,13 @@ namespace Common
             other == null
                 ? 1
                 : BigInteger.Compare(BigInteger.Parse(Index), BigInteger.Parse(other.Index));
+    }
+
+    public static class Essentials
+    {
+        public static bool IsNumber(this string input)
+        {
+            return Regex.IsMatch(input, @"^\d+$");
+        }
     }
 }

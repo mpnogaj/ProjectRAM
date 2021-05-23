@@ -1,12 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace Common
 {
     /// <summary>
-    /// Class whitch represents single command
+    /// Class which represents single command
     /// </summary>
     public class Command : INotifyPropertyChanged
     {
@@ -26,7 +25,7 @@ namespace Common
         /// </summary>
         public ArgumentType ArgumentType
         {
-            get { return _argumentType; }
+            get => _argumentType;
             set
             {
                 _argumentType = value;
@@ -39,7 +38,7 @@ namespace Common
         /// </summary>
         public CommandType CommandType
         {
-            get { return _commandType; }
+            get => _commandType;
             set
             {
                 _commandType = value;
@@ -52,23 +51,13 @@ namespace Common
         /// </summary>
         public string CommandName
         {
-            get { return _command; }
+            get => _command;
             set
             {
                 _command = value;
                 if (_command != null && _command != string.Empty)
                 {
                     CommandType = GetCommandType(value);
-                    /*object type;
-                    if (Enum.TryParse(typeof(CommandType), _command, true, out type))
-                    {
-                        CommandType = (CommandType)type;
-                    }
-                    else
-                    {
-                        CommandType = CommandType.Unknown;
-                    }*/
-                    //CommandType = (CommandType)Enum.Parse(typeof(CommandType), _command, true);
                 }
 
                 RaisePropertyChangedEvent(nameof(CommandName));
@@ -80,7 +69,7 @@ namespace Common
         /// </summary>
         public string Argument
         {
-            get { return _argument; }
+            get => _argument;
             set
             {
                 _argument = value;
@@ -98,7 +87,7 @@ namespace Common
         /// </summary>
         public string Label
         {
-            get { return _label; }
+            get => _label;
             set
             {
                 _label = value;
@@ -115,7 +104,7 @@ namespace Common
         /// </summary>
         public string Comment
         {
-            get { return _comment; }
+            get => _comment;
             set
             {
                 _comment = value;
@@ -128,7 +117,7 @@ namespace Common
         /// </summary>
         public long Line
         {
-            get { return _line; }
+            get => _line;
             set
             {
                 _line = value;
@@ -232,7 +221,7 @@ namespace Common
             }
             catch
             {
-                return;
+                // ignored
             }
         }
         #endregion
@@ -283,11 +272,11 @@ namespace Common
         /// <returns></returns>
         public static ArgumentType GetArgumentType(string argument)
         {
-            if (String.IsNullOrWhiteSpace(argument))
+            if (string.IsNullOrWhiteSpace(argument))
             {
                 return ArgumentType.Null;
             }
-            if (!BigInteger.TryParse(argument, out _))
+            if (!argument.IsNumber())
             {
                 if (argument.StartsWith('^'))
                 {
@@ -308,9 +297,9 @@ namespace Common
             }
         }
 
-        public string FormatedArg()
+        public string FormattedArg()
         {
-            string arg = this.Argument;
+            var arg = this.Argument;
             if (this.ArgumentType == ArgumentType.Const || this.ArgumentType == ArgumentType.IndirectAddress)
             {
                 return arg.Substring(1);
@@ -324,8 +313,8 @@ namespace Common
         /// <returns>{label}: {command} {argument} #{comment}</returns>
         public override string ToString()
         {
-            string outcome = string.Empty;
-            if (!String.IsNullOrWhiteSpace(Label))
+            var outcome = string.Empty;
+            if (!string.IsNullOrWhiteSpace(Label))
             {
                 outcome += Label + ": ";
             }
@@ -334,7 +323,7 @@ namespace Common
                 outcome += CommandType.ToString().ToLower() + " ";
             }
             outcome += Argument + " ";
-            if (!String.IsNullOrWhiteSpace(Comment))
+            if (!string.IsNullOrWhiteSpace(Comment))
             {
                 outcome += "#" + Comment;
             }

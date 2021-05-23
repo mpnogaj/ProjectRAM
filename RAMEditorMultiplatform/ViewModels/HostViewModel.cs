@@ -62,6 +62,14 @@ namespace RAMEditorMultiplatform.ViewModels
             set => SetProperty(ref _programRunning, value);
         }
 
+        private bool _isBlocked;
+
+        public bool IsBlocked
+        {
+            get => _isBlocked;
+            set => SetProperty(ref _isBlocked, value);
+        }
+
         private string? _path;
 
         public string? Path

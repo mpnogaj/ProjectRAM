@@ -38,7 +38,7 @@ namespace RAMEditorMultiplatform.Helpers
 
             DispatcherTimer canExecuteChangedTimer = new DispatcherTimer
             {
-                Interval = new TimeSpan(0, 0, 1),
+                Interval = new TimeSpan(0, 0, 0, 0, 50),
             };
             canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
             canExecuteChangedTimer.Start();
@@ -112,7 +112,7 @@ namespace RAMEditorMultiplatform.Helpers
             _canExecute = canExecute;
             DispatcherTimer canExecuteChangedTimer = new DispatcherTimer
             {
-                Interval = new TimeSpan(0, 0, 1),
+                Interval = new TimeSpan(0, 0, 0, 0, 50),
             };
             canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
             canExecuteChangedTimer.Start();

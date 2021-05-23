@@ -8,8 +8,6 @@ namespace RAMEditorMultiplatform.Helpers
 {
     public static class Essentials
     {
-        //public static MainWindow? MainWindow { get; set; }
-
         public static string TapeToString(Queue<string> tape)
         {
             return string.Join(", ", tape.ToArray());
@@ -27,19 +25,24 @@ namespace RAMEditorMultiplatform.Helpers
             return sr.ReadToEnd();
         }
 
-        public static IClassicDesktopStyleApplicationLifetime GetAppInstance()
+        public static IClassicDesktopStyleApplicationLifetime GetAppDesktopLifetime()
         {
-            return (IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime;
+            return (IClassicDesktopStyleApplicationLifetime) Application.Current.ApplicationLifetime;
+        }
+
+        public static App GetAppObject()
+        {
+            return (App) Application.Current;
         }
 
         public static void SetCursor(StandardCursorType cursor)
         {
-            GetAppInstance().MainWindow.Cursor = new Cursor(cursor);
+            GetAppDesktopLifetime().MainWindow.Cursor = new Cursor(cursor);
         }
 
         public static void Exit()
         {
-            GetAppInstance().Shutdown();
+            GetAppDesktopLifetime().Shutdown();
         }
     }
 }
