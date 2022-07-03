@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ProjectRAM.Core
@@ -54,27 +55,22 @@ namespace ProjectRAM.Core
 		public static Queue<string> CreateInputTapeFromFile(string pathToFile)
 		{
 			Queue<string> inputTape = new();
-			using (StreamReader sr = new(pathToFile))
+			using StreamReader sr = new(pathToFile);
+			while (sr.ReadLine() is { } line)
 			{
-				string? line;
-				while ((line = sr.ReadLine()) != null)
+				StringBuilder sb = new();
+				foreach (var c in line.Where(c => char.IsDigit(c) || c == '-'))
 				{
-					StringBuilder sb = new();
-					foreach (var c in line)
-					{
-						if (char.IsDigit(c) || c == '-')
-						{
-							sb.Append(c);
-						}
-					}
-					string number = sb.ToString();
-					// Double check
-					if (number.IsNumber())
-					{
-						inputTape.Enqueue(number);
-					}
+					sb.Append(c);
+				}
+				string number = sb.ToString();
+				// Double check
+				if (number.IsNumber())
+				{
+					inputTape.Enqueue(number);
 				}
 			}
+
 			return inputTape;
 		}
 
@@ -94,12 +90,9 @@ namespace ProjectRAM.Core
 			foreach (var entry in arr)
 			{
 				StringBuilder sb = new();
-				foreach (var c in entry)
+				foreach (var c in entry.Where(c => char.IsDigit(c) || c == '-'))
 				{
-					if (char.IsDigit(c) || c == '-')
-					{
-						sb.Append(c);
-					}
+					sb.Append(c);
 				}
 				string finalNum = sb.ToString();
 				if (finalNum.IsNumber())
@@ -116,19 +109,16 @@ namespace ProjectRAM.Core
 		/// </summary>
 		/// <param name="tape">Output tape</param>
 		/// <returns>String representation of output tape</returns>
-		public static string CreateOutputTapeFromQueue(Queue<string> tape)
+		public static string CreateOutputTapeFromQueue(Queue<string>? tape)
 		{
 			string outputTape = string.Empty;
-			while (tape != null && tape.Count > 0)
+			while (tape is { Count: > 0 })
 			{
 				string number = tape.Dequeue();
 				StringBuilder sb = new();
-				foreach (var c in number)
+				foreach (var c in number.Where(c => char.IsDigit(c) || c == '-'))
 				{
-					if (char.IsDigit(c) || c == '-')
-					{
-						sb.Append(c);
-					}
+					sb.Append(c);
 				}
 				string finalNumber = sb.ToString();
 				if (finalNumber.IsNumber())

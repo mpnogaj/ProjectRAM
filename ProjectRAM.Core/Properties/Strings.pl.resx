@@ -117,13 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Errors" xml:space="preserve">
-    <value>Błędy: {0}</value>
+  <data name="labelDoesntExistMessage" xml:space="preserve">
+    <value>Etykieta '{0}' nie została znaleziona.</value>
   </data>
-  <data name="ProcessExited" xml:space="preserve">
-    <value>Proces zakończony z kodem {0}</value>
+  <data name="manualMessage" xml:space="preserve">
+    <value>Sprawdź instrukcję po więcej informacji.</value>
   </data>
-  <data name="ExecutionCancelled" xml:space="preserve">
-    <value>Anulowano wykonywanie programu</value>
+  <data name="lineMessage" xml:space="preserve">
+    <value>Błąd wystąpił w linii: {0}.</value>
+  </data>
+  <data name="invalidArgumentMessage" xml:space="preserve">
+    <value>Podany argument nie pasuje do polecenia.</value>
+  </data>
+  <data name="inputTapeEmptyMessage" xml:space="preserve">
+    <value>Nie można odczytać elementu z taśmy wejściowej.</value>
+  </data>
+  <data name="cellUninitializedMessage" xml:space="preserve">
+    <value>Nie można odczytać wartości z komórki pamięci, ponieważ nie jest zainicjalizowana.</value>
+  </data>
+  <data name="accumulatorUninitializedMessage" xml:space="preserve">
+    <value>Nie można odczytać wartości akumulatora, ponieważ nie jest zainicjalizowany.</value>
+  </data>
+  <data name="invalidaLineMessage" xml:space="preserve">
+    <value>Linia jest nieprawidłowa. Sprawdź czy nie brakuje polecania lub argumentu.</value>
+  </data>
+  <data name="unknownCommandMessage" xml:space="preserve">
+    <value>Podane polecenie jest nieznane.</value>
   </data>
 </root>

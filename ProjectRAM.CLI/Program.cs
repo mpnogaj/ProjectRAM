@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading;
 using ProjectRAM.CLI.Properties;
 using ProjectRAM.Core;
@@ -16,7 +17,7 @@ namespace ProjectRAM.CLI
 		[Value(1, HelpText = "Path to input tape file.", Required = false)]
 		public string? InputTapePath { get; set; }
 
-		[Option('t', "timeout", HelpText = "Timeout in milliseconds after which program stops. 1 minute is default value. Everything <= 0 will set the default value", Required = false)]
+		[Option('t', "timeout", HelpText = "Timeout in seconds after which program stops. Everything <= 0 will set timeout to infinity", Required = false)]
 		public int Timeout { get; set; }
 	}
 
@@ -46,21 +47,38 @@ namespace ProjectRAM.CLI
 					inputTape = Factory.CreateInputTapeFromFile(options.InputTapePath);
 				}
 
-				var cts = new CancellationTokenSource(options.Timeout <= 0
-					? TimeSpan.FromMinutes(1)
-					: TimeSpan.FromMilliseconds(options.Timeout));
-				var interpreter = new Interpreter(Factory.CreateCommandList(options.CodePath), inputTape);
+				var cts = options.Timeout <= 0
+					? new CancellationTokenSource()
+					: new CancellationTokenSource(TimeSpan.FromSeconds(options.Timeout));
+				var interpreter = new Interpreter(Factory.CreateCommandList(options.CodePath));
 				interpreter.WriteToOutputTape += (sender, args) =>
 				{
-					Console.WriteLine(args.Output);
+					Console.WriteLine($@"<<< {args.Output}");
 				};
 				interpreter.ReadFromInputTape += (sender, args) =>
 				{
-					Console.Write(@">>> ");
-					args.Input = Console.ReadLine();
+					if (inputTape is { Count: > 0 })
+					{
+						args.Input = inputTape.Dequeue();
+					}
+					else
+					{
+						string? input;
+						bool res;
+						do
+						{
+							Console.Write(@">>> ");
+							input = Console.ReadLine();
+							res = BigInteger.TryParse(input, out var _);
+							if (!res)
+							{
+								Console.WriteLine(Resources.ParseError);
+							}
+						} while (!res);
+						args.Input = input;
+					}
 				};
-				var output = interpreter.RunCommands(cts.Token);
-				var outputTape = output.Item1;
+				var mem = interpreter.RunCommands(cts.Token);
 
 				return 0;
 			}
@@ -72,6 +90,11 @@ namespace ProjectRAM.CLI
 			catch (OperationCanceledException)
 			{
 				Console.WriteLine(Resources.ExecutionCancelled);
+				return -1;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
 				return -1;
 			}
 		}

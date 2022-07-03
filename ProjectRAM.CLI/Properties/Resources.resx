@@ -126,4 +126,7 @@
   <data name="ExecutionCancelled" xml:space="preserve">
     <value>Program execution cancelled</value>
   </data>
+  <data name="ParseError" xml:space="preserve">
+      <value>This value cannot be parsed. Make sure it's a number</value>
+  </data>
 </root>

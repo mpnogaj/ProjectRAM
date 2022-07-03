@@ -9,9 +9,7 @@ namespace ProjectRAM.Core
 {
 	public class Interpreter
 	{
-		private readonly Queue<string>? _inputTape;
 		private readonly Dictionary<string, int> _jumpMap;
-		private readonly Queue<string> _outputTape;
 		private readonly List<Command> _program;
 		private string _currentInput = "";
 
@@ -20,11 +18,9 @@ namespace ProjectRAM.Core
 		public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
 		public event EventHandler? ProgramFinished;
 		
-		public Interpreter(List<Command> program, Queue<string>? inputTape = null)
+		public Interpreter(List<Command> program)
 		{
 			_program = program;
-			_inputTape = inputTape;
-			_outputTape = new Queue<string>();
 			_jumpMap = MapLabels();
 			Memory = new Dictionary<string, string>()
 			{
@@ -41,9 +37,9 @@ namespace ProjectRAM.Core
 		internal Dictionary<string, string> MaxMemory { get; private set; }
 		internal Dictionary<string, string> Memory { get; private set; }
 
-		public Tuple<Queue<string>, Dictionary<string, string>> RunCommands() => RunCommands(CancellationToken.None);
+		public Dictionary<string, string> RunCommands() => RunCommands(CancellationToken.None);
 
-		public Tuple<Queue<string>, Dictionary<string, string>> RunCommands(CancellationToken cancellationToken)
+		public Dictionary<string, string> RunCommands(CancellationToken cancellationToken)
 		{
 			for (var i = 0; i < _program.Count; i++)
 			{
@@ -55,11 +51,11 @@ namespace ProjectRAM.Core
 				
 				if (RunCommand(ref i))
 				{
-					return new Tuple<Queue<string>, Dictionary<string, string>>(_outputTape, Memory);
+					return Memory;
 				}
 			}
 			ProgramFinished?.Invoke(this, EventArgs.Empty);
-			return new Tuple<Queue<string>, Dictionary<string, string>>(_outputTape, Memory);
+			return Memory;
 		}
 
 		private string GetValue(Command c, string formattedArg)
@@ -179,34 +175,19 @@ namespace ProjectRAM.Core
 						throw new ArgumentIsNotValidException(command.Line);
 					}
 
-					if (_inputTape is not { Count: > 0 })
-					{
-						throw new InputTapeEmptyException(command.Line);
-					}
-
 					#endregion Exception handling
 
 					string val;
-					if (_inputTape == null || _inputTape.Count == 0)
-					{
-						if (ReadFromInputTape == null)
-						{
-							throw new InputTapeEmptyException(i);
-						}
 
-						var eventArgs = new ReadFromTapeEventArgs();
-						ReadFromInputTape?.Invoke(this, eventArgs);
-
-						if (eventArgs.Input == null)
-						{
-							throw new InputTapeEmptyException(i);
-						}
-						val = eventArgs.Input;
-					}
-					else
+					if (ReadFromInputTape == null)
 					{
-						val = _inputTape.Dequeue();
+						throw new InputTapeEmptyException(i);
 					}
+
+					var eventArgs = new ReadFromTapeEventArgs();
+					ReadFromInputTape?.Invoke(this, eventArgs);
+
+					val = eventArgs.Input ?? throw new InputTapeEmptyException(i);
 
 					_currentInput = val;
 					SetMemory(arg, val);

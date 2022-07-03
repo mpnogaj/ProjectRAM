@@ -79,6 +79,15 @@ namespace ProjectRAM.CLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This value cannot be parsed. Make sure it&apos;s a number.
+        /// </summary>
+        internal static string ParseError {
+            get {
+                return ResourceManager.GetString("ParseError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Process exited with code {0}.
         /// </summary>
         internal static string ProcessExited {
