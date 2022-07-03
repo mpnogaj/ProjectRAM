@@ -31,6 +31,12 @@ namespace ProjectRAM.Editor.Helpers
 			sw.Write(content);
 		}
 
+		public static void AppendFile(string file, string content)
+		{
+			using StreamWriter sw = new(file, append: true);
+			sw.Write(content);
+		}
+
 		public static string ReadFromFile(string file)
 		{
 			using StreamReader sr = new(file);

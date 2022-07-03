@@ -1,0 +1,14 @@
+Language = "pl"
+UseDiscordRpc = false
+UseTextEditor = false
+LeftPanelSize = 250
+BottomPanelSize = 150
+StyleFile = "default.json"
+
+[StartupLocation]
+X = 233
+Y = 78
+
+[WindowSize]
+Width = 800
+Height = 600

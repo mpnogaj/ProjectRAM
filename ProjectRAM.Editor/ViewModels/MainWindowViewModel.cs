@@ -1,24 +1,25 @@
-﻿using System;
+﻿using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Threading;
+using MessageBox.Avalonia.Enums;
+using ProjectRAM.Core;
+using ProjectRAM.Core.Models;
+using ProjectRAM.Editor.Converters;
+using ProjectRAM.Editor.Helpers;
+using ProjectRAM.Editor.Models;
+using ProjectRAM.Editor.Properties;
+using ProjectRAM.Editor.ViewModels.Commands;
+using ProjectRAM.Editor.Views;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Threading;
-using ProjectRAM.Core;
-using ProjectRAM.Core.Models;
-using MessageBox.Avalonia.Enums;
 using Essentials = ProjectRAM.Editor.Helpers.Essentials;
-using ProjectRAM.Editor.Properties;
-using ProjectRAM.Editor.ViewModels.Commands;
-using ProjectRAM.Editor.Models;
-using ProjectRAM.Editor.Converters;
-using ProjectRAM.Editor.Views;
-using ProjectRAM.Editor.Helpers;
 
 namespace ProjectRAM.Editor.ViewModels
 {
@@ -361,14 +362,46 @@ namespace ProjectRAM.Editor.ViewModels
 				sc.AddRange(program.Split(Environment.NewLine));
 				commands = Factory.StringCollectionToCommandList(sc);
 			}
-			Interpreter interpreter = new(commands, Factory.CreateInputTapeFromString(input));
+
+			var inputTape = Factory.CreateInputTapeFromString(input);
+			var interpreter = new Interpreter(commands);
+			var sb = new StringBuilder();
+			string? file = null;
+			bool useFile = false;
+			interpreter.ReadFromInputTape += (sender, eventArgs) =>
+			{
+				eventArgs.Input = inputTape.Count > 0
+					? inputTape.Dequeue()
+					: null;
+			};
+			interpreter.WriteToOutputTape += async (sender, eventArgs) =>
+			{
+				if (useFile)
+				{
+					Essentials.AppendFile(file!, $"{Environment.NewLine}{eventArgs.Output}");
+				}
+				else
+				{
+					sb.Append($" {eventArgs.Output}");
+				}
+
+				if (sb.ToString().Length > 1000)
+				{
+					file = $"tape_{DateTime.Today:dd-MM-yyyy_hh-mm}.txt";
+					useFile = true;
+					Essentials.WriteToFile(file, sb.ToString().TrimStart().Replace(" ", Environment.NewLine));
+					sb.Clear();
+				}
+			};
+			interpreter.ProgramFinished += (sender, eventArgs) =>
+			{
+				Page!.ProgramRunning = false;
+			};
 			token.ThrowIfCancellationRequested();
-			var output = interpreter.RunCommands(token);
+			var memory = interpreter.RunCommands(token);
 			token.ThrowIfCancellationRequested();
-			Queue<string> outputTape = output.Item1;
-			string finalOutput = outputTape.Aggregate(string.Empty, (current, s) => current + s + " ");
-			Page!.OutputTapeString = finalOutput.Trim();
-			Page!.Memory = MemoryDictionaryToMemoryRowConverter.MemoryDictionaryToMemoryRows(output.Item2);
+			Page!.OutputTapeString = useFile ? $"Saved in file: {file}" :sb.ToString().TrimStart();
+			Page!.Memory = MemoryDictionaryToMemoryRowConverter.MemoryDictionaryToMemoryRows(memory);
 		}
 
 		private void TogglePageStatus()

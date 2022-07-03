@@ -1,5 +1,4 @@
-﻿using ProjectRAM.Core.Properties;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 
@@ -22,7 +21,7 @@ namespace ProjectRAM.Core.Properties
 			set
 			{
 				_currentCulture = value;
-				Strings.Culture = value;
+				Resources.Culture = value;
 			}
 		}
 	}

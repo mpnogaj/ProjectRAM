@@ -27,7 +27,7 @@ namespace ProjectRAM.Core
 
 		public AccumulatorEmptyException(long line) : base(line)
 		{
-			_message = Strings.accumulatorUninitializedMessage;
+			_message = Resources.accumulatorUninitializedMessage;
 		}
 
 		#endregion Constructors
@@ -56,7 +56,7 @@ namespace ProjectRAM.Core
 
 		public ArgumentIsNotValidException(long line) : base(line)
 		{
-			_message = Strings.invalidArgumentMessage;
+			_message = Resources.invalidArgumentMessage;
 		}
 
 		#endregion Constructors
@@ -85,7 +85,7 @@ namespace ProjectRAM.Core
 
 		public CellDoesntExistException(long line) : base(line)
 		{
-			_message = Strings.cellUninitializedMessage;
+			_message = Resources.cellUninitializedMessage;
 		}
 
 		#endregion Constructors
@@ -114,7 +114,7 @@ namespace ProjectRAM.Core
 
 		public InputTapeEmptyException(long line) : base(line)
 		{
-			_message = Strings.inputTapeEmptyMessage;
+			_message = Resources.inputTapeEmptyMessage;
 		}
 
 		#endregion Constructors
@@ -145,7 +145,7 @@ namespace ProjectRAM.Core
 
 		public LabelDoesntExistException(long line, string label) : base(line)
 		{
-			_message = string.Format(Strings.labelDoesntExistMessage, label);
+			_message = string.Format(Resources.labelDoesntExistMessage, label);
 			_label = label;
 		}
 
@@ -175,7 +175,7 @@ namespace ProjectRAM.Core
 
 		public LineIsEmptyException(long line) : base(line)
 		{
-			_message = Strings.invalidaLineMessage;
+			_message = Resources.invalidaLineMessage;
 		}
 
 		#endregion Constructors
@@ -210,7 +210,7 @@ namespace ProjectRAM.Core
 
 		#region Methods
 
-		public static string ManualMessage() => Strings.manualMessage;
+		public static string ManualMessage() => Resources.manualMessage;
 
 		/// <summary>
 		/// Get full exception message based on current culture. Change culture by setting CurrentCulture property in Settings class
@@ -219,7 +219,7 @@ namespace ProjectRAM.Core
 		public string GetFullLocalizedMessage() =>
 			$"{LocalizedMessage()} {LineMessage()} {ManualMessage()}";
 
-		public string LineMessage() => string.Format(Strings.lineMessage, Line);
+		public string LineMessage() => string.Format(Resources.lineMessage, Line);
 
 		public virtual string LocalizedMessage() => string.Empty;
 
@@ -249,7 +249,7 @@ namespace ProjectRAM.Core
 
 		public UnknownCommandTypeException(long line) : base(line)
 		{
-			_message = Strings.unknownCommandMessage;
+			_message = Resources.unknownCommandMessage;
 		}
 
 		#endregion Constructors
