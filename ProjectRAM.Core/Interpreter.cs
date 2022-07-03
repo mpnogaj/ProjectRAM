@@ -15,7 +15,12 @@ namespace ProjectRAM.Core
 		private readonly List<Command> _program;
 		private string _currentInput = "";
 
-		public Interpreter(List<Command> program, Queue<string> inputTape)
+
+		public event EventHandler<WriteFromTapeEventArgs>? WriteToOutputTape;
+		public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
+		public event EventHandler? ProgramFinished;
+		
+		public Interpreter(List<Command> program, Queue<string>? inputTape = null)
 		{
 			_program = program;
 			_inputTape = inputTape;
@@ -42,12 +47,18 @@ namespace ProjectRAM.Core
 		{
 			for (var i = 0; i < _program.Count; i++)
 			{
-				cancellationToken.ThrowIfCancellationRequested();
+				if (cancellationToken.IsCancellationRequested)
+				{
+					ProgramFinished?.Invoke(this, EventArgs.Empty);
+					cancellationToken.ThrowIfCancellationRequested();
+				}
+				
 				if (RunCommand(ref i))
 				{
 					return new Tuple<Queue<string>, Dictionary<string, string>>(_outputTape, Memory);
 				}
 			}
+			ProgramFinished?.Invoke(this, EventArgs.Empty);
 			return new Tuple<Queue<string>, Dictionary<string, string>>(_outputTape, Memory);
 		}
 
@@ -175,7 +186,28 @@ namespace ProjectRAM.Core
 
 					#endregion Exception handling
 
-					string val = _inputTape.Dequeue();
+					string val;
+					if (_inputTape == null || _inputTape.Count == 0)
+					{
+						if (ReadFromInputTape == null)
+						{
+							throw new InputTapeEmptyException(i);
+						}
+
+						var eventArgs = new ReadFromTapeEventArgs();
+						ReadFromInputTape?.Invoke(this, eventArgs);
+
+						if (eventArgs.Input == null)
+						{
+							throw new InputTapeEmptyException(i);
+						}
+						val = eventArgs.Input;
+					}
+					else
+					{
+						val = _inputTape.Dequeue();
+					}
+
 					_currentInput = val;
 					SetMemory(arg, val);
 					break;
@@ -191,9 +223,12 @@ namespace ProjectRAM.Core
 
 					#endregion ExceptionHandling
 
+					string output;
+
 					if (command.ArgumentType == ArgumentType.Const)
 					{
-						_outputTape.Enqueue(arg);
+						output = arg;
+						//_outputTape.Enqueue(arg);
 					}
 					else
 					{
@@ -202,8 +237,11 @@ namespace ProjectRAM.Core
 							throw new CellDoesntExistException(command.Line);
 						}
 
-						_outputTape.Enqueue(Memory[arg]);
+						output = Memory[arg];
+						//_outputTape.Enqueue(Memory[arg]);
 					}
+
+					WriteToOutputTape?.Invoke(this, new WriteFromTapeEventArgs(output));
 
 					break;
 

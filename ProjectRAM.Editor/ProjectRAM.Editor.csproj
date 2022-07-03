@@ -14,6 +14,10 @@
    </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\Images\*" />
+    <AvaloniaXaml Remove="Resources\**" />
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
     <None Remove="Themes\DataGridFluent.xaml" />
     <AvaloniaXaml Remove="Themes\DataGrid.axaml" />
     <None Remove="Styles\DataGrid.xaml" />
@@ -41,8 +45,5 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
   </ItemGroup>
 </Project>

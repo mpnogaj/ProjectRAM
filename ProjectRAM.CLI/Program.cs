@@ -40,7 +40,7 @@ namespace ProjectRAM.CLI
 		{
 			try
 			{
-				var inputTape = new Queue<string>();
+				Queue<string>? inputTape = null;
 				if (options.InputTapePath != null)
 				{
 					inputTape = Factory.CreateInputTapeFromFile(options.InputTapePath);
@@ -50,14 +50,17 @@ namespace ProjectRAM.CLI
 					? TimeSpan.FromMinutes(1)
 					: TimeSpan.FromMilliseconds(options.Timeout));
 				var interpreter = new Interpreter(Factory.CreateCommandList(options.CodePath), inputTape);
+				interpreter.WriteToOutputTape += (sender, args) =>
+				{
+					Console.WriteLine(args.Output);
+				};
+				interpreter.ReadFromInputTape += (sender, args) =>
+				{
+					Console.Write(@">>> ");
+					args.Input = Console.ReadLine();
+				};
 				var output = interpreter.RunCommands(cts.Token);
 				var outputTape = output.Item1;
-				while (outputTape.Count > 0)
-				{
-					// ReSharper disable once LocalizableElement
-					Console.Write($"{outputTape.Dequeue()} ");
-				}
-				Console.Write(Environment.NewLine);
 
 				return 0;
 			}
