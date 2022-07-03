@@ -1,0 +1,258 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="using:ProjectRAM.Editor.Views"
+        xmlns:viewmodels="using:ProjectRAM.Editor.ViewModels"
+        xmlns:properties="clr-namespace:ProjectRAM.Editor.Properties"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ProjectRAM.Editor.Views.MainWindow"
+        Title="RAM Editor" Height="600" Width="800"
+        MinHeight="450" MinWidth="550"
+        Background="{DynamicResource Background}"
+        x:DataType="viewmodels:MainWindowViewModel">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Ctrl+W" Command="{CompiledBinding CloseCurrent}"/>
+  </Window.KeyBindings>
+  <Grid RowDefinitions="Auto,Auto,*" Margin="0, 0, 0, 10">
+    <Menu Grid.Row="0" Background="{DynamicResource MenuFlyoutPresenterBackground}">
+      <Menu.Styles>
+        <Style Selector="Image">
+          <Setter Property="Width" Value="16"/>
+          <Setter Property="Height" Value="16"/>
+        </Style>
+      </Menu.Styles>
+      <MenuItem Header="{x:Static properties:Strings.file}">
+        <MenuItem Header="{x:Static properties:Strings.newFile}" HotKey="Ctrl+N" InputGesture="Ctrl+N" Command="{CompiledBinding AddPageCommand}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/newFile.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="{x:Static properties:Strings.openFile}" HotKey="Ctrl+O" InputGesture="Ctrl+O" Command="{CompiledBinding OpenFile}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/openFile.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="{x:Static properties:Strings.saveFile}" HotKey="Ctrl+S" InputGesture="Ctrl+S" Command="{CompiledBinding SaveFile}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/save.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static properties:Strings.saveFileAs}" HotKey="Ctrl+Shift+S" InputGesture="Ctrl+Shift+S" Command="{CompiledBinding SaveFileAs}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/saveAs.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="{x:Static properties:Strings.exit}" HotKey="Alt+F4" InputGesture="Alt+F4" Command="{CompiledBinding CloseProgram}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/exit.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="{x:Static properties:Strings.view}">
+        <MenuItem Header="{x:Static properties:Strings.zoomIn}" HotKey="Ctrl++" InputGesture="Ctrl++" Command="{CompiledBinding IncreaseFontSize}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/zoomIn.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static properties:Strings.zoomOut}" HotKey="Ctrl+-" InputGesture="Ctrl+-" Command="{CompiledBinding DecreaseFontSize}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/zoomOut.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="{x:Static properties:Strings.switchEditor}" HotKey="Ctrl+Q" InputGesture="Ctrl+Q" Command="{CompiledBinding SwitchEditors}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/switch.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="{x:Static properties:Strings.program}">
+        <MenuItem Header="{x:Static properties:Strings.verifyProgram}" HotKey="F7" InputGesture="F7" Command="{CompiledBinding Verify}">
+          <MenuItem.CommandParameter>
+            <system:Boolean>True</system:Boolean>
+          </MenuItem.CommandParameter>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/verify.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="{x:Static properties:Strings.runProgram}" HotKey="F5" InputGesture="F5" Command="{CompiledBinding RunProgram}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/run.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static properties:Strings.stopProgram}" HotKey="Shift+F5" InputGesture="Shift+F5" Command="{CompiledBinding StopProgram}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/stop2.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="{x:Static properties:Strings.data}">
+        <MenuItem Header="{x:Static properties:Strings.memory}">
+          <MenuItem Header="{x:Static properties:Strings.clear}" Command="{CompiledBinding Clear}" CommandParameter="memory">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/clear.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator/>
+          <MenuItem Header="{x:Static properties:Strings.exportToFile}" Command="{CompiledBinding Export}" CommandParameter="memory">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/export.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="{x:Static properties:Strings.inputTape}" Command="{CompiledBinding Clear}" CommandParameter="inputTape">
+          <MenuItem Header="{x:Static properties:Strings.clear}">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/clear.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator/>
+          <MenuItem Header="{x:Static properties:Strings.exportToFile}" Command="{CompiledBinding Export}" CommandParameter="inputTape">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/export.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="{x:Static properties:Strings.importFromFile}" Command="{CompiledBinding Import}">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/import.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+        </MenuItem>
+        <MenuItem Header="{x:Static properties:Strings.outputTape}">
+          <MenuItem Header="{x:Static properties:Strings.clear}" Command="{CompiledBinding Clear}" CommandParameter="outputTape">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/clear.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator/>
+          <MenuItem Header="{x:Static properties:Strings.exportToFile}" Command="{CompiledBinding Export}" CommandParameter="outputTape">
+            <MenuItem.Icon>
+              <Image Source="/Assets/Images/export.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="{x:Static properties:Strings.tools}">
+        <MenuItem Header="{x:Static properties:Strings.settings}" Command="{CompiledBinding OpenSettings}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/settings.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <!-- Not ready yet
+        <MenuItem Header="Style editor" Command="{CompiledBinding OpenStyleEditor}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/settings.png"/>
+          </MenuItem.Icon>
+        </MenuItem>-->
+      </MenuItem>
+      <MenuItem Header="{x:Static properties:Strings.help}">
+        <MenuItem Header="{x:Static properties:Strings.aboutProgram}" HotKey="F1" InputGesture="F1">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Images/info.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+    </Menu>
+    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="5" Margin="10, 5, 10, 5">
+      <StackPanel.Styles>
+        <Style Selector="Rectangle">
+          <Setter Property="VerticalAlignment" Value="Stretch"/>
+          <Setter Property="Width" Value="1"/>
+          <Setter Property="Stroke" Value="Gray"/>
+          <Setter Property="Fill" Value="Gray"/>
+        </Style>
+        <Style Selector="Button">
+          <Setter Property="Height" Value="26"/>
+          <Setter Property="Width" Value="26"/>
+          <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style Selector="Image:disabled">
+          <Setter Property="Opacity" Value="0.25"/>
+        </Style>
+        <Style Selector="Image">
+          <Setter Property="Height" Value="26"/>
+          <Setter Property="Width" Value="26"/>
+        </Style>
+      </StackPanel.Styles>
+      <Button Command="{CompiledBinding AddPageCommand}">
+        <Panel>
+          <Image Source="/Assets/Images/newFile.png"/>
+        </Panel>
+      </Button>
+      <Rectangle/>
+      <Button Command="{CompiledBinding OpenFile}">
+        <Panel>
+          <Image Source="/Assets/Images/openFile.png"/>
+        </Panel>
+      </Button>
+      <Rectangle/>
+      <Button Command="{CompiledBinding SaveFile}">
+        <Panel>
+          <Image Source="/Assets/Images/save.png"/>
+        </Panel>
+      </Button>
+      <Button Command="{CompiledBinding SaveFileAs}">
+        <Panel>
+          <Image Source="/Assets/Images/saveAs.png"/>
+        </Panel>
+      </Button>
+      <Rectangle/>
+      <Button Command="{CompiledBinding SwitchEditors}">
+        <Panel>
+          <Image Source="/Assets/Images/switch.png"/>
+        </Panel>
+      </Button>
+      <Rectangle/>
+      <Button Command="{CompiledBinding Verify}">
+        <Button.CommandParameter>
+          <system:Boolean>True</system:Boolean>
+        </Button.CommandParameter>
+        <Panel>
+          <Image Source="/Assets/Images/verify.png"/>
+        </Panel>
+      </Button>
+      <Button Command="{CompiledBinding RunProgram}">
+        <Panel>
+          <Image Source="/Assets/Images/run.png"/>
+        </Panel>
+      </Button>
+      <Button Command="{CompiledBinding StopProgram}">
+        <Panel>
+          <Image Source="/Assets/Images/stop2.png"/>
+        </Panel>
+      </Button>
+    </StackPanel>
+    <Grid Grid.Row="2">
+      <TabControl Name="Files" Items="{CompiledBinding Pages}" SelectedItem="{CompiledBinding Page, Mode=TwoWay}" DragDrop.AllowDrop="True">
+        <TabControl.ItemTemplate>
+          <DataTemplate>
+            <ContentControl>
+              <ContentControl.Content>
+                <TextBlock FontSize="{DynamicResource HeaderTextFontSize}" Text="{CompiledBinding Header}"/>
+              </ContentControl.Content>
+              <ContentControl.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="Close" InputGesture="Ctrl+W" Command="{CompiledBinding ClosePage}" CommandParameter="{CompiledBinding}"/>
+                </ContextMenu>
+              </ContentControl.ContextMenu>
+            </ContentControl>
+          </DataTemplate>
+        </TabControl.ItemTemplate>
+        <TabControl.ContentTemplate>
+          <DataTemplate DataType="{x:Type viewmodels:HostViewModel}">
+            <Border BorderThickness="1" BorderBrush="Gray">
+              <local:Host/>
+            </Border>
+          </DataTemplate>
+        </TabControl.ContentTemplate>
+      </TabControl>
+    </Grid>
+  </Grid>
+</Window>

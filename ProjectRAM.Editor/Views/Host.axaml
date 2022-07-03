@@ -1,0 +1,283 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:properties="clr-namespace:ProjectRAM.Editor.Properties"
+             xmlns:viewmodels="clr-namespace:ProjectRAM.Editor.ViewModels"
+             xmlns:models="clr-namespace:ProjectRAM.Editor.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewmodels:HostViewModel"
+             x:Class="ProjectRAM.Editor.Views.Host">
+    <!--#FFDD99-->
+    <!--#2B2B2B-->
+    <UserControl.Resources>
+        <properties:Settings x:Key="Settings" />
+    </UserControl.Resources>
+    <Grid Background="{DynamicResource HostBackground}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{Binding Source={StaticResource Settings}, Path=LeftPanelSize, Mode=TwoWay}" />
+            <ColumnDefinition Width="4" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="4" />
+            <RowDefinition Height="{Binding Source={StaticResource Settings}, Path=BottomPanelSize, Mode=TwoWay}" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0" Background="{DynamicResource SideBarBackground}" ZIndex="2">
+            <TabControl>
+                <TabItem Header="{x:Static properties:Strings.memory}" FontSize="{DynamicResource HeaderTextFontSize}">
+                    <Border BorderThickness="1" Background="{DynamicResource DataGridBackground}"
+                            BorderBrush="LightGray" Margin="0, 0, 0, 5">
+                        <DataGrid CanUserReorderColumns="False"
+                                  CanUserResizeColumns="True"
+                                  CanUserSortColumns="False"
+                                  GridLinesVisibility="All"
+                                  Items="{CompiledBinding Memory}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn IsReadOnly="True" Width="*" Binding="{CompiledBinding Address}"
+                                                    x:DataType="models:MemoryRow"
+                                                    Header="{x:Static properties:Strings.address}" />
+                                <DataGridTextColumn IsReadOnly="True" Width="*" Binding="{CompiledBinding Value}"
+                                                    x:DataType="models:MemoryRow"
+                                                    Header="{x:Static properties:Strings.value}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <GridSplitter
+            Grid.Row="0"
+            Grid.Column="1"
+            Width="4"
+            ResizeDirection="Columns"
+            VerticalAlignment="Stretch" />
+        <Grid
+            Grid.Row="0"
+            Grid.Column="2"
+            RowDefinitions="*">
+            <DockPanel
+                Grid.Row="0"
+                LastChildFill="True">
+                <!--Input tape-->
+                <StackPanel
+                    DockPanel.Dock="Top"
+                    Orientation="Vertical"
+                    VerticalAlignment="Bottom" Margin="8, 8, 8, 5"
+                    Spacing="10"
+                    IsEnabled="{CompiledBinding !ProgramRunning}">
+                    <StackPanel.Styles>
+                        <Style Selector="TextBox:focus/template/Border">
+                            <Setter Property="Background" Value="{DynamicResource InputTapeBackground}" />
+                            <Setter Property="CornerRadius" Value="3" />
+                        </Style>
+                        <Style Selector="TextBox:pointerover/template/Border">
+                            <Setter Property="Background" Value="{DynamicResource InputTapeBackground}" />
+                            <Setter Property="CornerRadius" Value="3" />
+                        </Style>
+                    </StackPanel.Styles>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Text="{x:Static properties:Strings.inputTape}"
+                        FontFamily="{DynamicResource HeaderTextFontFamily}"
+                        FontWeight="{DynamicResource HeaderTextFontWeight}"
+                        FontSize="{DynamicResource HeaderTextFontSize}"
+                        Foreground="{DynamicResource HeaderTextForeground}" />
+                    <TextBox
+                        Text="{CompiledBinding InputTapeString, Mode=TwoWay}"
+                        FontFamily="{DynamicResource InputTapeFontFamily}"
+                        FontWeight="{DynamicResource InputTapeFontWeight}"
+                        FontSize="{DynamicResource InputTapeFontSize}"
+                        Foreground="{DynamicResource InputTapeForeground}"
+                        Background="{DynamicResource InputTapeBackground}" />
+                </StackPanel>
+                <!--Output tape-->
+                <StackPanel
+                    DockPanel.Dock="Bottom"
+                    Orientation="Vertical"
+                    VerticalAlignment="Top"
+                    Margin="8, 5, 8, 8"
+                    Spacing="10">
+                    <StackPanel.Styles>
+                        <Style Selector="TextBox:disabled/template/Border">
+                            <Setter Property="Background" Value="{DynamicResource OutputTapeBackground}" />
+                            <Setter Property="BorderBrush" Value="#99000000" />
+                            <Setter Property="CornerRadius" Value="3" />
+                        </Style>
+                    </StackPanel.Styles>
+                    <TextBox
+                        IsEnabled="False"
+                        IsReadOnly="True"
+                        Text="{CompiledBinding OutputTapeString}"
+                        FontFamily="{DynamicResource  OutputTapeFontFamily}"
+                        FontWeight="{DynamicResource OutputTapeFontWeight}"
+                        FontSize="{DynamicResource OutputTapeFontSize}"
+                        Foreground="{DynamicResource OutputTapeForeground}"
+                        Background="{DynamicResource OutputTapeBackground}" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Text="{x:Static properties:Strings.outputTape}"
+                        FontFamily="{DynamicResource HeaderTextFontFamily}"
+                        FontWeight="{DynamicResource HeaderTextFontWeight}"
+                        FontSize="{DynamicResource HeaderTextFontSize}"
+                        Foreground="{DynamicResource HeaderTextForeground}" />
+                </StackPanel>
+                <!--&#x0a; -> '\n'
+                \r\n doesn't work for Windows but it should-->
+                <Grid DockPanel.Dock="Top" x:Name="PrintProgram">
+                    <!--Text editor-->
+                    <TextBox HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             IsEnabled="{CompiledBinding !ProgramRunning}"
+                             IsVisible="{CompiledBinding !SimpleEditorUsage}"
+                             Margin="8, 5, 8, 5"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             FontFamily="{DynamicResource TextEditorFontFamily}"
+                             FontWeight="{DynamicResource TextEditorFontWeight}"
+                             FontSize="{DynamicResource TextEditorFontSize}"
+                             Foreground="{DynamicResource TextEditorForeground}"
+                             Background="{DynamicResource TextEditorBackground}"
+                             AcceptsTab="True"
+                             Text="{CompiledBinding TextEditorProgram}"
+                             NewLine="&#x0a;">
+                        <TextBox.Styles>
+                            <Style Selector="TextBox:pointerover/template/Border">
+                                <Setter Property="Background" Value="{DynamicResource TextEditorBackground}" />
+                            </Style>
+                        </TextBox.Styles>
+                    </TextBox>
+                    <!--Simple editor-->
+                    <Border BorderBrush="Gray"
+                            BorderThickness="1"
+                            CornerRadius="5, 5, 5, 5"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            IsVisible="{CompiledBinding SimpleEditorUsage}"
+                            Background="{DynamicResource SimpleEditorBackground}"
+                            Margin="8, 5, 8, 5"
+                            Padding="1, 1, 1, 1">
+                        <DataGrid CanUserSortColumns="False"
+                                  Name="SimpleEditor"
+                                  IsEnabled="{CompiledBinding !ProgramRunning}"
+                                  CanUserReorderColumns="False"
+                                  CanUserResizeColumns="True"
+                                  KeyDown="OnKeyDown"
+                                  RowBackground="{DynamicResource SimpleEditorRowBackground}"
+                                  AlternatingRowBackground="{DynamicResource SimpleEditorRowBackground}"
+                                  Items="{CompiledBinding SimpleEditorProgram}"
+                                  SelectionMode="Single">
+                            <DataGrid.Styles>
+                                <Style Selector="DataGridRow:selected DataGridCellsPresenter">
+                                    <Setter Property="Background" Value="{DynamicResource SimpleEditorSelectedRow}" />
+                                </Style>
+                                <Style Selector="DataGridRow:pointerover DataGridCellsPresenter">
+                                    <Setter Property="Background" Value="{DynamicResource SimpleEditorPointerOverRow}" />
+                                </Style>
+                                <Style Selector="DataGridColumnHeader#SimpleEditor">
+                                    <Setter Property="FontFamily"
+                                            Value="{DynamicResource SimpleEditorHeaderFontFamily}" />
+                                    <Setter Property="FontSize" Value="{DynamicResource SimpleEditorHeaderFontSize}" />
+                                    <Setter Property="FontWeight"
+                                            Value="{DynamicResource SimpleEditorHeaderFontWeight}" />
+                                    <Setter Property="Foreground"
+                                            Value="{DynamicResource SimpleEditorHeaderForeground}" />
+                                    <Setter Property="Background"
+                                            Value="{DynamicResource SimpleEditorHeaderBackground}" />
+                                </Style>
+                                <Style Selector="DataGridColumnHeader:pointerover/template/Grid">
+                                    <Setter Property="Background"
+                                            Value="{DynamicResource SimpleEditorHeaderBackground}" />
+                                </Style>
+                                <Style Selector="DataGridCell">
+                                    <Setter Property="Padding" Value="1" />
+                                    <Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+                                    <Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+                                    <Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+                                </Style>
+                                <Style Selector="DataGridCell TextBox">
+                                    <Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+                                    <Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+                                    <Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+                                    <Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+                                </Style>
+                                <Style Selector="DataGridCell TextBox:pointerover">
+                                    <Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+                                    <Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+                                    <Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+                                    <Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+                                </Style>
+                                <Style Selector="DataGridCell TextBox:focus">
+                                    <Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+                                    <Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+                                    <Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+                                    <Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+                                </Style>
+                                <Style Selector="DataGridCell TextBox/template/Border">
+                                    <Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+                                </Style>
+                                <Style Selector="DataGridCell TextBox:pointerover/template/Border">
+                                    <Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+                                </Style>
+                                <Style Selector="DataGridCell TextBox:focus/template/Border">
+                                    <Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+                                </Style>
+                            </DataGrid.Styles>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{x:Static properties:Strings.line}" IsReadOnly="True"
+                                                    Binding="{CompiledBinding Line}" Width="90"
+                                                    x:DataType="models:ProgramLine" />
+                                <DataGridTextColumn Header="{x:Static properties:Strings.label}"
+                                                    Binding="{CompiledBinding Label}" Width="*"
+                                                    x:DataType="models:ProgramLine" />
+                                <DataGridTextColumn Header="{x:Static properties:Strings.command}"
+                                                    Binding="{CompiledBinding Command}" Width="*"
+                                                    x:DataType="models:ProgramLine" />
+                                <DataGridTextColumn Header="{x:Static properties:Strings.argument}"
+                                                    Binding="{CompiledBinding Argument}" Width="*"
+                                                    x:DataType="models:ProgramLine" />
+                                <DataGridTextColumn Header="{x:Static properties:Strings.comment}"
+                                                    Binding="{CompiledBinding Comment}" Width="*"
+                                                    x:DataType="models:ProgramLine" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </Grid>
+            </DockPanel>
+        </Grid>
+        <GridSplitter Height="4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" ResizeDirection="Rows" />
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="{DynamicResource BottomBarBackground}">
+            <TabControl>
+                <TabItem Header="{x:Static properties:Strings.verificationReport}">
+                    <Border BorderBrush="LightGray" BorderThickness="1"
+                            Background="{DynamicResource DataGridBackground}" Margin="0, 0, 0, 5">
+                        <DataGrid CanUserReorderColumns="False"
+                                  CanUserResizeColumns="True"
+                                  CanUserSortColumns="False"
+                                  GridLinesVisibility="All"
+                                  AlternatingRowBackground="White"
+                                  RowBackground="White"
+                                  Items="{CompiledBinding Errors}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn IsReadOnly="True" Width="75" Header="Line"
+                                                    x:DataType="models:ErrorLine"
+                                                    Binding="{CompiledBinding Line}" />
+                                <DataGridTextColumn IsReadOnly="True" Width="*" Header="Message"
+                                                    x:DataType="models:ErrorLine"
+                                                    Binding="{CompiledBinding Message}" />
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </Border>
+                </TabItem>
+                <TabItem Header="{x:Static properties:Strings.complexityReport}"
+                         FontSize="{DynamicResource HeaderTextFontSize}" />
+            </TabControl>
+        </Grid>
+    </Grid>
+</UserControl>

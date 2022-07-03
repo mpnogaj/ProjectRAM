@@ -1,0 +1,43 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:ProjectRAM.Editor.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="350"
+        Height="450"
+        x:Class="ProjectRAM.Editor.Views.Options"
+        Title="Options"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="{DynamicResource Background}"
+        x:DataType="viewmodels:SettingsViewModel">
+    <DockPanel LastChildFill="True" Margin="25, 10, 25, 10">
+        <Grid DockPanel.Dock="Bottom" ColumnDefinitions="Auto,*,Auto,Auto">
+            <Button Grid.Column="2" Content="Cancel" Command="{CompiledBinding Close}"/>
+            <Button Grid.Column="3" Content="Ok" Command="{CompiledBinding Save}"/>
+            <Button Grid.Column="0" Content="Revert to default" Command="{CompiledBinding RevertToDefault}" HorizontalAlignment="Left"/>
+        </Grid>
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Spacing="15">
+            <TextBlock Text="Display language"/>
+            <ComboBox Items="{CompiledBinding Languages}" SelectedItem="{CompiledBinding Language}" Width="200">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{CompiledBinding NativeName}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+            </ComboBox>
+			<!--
+			<ToggleSwitch IsChecked="{CompiledBinding DiscordRpc}" Content="Use Discord RPC"/>-->
+            <ToggleSwitch IsChecked="{CompiledBinding TextEditor}" Content="Use text editor as a default"/>
+            <TextBlock Text="Skin"/>
+            <ComboBox Items="{CompiledBinding Styles}" SelectedItem="{CompiledBinding Style}" Width="200">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{CompiledBinding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+    </DockPanel>
+</Window>
