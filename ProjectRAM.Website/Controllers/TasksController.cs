@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using ProjectRAM.Website.Models;
 using ProjectRAM.Website.Helpers;
 using ProjectRAM.Website.Data;
+using System.Threading;
 
 namespace ProjectRAM.Website.Controllers
 {
@@ -138,13 +139,13 @@ namespace ProjectRAM.Website.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Submit(string id, string code, IFormFile file)
 		{
-			StringCollection sc = new StringCollection();
+			var sc = new StringCollection();
 
 			if (file == null)
 			{
 				if (string.IsNullOrWhiteSpace(code))
 				{
-					//Dupa
+					return BadRequest();
 				}
 				sc = Converter.StringToStringCollection(code, '\n');
 			}
@@ -152,11 +153,11 @@ namespace ProjectRAM.Website.Controllers
 			{
 				sc = Converter.IFormFileToStringCollection(file);
 			}
-			List<Command> CommandList = Creator.CreateCommandList(sc);
-			Models.Task task = await _appDbContext.Tasks.FirstOrDefaultAsync(t => t.Id == id);
-			List<Test> tests = await _appDbContext.Tests.Where(t => t.TaskId == task.Id).ToListAsync();
+			var commandList = Factory.StringCollectionToCommandList(sc);
+			var task = await _appDbContext.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+			var tests = await _appDbContext.Tests.Where(t => t.TaskId == task.Id).ToListAsync();
 			bool taskSolved = true;
-			Report report = new Report
+			var report = new Report
 			{
 				Task = task,
 				ReportRows = new List<ReportRow>(),
@@ -165,29 +166,28 @@ namespace ProjectRAM.Website.Controllers
 			};
 			foreach (Test test in tests)
 			{
-				//Nie wiem czy działa
-				//***
-				var token = new System.Threading.CancellationToken();
-				var t = System.Threading.Tasks.Task.Run(() =>
-					Interpreter.RunCommands(CommandList,
-					Creator.CreateInputTapeFromString(test.Input),
-					token));
-				t.Wait(5000);
-				//***
-				if (!Interpreter.Executed)
+				var token = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+				var interpreter = new Interpreter(commandList);
+
+				var inputTape = Factory.CreateInputTapeFromString(test.Input);
+				var outputTape = new Queue<string>();
+
+				interpreter.ReadFromInputTape += (sender, eventArgs) =>
 				{
-					//niezaliczony
-					taskSolved = false;
-					report.ReportRows.Add(new ReportRow
-					{
-						Passed = false,
-						ExpectedOutput = test.Output,
-						GivenOutput = ""
-					});
-				}
-				else
+					eventArgs.Input = inputTape.Count > 0
+						? inputTape.Dequeue()
+						: null;
+				};
+
+				interpreter.WriteToOutputTape += (sender, eventArgs) =>
 				{
-					string tape = Creator.CreateOutputTapeFromQueue(Interpreter.OutputTape);
+					outputTape.Enqueue(eventArgs.Output);
+				};
+
+				try
+				{
+					var res = interpreter.RunCommands(token.Token);
+					string tape = Factory.CreateOutputTapeFromQueue(outputTape);
 					if (tape == test.Output)
 					{
 						report.ReportRows.Add(new ReportRow
@@ -206,10 +206,21 @@ namespace ProjectRAM.Website.Controllers
 						taskSolved = false;
 					}
 				}
+				catch
+				{
+					//exception, or time limit exceeded
+					taskSolved = false;
+					report.ReportRows.Add(new ReportRow
+					{
+						Passed = false,
+						ExpectedOutput = test.Output,
+						GivenOutput = ""
+					});
+				}
 			}
 			report.Passed = taskSolved;
 			await _appDbContext.Reports.AddAsync(report);
-			User user = await _userManager.GetUserAsync(User);
+			var user = await _userManager.GetUserAsync(User);
 			if (taskSolved == true && !task.SolvedBy.Where(u => u.User == user).Any())
 			{
 				task.SolvedNumber++;
@@ -224,12 +235,12 @@ namespace ProjectRAM.Website.Controllers
 			}
 			await _appDbContext.SaveChangesAsync();
 
-			//Pisz kod do pliku
-			using (StreamWriter sr = new StreamWriter($"{CODES_PATH}{report.Id}.RAMCode"))
+			//Save code to file
+			using (var sr = new StreamWriter($"{CODES_PATH}{report.Id}.RAMCode"))
 			{
 				await sr.WriteAsync(string.Join('\n', sc.Cast<string>()));
 			}
-			//Wygeneruj raport
+			//Generate report
 			return RedirectToAction("Report", new { id = report.Id });
 		}
 	}
