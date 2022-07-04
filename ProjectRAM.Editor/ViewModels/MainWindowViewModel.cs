@@ -28,6 +28,7 @@ namespace ProjectRAM.Editor.ViewModels
 		private const string TargetMemory = "memory";
 		private const string TargetInputTape = "inputTape";
 		private const string TargetOutputTape = "outputTape";
+		private const int StringBuilderMaxCapacity = 1 << 21;
 		private HostViewModel? _page;
 		private ObservableCollection<HostViewModel> _pages;
 
@@ -366,31 +367,18 @@ namespace ProjectRAM.Editor.ViewModels
 			var inputTape = Factory.CreateInputTapeFromString(input);
 			var interpreter = new Interpreter(commands);
 			var sb = new StringBuilder();
-			string? file = null;
-			bool useFile = false;
 			interpreter.ReadFromInputTape += (sender, eventArgs) =>
 			{
 				eventArgs.Input = inputTape.Count > 0
 					? inputTape.Dequeue()
 					: null;
 			};
-			interpreter.WriteToOutputTape += async (sender, eventArgs) =>
+			interpreter.WriteToOutputTape += (sender, eventArgs) =>
 			{
-				if (useFile)
+				sb.Append($" {eventArgs.Output}");
+				if(sb.Length >= StringBuilderMaxCapacity)
 				{
-					Essentials.AppendFile(file!, $"{Environment.NewLine}{eventArgs.Output}");
-				}
-				else
-				{
-					sb.Append($" {eventArgs.Output}");
-				}
-
-				if (sb.ToString().Length > 1000)
-				{
-					file = $"tape_{DateTime.Today:dd-MM-yyyy_hh-mm}.txt";
-					useFile = true;
-					Essentials.WriteToFile(file, sb.ToString().TrimStart().Replace(" ", Environment.NewLine));
-					sb.Clear();
+					throw new OutOfMemoryException("Output tape is too large. Aborting");
 				}
 			};
 			interpreter.ProgramFinished += (sender, eventArgs) =>
@@ -400,7 +388,7 @@ namespace ProjectRAM.Editor.ViewModels
 			token.ThrowIfCancellationRequested();
 			var memory = interpreter.RunCommands(token);
 			token.ThrowIfCancellationRequested();
-			Page!.OutputTapeString = useFile ? $"Saved in file: {file}" :sb.ToString().TrimStart();
+			Page!.OutputTapeString = sb.ToString().TrimStart();
 			Page!.Memory = MemoryDictionaryToMemoryRowConverter.MemoryDictionaryToMemoryRows(memory);
 		}
 
