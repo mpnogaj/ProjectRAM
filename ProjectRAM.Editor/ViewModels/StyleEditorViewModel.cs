@@ -1,5 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using MessageBox.Avalonia;
+using MessageBox.Avalonia.DTO;
+using MessageBox.Avalonia.Models;
 using ProjectRAM.Editor.Helpers;
 using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.ViewModels.Commands;
@@ -30,30 +33,51 @@ namespace ProjectRAM.Editor.ViewModels
 		#endregion
 		#endregion
 
-		private RelayCommand _save;
-
-		public RelayCommand Save
-		{
-			get => _save;
-		}
-
-		private RelayCommand _close;
-
-		public RelayCommand Close
-		{
-			get => _close;
-		}
+		public RelayCommand SaveCommand { get; }
+		public RelayCommand CloseCommand { get; }
+		public AsyncRelayCommand CreateNewStyleCommand { get; }
 
 		public StyleEditorViewModel()
 		{
-			_styles = new(Essentials.GetAllStyles().ToList());
+			_styles = new ObservableCollection<Style>(Essentials.GetAllStyles().ToList());
 			_currentStyle = _styles[0];
-			_close = new(Essentials.CloseTopWindow, () => true);
-			_save = new(() =>
+			CloseCommand = new RelayCommand(Essentials.CloseTopWindow, () => true);
+			SaveCommand = new RelayCommand(() =>
 			{
 				foreach (var style in _styles)
 				{
 					style.Save();
+				}
+			}, () => true);
+
+			CreateNewStyleCommand = new AsyncRelayCommand(async () =>
+			{
+				var dialog = MessageBoxManager.GetMessageBoxInputWindow(new MessageBoxInputParams
+				{
+					ButtonDefinitions = new []
+					{
+						new ButtonDefinition
+						{
+							IsCancel = false,
+							IsDefault = true,
+							Name = "Add"
+						},
+						new ButtonDefinition
+						{
+							IsCancel = true,
+							IsDefault = false,
+							Name = "Cancel"
+						}
+					}
+				});
+				var res = await dialog.ShowDialog(Essentials.GetTopWindow());
+				if (res.Button == "Add")
+				{
+					Styles.Add(new Style
+					{
+						Name = res.Message,
+						FileName = $"{res.Message.ToLower()}.json"
+					});
 				}
 			}, () => true);
 		}

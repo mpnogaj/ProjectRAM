@@ -9,7 +9,7 @@ using FontStyle = ProjectRAM.Editor.Models.FontStyle;
 
 namespace ProjectRAM.Editor.Properties
 {
-	public class Style : ViewModelBase
+	public class Style
 	{
 		#region Constants
 
@@ -195,6 +195,11 @@ namespace ProjectRAM.Editor.Properties
 				hashCode.Add(value);
 			}
 			return hashCode.ToHashCode();
+		}
+
+		public override string ToString()
+		{
+			return Name;
 		}
 
 		#endregion
