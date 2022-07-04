@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProjectRAM.Website.Data;
 using ProjectRAM.Website.Models;
-using RAMWebsite.Models;
+using ProjectRAM.Website.Models;
 using System.Linq;
 using System.Threading.Tasks;
 

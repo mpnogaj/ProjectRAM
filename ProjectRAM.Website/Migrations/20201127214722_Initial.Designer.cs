@@ -146,7 +146,7 @@ namespace RAMWebsite.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("RAMWebsite.Models.Report", b =>
+            modelBuilder.Entity("ProjectRAM.Website.Report", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,7 +173,7 @@ namespace RAMWebsite.Migrations
                     b.ToTable("Reports");
                 });
 
-            modelBuilder.Entity("RAMWebsite.Models.ReportRow", b =>
+            modelBuilder.Entity("ProjectRAM.Website.ReportRow", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -198,7 +198,7 @@ namespace RAMWebsite.Migrations
                     b.ToTable("ReportRows");
                 });
 
-            modelBuilder.Entity("RAMWebsite.Models.Task", b =>
+            modelBuilder.Entity("ProjectRAM.Website.Task", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -241,7 +241,7 @@ namespace RAMWebsite.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("RAMWebsite.Models.Test", b =>
+            modelBuilder.Entity("ProjectRAM.Website.Test", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -268,7 +268,7 @@ namespace RAMWebsite.Migrations
                     b.ToTable("Tests");
                 });
 
-            modelBuilder.Entity("RAMWebsite.Models.User", b =>
+            modelBuilder.Entity("ProjectRAM.Website.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -342,7 +342,7 @@ namespace RAMWebsite.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("RAMWebsite.Models.UserInTask", b =>
+            modelBuilder.Entity("ProjectRAM.Website.UserInTask", b =>
                 {
                     b.Property<string>("TaskId")
                         .HasColumnType("TEXT");
@@ -368,7 +368,7 @@ namespace RAMWebsite.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("RAMWebsite.Models.User", null)
+                    b.HasOne("ProjectRAM.Website.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -377,7 +377,7 @@ namespace RAMWebsite.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("RAMWebsite.Models.User", null)
+                    b.HasOne("ProjectRAM.Website.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -392,7 +392,7 @@ namespace RAMWebsite.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RAMWebsite.Models.User", null)
+                    b.HasOne("ProjectRAM.Website.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -401,45 +401,45 @@ namespace RAMWebsite.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("RAMWebsite.Models.User", null)
+                    b.HasOne("ProjectRAM.Website.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RAMWebsite.Models.Report", b =>
+            modelBuilder.Entity("ProjectRAM.Website.Report", b =>
                 {
-                    b.HasOne("RAMWebsite.Models.Task", "Task")
+                    b.HasOne("ProjectRAM.Website.Task", "Task")
                         .WithMany()
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RAMWebsite.Models.ReportRow", b =>
+            modelBuilder.Entity("ProjectRAM.Website.ReportRow", b =>
                 {
-                    b.HasOne("RAMWebsite.Models.Report", "Report")
+                    b.HasOne("ProjectRAM.Website.Report", "Report")
                         .WithMany("ReportRows")
                         .HasForeignKey("ReportId");
                 });
 
-            modelBuilder.Entity("RAMWebsite.Models.Test", b =>
+            modelBuilder.Entity("ProjectRAM.Website.Test", b =>
                 {
-                    b.HasOne("RAMWebsite.Models.Task", "Task")
+                    b.HasOne("ProjectRAM.Website.Task", "Task")
                         .WithMany("Tests")
                         .HasForeignKey("TaskId");
                 });
 
-            modelBuilder.Entity("RAMWebsite.Models.UserInTask", b =>
+            modelBuilder.Entity("ProjectRAM.Website.UserInTask", b =>
                 {
-                    b.HasOne("RAMWebsite.Models.User", "User")
+                    b.HasOne("ProjectRAM.Website.User", "User")
                         .WithMany("SolvedTasks")
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RAMWebsite.Models.Task", "Task")
+                    b.HasOne("ProjectRAM.Website.Task", "Task")
                         .WithMany("SolvedBy")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectRAM.Website.Data;
-using RAMWebsite.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProjectRAM.Website.Controllers
 {

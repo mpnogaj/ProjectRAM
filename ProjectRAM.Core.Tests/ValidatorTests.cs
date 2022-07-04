@@ -20,8 +20,8 @@ namespace ProjectRAM.Core.Tests
 			{
 				new List<Command>()
 				{
-					new Command("read 0"),
-					new Command("write 0")
+					new("read 0"),
+					new("write 0")
 				},
 				new List<RamInterpreterException>()
 			},
@@ -30,13 +30,13 @@ namespace ProjectRAM.Core.Tests
 			{
 				new List<Command>()
 				{
-					new Command("read 0"),
-					new Command("mult 0"),
-					new Command("mult 0"),
-					new Command("mult 0"),
-					new Command("mult 0"),
-					new Command("write 0"),
-					new Command("a: halt")
+					new("read 0"),
+					new("mult 0"),
+					new("mult 0"),
+					new("mult 0"),
+					new("mult 0"),
+					new("write 0"),
+					new("a: halt")
 				},
 				new List<RamInterpreterException>()
 			},

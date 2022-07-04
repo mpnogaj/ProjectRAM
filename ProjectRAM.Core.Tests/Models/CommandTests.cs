@@ -97,7 +97,7 @@ namespace ProjectRAM.Core.Tests.Models
 			new object[]{ new Command(string.Empty, string.Empty, string.Empty, "Bolek"), new Command(string.Empty, string.Empty, string.Empty, "BoLek"), false },
 			new object[]{ new Command("ab: halt"), new Command("AB: halt"), false },
 			new object[]{ null, new Command(string.Empty, string.Empty, string.Empty, "BoLek"), false },
-			new object[]{ new object(), new Command(string.Empty, string.Empty, string.Empty, "BoLek"), false },
+			new object[]{ new(), new Command(string.Empty, string.Empty, string.Empty, "BoLek"), false },
 		};
 	}
 }

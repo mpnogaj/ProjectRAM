@@ -1,16 +1,13 @@
-﻿using ProjectRAM.Core.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using ProjectRAM.Core.Models;
 using Xunit;
 
 namespace ProjectRAM.Core.Tests
 {
 	public class FactoryTests
 	{
-		const string RAMCode = "Files/RAMCode/";
-		const string InputTape = "Files/InputTape/";
-
-		[Theory()]
+		[Theory]
 		[MemberData(nameof(DataStringCollectionToString))]
 		public void CreateStringCollectionTest(string text, string separator, StringCollection expected)
 		{
@@ -18,7 +15,7 @@ namespace ProjectRAM.Core.Tests
 			Assert.Equal(expected, actual);
 		}
 
-		[Theory()]
+		[Theory]
 		[MemberData(nameof(DataStringCollectionToString))]
 		public void StringCollectionToStringTest(string expected, string join, StringCollection collection)
 		{
@@ -27,7 +24,7 @@ namespace ProjectRAM.Core.Tests
 		}
 
 
-		[Theory()]
+		[Theory]
 		[MemberData(nameof(DataStringCollectionToCommandList))]
 		public void StringCollectionToCommandListTest(StringCollection collection, List<Command> expected)
 		{
@@ -35,7 +32,7 @@ namespace ProjectRAM.Core.Tests
 			Assert.Equal(expected, actual);
 		}
 
-		[Theory()]
+		[Theory]
 		[MemberData(nameof(DataStringCollectionToCommandList))]
 		public void CommandListToStringCollectionTest(StringCollection expected, List<Command> commands)
 		{
@@ -43,7 +40,7 @@ namespace ProjectRAM.Core.Tests
 			Assert.Equal(expected, actual);
 		}
 
-		[Theory()]
+		[Theory]
 		[MemberData(nameof(DataFileToCommandList))]
 		public void CreateCommandListTest(string filePath, List<Command> expected)
 		{
@@ -51,7 +48,7 @@ namespace ProjectRAM.Core.Tests
 			Assert.Equal(expected, actual);
 		}
 
-		[Theory()]
+		[Theory]
 		[MemberData(nameof(DataFileToInputTape))]
 		public void CreateInputTapeFromFileTest(string filePath, Queue<string> expected)
 		{
@@ -59,7 +56,7 @@ namespace ProjectRAM.Core.Tests
 			Assert.Equal(expected, actual);
 		}
 
-		[Theory()]
+		[Theory]
 		[MemberData(nameof(DataStringToInputTape))]
 		public void CreateInputTapeFromStringTest(string input, Queue<string> expected)
 		{
@@ -67,7 +64,7 @@ namespace ProjectRAM.Core.Tests
 			Assert.Equal(expected, actual);
 		}
 
-		[Theory()]
+		[Theory]
 		[MemberData(nameof(DataStringToOutputTape))]
 		public void CreateOutputTapeFromQueueTest(string expected, Queue<string> input)
 		{
@@ -77,16 +74,16 @@ namespace ProjectRAM.Core.Tests
 
 		public static IEnumerable<object[]> DataStringCollectionToCommandList => new List<object[]>
 		{
-			new object[] {new StringCollection()
+			new object[] {new StringCollection
 			{
 				"read 0",
 				"write 0"
-			}, new List<Command>()
+			}, new List<Command>
 			{
-				new Command("read 0"),
-				new Command("write 0")
+				new("read 0"),
+				new("write 0")
 			} },
-			new object[] {new StringCollection()
+			new object[] {new StringCollection
 			{
 				"read 0",
 				"mult 0",
@@ -94,16 +91,16 @@ namespace ProjectRAM.Core.Tests
 				"mult 0",
 				"mult 0",
 				"write 0"
-			}, new List<Command>()
+			}, new List<Command>
 			{
-				new Command("read 0"),
-				new Command("mult 0"),
-				new Command("mult 0"),
-				new Command("mult 0"),
-				new Command("mult 0"),
-				new Command("write 0")
+				new("read 0"),
+				new("mult 0"),
+				new("mult 0"),
+				new("mult 0"),
+				new("mult 0"),
+				new("write 0")
 			} },
-			new object[] {new StringCollection()
+			new object[] {new StringCollection
 			{
 				"read 1",
 				"load 1 #pobierzOstatniąCyfrę",
@@ -119,27 +116,27 @@ namespace ProjectRAM.Core.Tests
 				"add 2 #dodajOstatnią",
 				"store 3 #zapisz",
 				"write 3"
-			}, new List<Command>()
+			}, new List<Command>
 			{
-				new Command("read 1"),
-				new Command("load 1 #pobierzOstatniąCyfrę"),
-				new Command("div =10"),
-				new Command("mult =10"),
-				new Command("store 10"),
-				new Command("load 1"),
-				new Command("sub 10"),
-				new Command("store 2"),
-				new Command("load 1 #zamieńNaZera"),
-				new Command("div =1000"),
-				new Command("mult =1000"),
-				new Command("add 2 #dodajOstatnią"),
-				new Command("store 3 #zapisz"),
-				new Command("write 3")
+				new("read 1"),
+				new("load 1 #pobierzOstatniąCyfrę"),
+				new("div =10"),
+				new("mult =10"),
+				new("store 10"),
+				new("load 1"),
+				new("sub 10"),
+				new("store 2"),
+				new("load 1 #zamieńNaZera"),
+				new("div =1000"),
+				new("mult =1000"),
+				new("add 2 #dodajOstatnią"),
+				new("store 3 #zapisz"),
+				new("write 3")
 			} },
 		};
 		public static IEnumerable<object[]> DataStringCollectionToString => new List<object[]>
 		{
-			new object[] { "Ala\nma\nkota", "\n", new StringCollection()
+			new object[] { "Ala\nma\nkota", "\n", new StringCollection
 			{
 				"Ala",
 				"ma",
@@ -148,14 +145,14 @@ namespace ProjectRAM.Core.Tests
 
 			new object[] { string.Empty, "\n", new StringCollection()},
 
-			new object[] { "Bolek i Lolek na dzikim zachodzie", string.Empty, new StringCollection()
+			new object[] { "Bolek i Lolek na dzikim zachodzie", string.Empty, new StringCollection
 			{
 				"Bolek i Lolek na dzikim zachodzie"
 			} },
 
 			new object[] { string.Empty, string.Empty, new StringCollection() },
 
-			new object[] { "The quick brown fox jumps over the lazy dog", " ", new StringCollection()
+			new object[] { "The quick brown fox jumps over the lazy dog", " ", new StringCollection
 			{
 				"The",
 				"quick",
@@ -170,41 +167,41 @@ namespace ProjectRAM.Core.Tests
 		};
 		public static IEnumerable<object[]> DataFileToCommandList => new List<object[]>
 		{
-			new object[] {$"{RAMCode}1.RAMCode", new List<Command>()
+			new object[] {$"{HelperClass.RAMCode}1.RAMCode", new List<Command>
 			{
-				new Command("read 0"),
-				new Command("write 0")
+				new("read 0"),
+				new("write 0")
 			} },
-			new object[] {$"{RAMCode}2.RAMCode", new List<Command>()
+			new object[] {$"{HelperClass.RAMCode}2.RAMCode", new List<Command>
 			{
-				new Command("read 0"),
-				new Command("mult 0"),
-				new Command("mult 0"),
-				new Command("mult 0"),
-				new Command("mult 0"),
-				new Command("write 0")
+				new("read 0"),
+				new("mult 0"),
+				new("mult 0"),
+				new("mult 0"),
+				new("mult 0"),
+				new("write 0")
 			} },
-			new object[] {$"{RAMCode}3.RAMCode", new List<Command>()
+			new object[] {$"{HelperClass.RAMCode}3.RAMCode", new List<Command>
 			{
-				new Command("read 1"),
-				new Command("load 1 #pobierzOstatniąCyfrę"),
-				new Command("div =10"),
-				new Command("mult =10"),
-				new Command("store 10"),
-				new Command("load 1"),
-				new Command("sub 10"),
-				new Command("store 2"),
-				new Command("load 1 #zamieńNaZera"),
-				new Command("div =1000"),
-				new Command("mult =1000"),
-				new Command("add 2 #dodajOstatnią"),
-				new Command("store 3 #zapisz"),
-				new Command("write 3")
+				new("read 1"),
+				new("load 1 #pobierzOstatniąCyfrę"),
+				new("div =10"),
+				new("mult =10"),
+				new("store 10"),
+				new("load 1"),
+				new("sub 10"),
+				new("store 2"),
+				new("load 1 #zamieńNaZera"),
+				new("div =1000"),
+				new("mult =1000"),
+				new("add 2 #dodajOstatnią"),
+				new("store 3 #zapisz"),
+				new("write 3")
 			} },
 		};
-		public static IEnumerable<object[]> DataFileToInputTape => new List<object[]>()
+		public static IEnumerable<object[]> DataFileToInputTape => new List<object[]>
 		{
-			new object[] {$"{InputTape}1.txt", new Queue<string>(new string[]
+			new object[] {$"{HelperClass.InputTape}1.txt", new Queue<string>(new[]
 			{
 				"32342",
 				"132",
@@ -213,7 +210,7 @@ namespace ProjectRAM.Core.Tests
 				"-1",
 				"0"
 			})},
-			new object[] {$"{InputTape}2.txt", new Queue<string>(new string[]
+			new object[] {$"{HelperClass.InputTape}2.txt", new Queue<string>(new[]
 			{
 				"1",
 				"1",
@@ -223,14 +220,14 @@ namespace ProjectRAM.Core.Tests
 				"1",
 				"10"
 			})},
-			new object[] {$"{InputTape}3.txt", new Queue<string>(new string[]
+			new object[] {$"{HelperClass.InputTape}3.txt", new Queue<string>(new[]
 			{
 				"25",
 				"10",
 				"25",
 				"10"
 			})},
-			new object[] {$"{InputTape}4.txt", new Queue<string>(new string[]
+			new object[] {$"{HelperClass.InputTape}4.txt", new Queue<string>(new[]
 			{
 				"-1",
 				"-50",
@@ -238,9 +235,9 @@ namespace ProjectRAM.Core.Tests
 				"88"
 			})}
 		};
-		public static IEnumerable<object[]> DataStringToInputTape => new List<object[]>()
+		public static IEnumerable<object[]> DataStringToInputTape => new List<object[]>
 		{
-			new object[] {"32342 132 765 10 -1 0", new Queue<string>(new string[]
+			new object[] {"32342 132 765 10 -1 0", new Queue<string>(new[]
 			{
 				"32342",
 				"132",
@@ -249,7 +246,7 @@ namespace ProjectRAM.Core.Tests
 				"-1",
 				"0"
 			})},
-			new object[] {"1 1 1 1 1 1 10", new Queue<string>(new string[]
+			new object[] {"1 1 1 1 1 1 10", new Queue<string>(new[]
 			{
 				"1",
 				"1",
@@ -259,14 +256,14 @@ namespace ProjectRAM.Core.Tests
 				"1",
 				"10"
 			})},
-			new object[] {"25 10 25 10", new Queue<string>(new string[]
+			new object[] {"25 10 25 10", new Queue<string>(new[]
 			{
 				"25",
 				"10",
 				"25",
 				"10"
 			})},
-			new object[] {"-1 -50 -70 abc 8a8", new Queue<string>(new string[]
+			new object[] {"-1 -50 -70 abc 8a8", new Queue<string>(new[]
 			{
 				"-1",
 				"-50",
@@ -275,9 +272,9 @@ namespace ProjectRAM.Core.Tests
 			})},
 			new object[] {string.Empty, new Queue<string>()}
 		};
-		public static IEnumerable<object[]> DataStringToOutputTape => new List<object[]>()
+		public static IEnumerable<object[]> DataStringToOutputTape => new List<object[]>
 		{
-			new object[] {"32342 132 765 10 -1 0", new Queue<string>(new string[]
+			new object[] {"32342 132 765 10 -1 0", new Queue<string>(new[]
 			{
 				"32342",
 				"132",
@@ -286,7 +283,7 @@ namespace ProjectRAM.Core.Tests
 				"-1",
 				"0"
 			})},
-			new object[] {"1 1 1 1 1 1 10", new Queue<string>(new string[]
+			new object[] {"1 1 1 1 1 1 10", new Queue<string>(new[]
 			{
 				"1",
 				"1",
@@ -296,14 +293,14 @@ namespace ProjectRAM.Core.Tests
 				"1",
 				"10"
 			})},
-			new object[] {"25 10 25 10", new Queue<string>(new string[]
+			new object[] {"25 10 25 10", new Queue<string>(new[]
 			{
 				"25",
 				"10",
 				"25",
 				"10"
 			})},
-			new object[] {"-1 -50 -70 88", new Queue<string>(new string[]
+			new object[] {"-1 -50 -70 88", new Queue<string>(new[]
 			{
 				"-1",
 				"-50",
