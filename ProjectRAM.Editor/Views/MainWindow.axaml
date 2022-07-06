@@ -8,10 +8,10 @@
 		xmlns:properties="clr-namespace:ProjectRAM.Editor.Properties"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="ProjectRAM.Editor.Views.MainWindow"
+		x:DataType="viewmodels:MainWindowViewModel"
 		Title="RAM Editor" Height="600" Width="800"
 		MinHeight="450" MinWidth="550"
-		Background="{DynamicResource Background}"
-		x:DataType="viewmodels:MainWindowViewModel">
+		Background="{DynamicResource Background}">
   <Window.KeyBindings>
 	<KeyBinding Gesture="Ctrl+W" Command="{CompiledBinding CloseCurrent}"/>
   </Window.KeyBindings>
@@ -234,7 +234,7 @@
 		  <DataTemplate>
 			<ContentControl>
 			  <ContentControl.Content>
-				<TextBlock FontSize="{DynamicResource HeaderTextFontSize}" Text="{CompiledBinding Header}"/>
+				<TextBlock Text="{CompiledBinding Header}"/>
 			  </ContentControl.Content>
 			  <ContentControl.ContextMenu>
 				<ContextMenu>
