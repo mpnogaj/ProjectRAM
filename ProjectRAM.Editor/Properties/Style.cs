@@ -178,7 +178,9 @@ namespace ProjectRAM.Editor.Properties
 		public string OutputTapeBackground { get; set; } = White;
 
 		public FontDescriptor InputTape { get; set; } = new();
+		public FontDescriptor InputTapeLbl { get; set; } = new();
 		public FontDescriptor OutputTape { get; set; } = new();
+		public FontDescriptor OutputTapeLbl { get; set; } = new();
 
 		#endregion
 

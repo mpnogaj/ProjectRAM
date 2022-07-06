@@ -10,54 +10,54 @@
 		MinHeight="150" MinWidth="200"
 		WindowStartupLocation="CenterOwner"
 		Background="{DynamicResource Background}"
-        Closing="OnClosing">
+		Closing="OnClosing">
 	<Grid RowDefinitions="Auto,*,50" 
 		  Margin="5">
 		<StackPanel Grid.Row="0" 
-		            Orientation="Vertical" 
-		            Spacing="10">
+					Orientation="Vertical" 
+					Spacing="10">
 			<TextBlock Text="Current style:"/>
 			<StackPanel Spacing="15" 
-			            Orientation="Horizontal">
+						Orientation="Horizontal">
 				<ComboBox Width="200"
-				          Items="{CompiledBinding Styles}"
-				          SelectedItem="{CompiledBinding CurrentStyle}"/>
+						  Items="{CompiledBinding Styles}"
+						  SelectedItem="{CompiledBinding CurrentStyle}"/>
 				<Button Content="Add style"
-				        Command="{CompiledBinding CreateNewStyleCommand}"/>
+						Command="{CompiledBinding CreateNewStyleCommand}"/>
 			</StackPanel>
 		</StackPanel>
 		<TabControl Classes="editor"
 					Grid.Row="1"
 					TabStripPlacement="Left"
 					Margin="0, 10, 0, 0">
-            <TabControl.Styles>
-                <Style Selector="TextBlock">
-                    <Setter Property="VerticalAlignment"
-                            Value="Center"/>
-                    <Setter Property="Margin"
-                            Value="0, 0,30, 0"/>
+			<TabControl.Styles>
+				<Style Selector="TextBlock">
+					<Setter Property="VerticalAlignment"
+							Value="Center"/>
+					<Setter Property="Margin"
+							Value="0, 0,30, 0"/>
 				</Style>
-            </TabControl.Styles>
+			</TabControl.Styles>
 			<TabItem Header="Główne">
 				<Grid ColumnDefinitions="Auto, *"
-				      RowDefinitions="Auto, Auto, Auto, Auto">
+					  RowDefinitions="Auto, Auto, Auto, Auto">
 					<TextBlock Grid.Column="0"
-					           Grid.Row="0"
-					           Text="Normalny tekst"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="0"
-                            Content="..."
-                            CommandParameter="NormalText"
-                            Command="{CompiledBinding SetFontCommand}"/>
+							   Grid.Row="0"
+							   Text="Normalny tekst"/>
+					<Button Grid.Column="1"
+							Grid.Row="0"
+							Content="..."
+							CommandParameter="NormalText"
+							Command="{CompiledBinding SetFontCommand}"/>
 
-                    
+					
 					<TextBlock Grid.Column="0"
 							   Grid.Row="1"
 							   Text="Nagłówek"/>
 					<Button Grid.Column="1"
 							Grid.Row="1"
 							Content="..."
-                            CommandParameter="HeaderText"
+							CommandParameter="HeaderText"
 							Command="{CompiledBinding SetFontCommand}"/>
 
 					<TextBlock Grid.Column="0"
@@ -79,7 +79,48 @@
 							Command="{CompiledBinding SetFontCommand}"/>
 				</Grid>
 			</TabItem>
-			<TabItem Header="Prosty edytor">
+			<TabItem Header="Taśmy">
+				<Grid ColumnDefinitions="Auto, *"
+					  RowDefinitions="Auto, Auto, Auto, Auto">
+					<TextBlock Grid.Column="0"
+					           Grid.Row="0"
+					           Text="Taśma wejścia tytuł"/>
+					<Button Grid.Column="1"
+					        Grid.Row="0"
+					        Content="..."
+					        CommandParameter="InputTapeLbl"
+					        Command="{CompiledBinding SetFontCommand}"/>
+
+
+					<TextBlock Grid.Column="0"
+					           Grid.Row="1"
+					           Text="Taśma wejścia"/>
+					<Button Grid.Column="1"
+					        Grid.Row="1"
+					        Content="..."
+					        CommandParameter="InputTape"
+					        Command="{CompiledBinding SetFontCommand}"/>
+
+					<TextBlock Grid.Column="0"
+					           Grid.Row="2"
+					           Text="Taśma wyjścia tytył"/>
+					<Button Grid.Column="1"
+					        Grid.Row="2"
+					        Content="..."
+					        CommandParameter="OutputTapeLbl"
+					        Command="{CompiledBinding SetFontCommand}"/>
+
+					<TextBlock Grid.Column="0"
+					           Grid.Row="3"
+					           Text="Taśma wyjścia"/>
+					<Button Grid.Column="1"
+					        Grid.Row="3"
+					        Content="..."
+					        CommandParameter="OutputTape"
+					        Command="{CompiledBinding SetFontCommand}"/>
+				</Grid>
+			</TabItem>
+			<TabItem Header="Edytory">
 
 			</TabItem>
 			<TabItem Header="Pamięć">
@@ -91,9 +132,9 @@
 		</TabControl>
 		<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="15">
 			<Button Content="Save" 
-			        Command="{CompiledBinding SaveCommand}" />
+					Command="{CompiledBinding SaveCommand}" />
 			<Button Content="Close" 
-			        Command="{CompiledBinding CloseCommand}"/>
+					Command="{CompiledBinding CloseCommand}"/>
 			<Button Content="Revert to default"/>
 		</StackPanel>
 	</Grid>

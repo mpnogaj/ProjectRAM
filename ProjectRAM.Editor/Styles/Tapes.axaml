@@ -1,0 +1,61 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Style Selector="TextBlock#inputTapeLbl">
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="FontFamily" Value="{DynamicResource InputTapeLblFontFamily}" />
+		<Setter Property="FontWeight" Value="{DynamicResource InputTapeLblFontWeight}" />
+		<Setter Property="FontSize" Value="{DynamicResource InputTapeLblFontSize}" />
+		<Setter Property="Foreground" Value="{DynamicResource InputTapeLblForeground}" />
+	</Style>
+
+	<Style Selector="TextBox#inputTapeBox">
+		<Setter Property="FontFamily" Value="{DynamicResource InputTapeFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource InputTapeFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource InputTapeFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource InputTapeFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource InputTapeForeground}"/>
+		<Setter Property="Background" Value="{DynamicResource InputTapeBackground}"/>
+	</Style>
+
+	<Style Selector="TextBox#inputTapeBox:pointerover">
+		<Setter Property="FontFamily" Value="{DynamicResource InputTapeFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource InputTapeFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource InputTapeFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource InputTapeFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource InputTapeForeground}"/>
+		<Setter Property="Background" Value="{DynamicResource InputTapeBackground}"/>
+	</Style>
+
+	<Style Selector="TextBox#inputTapeBox:focus">
+		<Setter Property="FontFamily" Value="{DynamicResource InputTapeFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource InputTapeFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource InputTapeFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource InputTapeFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource InputTapeForeground}"/>
+		<Setter Property="Background" Value="{DynamicResource InputTapeBackground}"/>
+	</Style>
+
+	<Style Selector="TextBlock#outputTapeLbl">
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="FontFamily" Value="{DynamicResource OutputTapeLblFontFamily}" />
+		<Setter Property="FontWeight" Value="{DynamicResource OutputTapeLblFontWeight}" />
+		<Setter Property="FontSize" Value="{DynamicResource OutputTapeLblFontSize}" />
+		<Setter Property="Foreground" Value="{DynamicResource OutputTapeLblForeground}" />
+	</Style>
+
+	<Style Selector="TextBox#outputTape:disabled">
+		<Setter Property="FontFamily" Value="{DynamicResource OutputTapeFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource OutputTapeFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource OutputTapeFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource OutputTapeFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource OutputTapeForeground}"/>
+		<Setter Property="Background" Value="{DynamicResource OutputTapeBackground}"/>
+	</Style>
+
+	<Style Selector="TextBox#outputTape:disabled /template/ Border">
+		<Setter Property="Background" Value="{DynamicResource OutputTapeBackground}" />
+		<Setter Property="BorderBrush" Value="#99000000" />
+		<Setter Property="CornerRadius" Value="3" />
+	</Style>
+
+</Styles>
