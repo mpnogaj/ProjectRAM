@@ -1,64 +1,71 @@
 <Application xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="ProjectRAM.Editor.App">
-    <Application.Styles>
-      <FluentTheme Mode="Light"/>
-      <StyleInclude Source="avares://ProjectRAM.Editor/Styles/DataGrid.xaml"/>
-      <StyleInclude Source="avares://ProjectRAM.Editor/Styles/MenuItem.xaml"/>
-      <StyleInclude Source="avares://AvaloniaColorPicker/ColorPicker.axaml"/>
-      <Style Selector="MenuItem">
-          <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}"/>
-          <Setter Property="FontFamily" Value="{DynamicResource MenuFlyoutItemFontFamily}"/>
-          <Setter Property="FontWeight" Value="{DynamicResource MenuFlyoutItemFontWeight}"/>
-          <Setter Property="FontSize" Value="{DynamicResource MenuFlyoutItemFontSize}"/>
-          <Setter Property="Foreground" Value="{DynamicResource   MenuFlyoutItemForeground}"/>
-      </Style>
-      <Style Selector="TabItem">
-          <Setter Property="TextBlock.FontFamily" Value="{DynamicResource HeaderTextFontFamily}"/>
-          <Setter Property="TextBlock.FontWeight" Value="{DynamicResource HeaderTextFontWeight}"/>
-          <Setter Property="TextBlock.FontSize" Value="{DynamicResource HeaderTextFontSize}"/>
-          <Setter Property="TextBlock.Foreground" Value="{DynamicResource HeaderTextForeground}"/>
-      </Style>
-      <Style Selector="DataGrid">
-          <Setter Property="GridLinesVisibility" Value="All" />
-          <Setter Property="VerticalGridLinesBrush" Value="LightGray" />
-          <Setter Property="HorizontalGridLinesBrush" Value="LightGray" />
-          <Setter Property="RowBackground" Value="{DynamicResource DataGridRowColor}"/>
-          <Setter Property="AlternatingRowBackground" Value="{DynamicResource DataGridAlternativeRowColor}"/>
-      </Style>
-      <Style Selector="DataGridCell">
-          <Setter Property="Padding" Value="5"/>
-          <Setter Property="FontFamily" Value="{DynamicResource NormalTextFontFamily}"/>
-          <Setter Property="FontWeight" Value="{DynamicResource NormalTextFontWeight}"/>
-          <Setter Property="FontSize" Value="{DynamicResource NormalTextFontSize}"/>
-          <Setter Property="Foreground" Value="{DynamicResource NormalTextForeground}"/>
-      </Style>
-      <Style Selector="DataGridColumnHeader">
-          <Setter Property="HorizontalContentAlignment" Value="Center" />
-          <Setter Property="AreSeparatorsVisible" Value="True" />
-          <Setter Property="SeparatorBrush" Value="LightGray" />
-          <Setter Property="FontFamily" Value="{DynamicResource DataGridHeaderFontFamily}"/>
-          <Setter Property="FontSize" Value="{DynamicResource DataGridHeaderFontSize}" />
-          <Setter Property="FontWeight" Value="{DynamicResource DataGridHeaderFontWeight}"/>
-          <Setter Property="Foreground" Value="{DynamicResource DataGridHeaderForeground}" />
-          <Setter Property="Background" Value="{DynamicResource DataGridHeaderBackground}"/>
-      </Style>
-      <Style Selector="DataGridColumnHeader:pointerover/template/Grid">
-          <Setter Property="Background" Value="{DynamicResource DataGridHeaderBackground}"/>
-      </Style>
-      <Style Selector="DataGridColumnHeader:pointerover/template/Grid">
-          <Setter Property="Background" Value="{DynamicResource DataGridHeaderBackground}"/>
-      </Style>
-      <Style Selector="GridSplitter">
-          <Setter Property="Background" Value="{DynamicResource GridSplitterBackground}" />
-          <Setter Property="MinWidth" Value="2" />
-          <Setter Property="MinHeight" Value="2" />
-      </Style>
-      <Style Selector="GridSplitter:pointerover">
-          <Setter Property="Background" Value="{DynamicResource GridSplitterPointerOverBackground}"/>
-      </Style>
-      <Style Selector="GridSplitter:pressed">
-          <Setter Property="Background" Value="{DynamicResource GridSplitterPressedBackground}"/>
-      </Style>
-    </Application.Styles>
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 x:Class="ProjectRAM.Editor.App">
+	<Application.Styles>
+	  <FluentTheme Mode="Light"/>
+	  <StyleInclude Source="avares://ProjectRAM.Editor/Styles/DataGrid.xaml"/>
+	  <StyleInclude Source="avares://ProjectRAM.Editor/Styles/MenuItem.xaml"/>
+	  <StyleInclude Source="avares://AvaloniaColorPicker/ColorPicker.axaml"/>
+	  <Style Selector="MenuItem">
+		  <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}"/>
+		  <Setter Property="FontFamily" Value="{DynamicResource MenuFlyoutItemFontFamily}"/>
+		  <Setter Property="FontWeight" Value="{DynamicResource MenuFlyoutItemFontWeight}"/>
+		  <Setter Property="FontSize" Value="{DynamicResource MenuFlyoutItemFontSize}"/>
+		  <Setter Property="Foreground" Value="{DynamicResource   MenuFlyoutItemForeground}"/>
+	  </Style>
+	  <Style Selector="TabItem">
+		  <Setter Property="TextBlock.FontFamily" Value="{DynamicResource HeaderTextFontFamily}"/>
+		  <Setter Property="TextBlock.FontWeight" Value="{DynamicResource HeaderTextFontWeight}"/>
+		  <Setter Property="TextBlock.FontSize" Value="{DynamicResource HeaderTextFontSize}"/>
+		  <Setter Property="TextBlock.Foreground" Value="{DynamicResource HeaderTextForeground}"/>
+	  </Style>
+	  <Style Selector="DataGrid">
+		  <Setter Property="GridLinesVisibility" Value="All" />
+		  <Setter Property="VerticalGridLinesBrush" Value="LightGray" />
+		  <Setter Property="HorizontalGridLinesBrush" Value="LightGray" />
+		  <Setter Property="RowBackground" Value="{DynamicResource DataGridRowColor}"/>
+		  <Setter Property="AlternatingRowBackground" Value="{DynamicResource DataGridAlternativeRowColor}"/>
+	  </Style>
+	  <Style Selector="DataGridCell">
+		  <Setter Property="Padding" Value="5"/>
+		  <Setter Property="FontFamily" Value="{DynamicResource NormalTextFontFamily}"/>
+		  <Setter Property="FontWeight" Value="{DynamicResource NormalTextFontWeight}"/>
+		  <Setter Property="FontSize" Value="{DynamicResource NormalTextFontSize}"/>
+		  <Setter Property="Foreground" Value="{DynamicResource NormalTextForeground}"/>
+	  </Style>
+	  <Style Selector="TextBlock.normal">
+		  <Setter Property="FontFamily" Value="{DynamicResource NormalTextFontFamily}"/>
+		  <Setter Property="FontWeight" Value="{DynamicResource NormalTextFontWeight}"/>
+		  <Setter Property="FontSize" Value="{DynamicResource NormalTextFontSize}"/>
+          <Setter Property="FontStyle" Value="{DynamicResource NormalTextFontStyle}"/>
+		  <Setter Property="Foreground" Value="{DynamicResource NormalTextForeground}"/>
+	  </Style>
+	  <Style Selector="DataGridColumnHeader">
+		  <Setter Property="HorizontalContentAlignment" Value="Center" />
+		  <Setter Property="AreSeparatorsVisible" Value="True" />
+		  <Setter Property="SeparatorBrush" Value="LightGray" />
+		  <Setter Property="FontFamily" Value="{DynamicResource DataGridHeaderFontFamily}"/>
+		  <Setter Property="FontSize" Value="{DynamicResource DataGridHeaderFontSize}" />
+		  <Setter Property="FontWeight" Value="{DynamicResource DataGridHeaderFontWeight}"/>
+		  <Setter Property="Foreground" Value="{DynamicResource DataGridHeaderForeground}" />
+		  <Setter Property="Background" Value="{DynamicResource DataGridHeaderBackground}"/>
+	  </Style>
+	  <Style Selector="DataGridColumnHeader:pointerover/template/Grid">
+		  <Setter Property="Background" Value="{DynamicResource DataGridHeaderBackground}"/>
+	  </Style>
+	  <Style Selector="DataGridColumnHeader:pointerover/template/Grid">
+		  <Setter Property="Background" Value="{DynamicResource DataGridHeaderBackground}"/>
+	  </Style>
+	  <Style Selector="GridSplitter">
+		  <Setter Property="Background" Value="{DynamicResource GridSplitterBackground}" />
+		  <Setter Property="MinWidth" Value="2" />
+		  <Setter Property="MinHeight" Value="2" />
+	  </Style>
+	  <Style Selector="GridSplitter:pointerover">
+		  <Setter Property="Background" Value="{DynamicResource GridSplitterPointerOverBackground}"/>
+	  </Style>
+	  <Style Selector="GridSplitter:pressed">
+		  <Setter Property="Background" Value="{DynamicResource GridSplitterPressedBackground}"/>
+	  </Style>
+	</Application.Styles>
 </Application>

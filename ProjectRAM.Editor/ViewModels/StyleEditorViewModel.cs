@@ -1,9 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Avalonia.Media;
+using AvaloniaFontPicker;
 using MessageBox.Avalonia;
 using MessageBox.Avalonia.DTO;
 using MessageBox.Avalonia.Models;
 using ProjectRAM.Editor.Helpers;
+using ProjectRAM.Editor.Models;
 using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.ViewModels.Commands;
 
@@ -36,6 +39,8 @@ namespace ProjectRAM.Editor.ViewModels
 		public RelayCommand SaveCommand { get; }
 		public RelayCommand CloseCommand { get; }
 		public AsyncRelayCommand CreateNewStyleCommand { get; }
+
+		public AsyncRelayCommand SetFontCommand { get; }
 
 		public StyleEditorViewModel()
 		{
@@ -79,6 +84,32 @@ namespace ProjectRAM.Editor.ViewModels
 						FileName = $"{res.Message.ToLower()}.json"
 					});
 				}
+			}, () => true);
+
+			SetFontCommand = new AsyncRelayCommand(async () =>
+			{
+				var fontDescriptor = CurrentStyle.NormalText;
+				var font = new Font
+				{
+					FontFamily = fontDescriptor.FontFamily,
+					FontSize = fontDescriptor.FontSize,
+					FontWeight = fontDescriptor.FontWeight,
+					FontStyle = fontDescriptor.FontStyle,
+					Foreground = new SolidColorBrush(Color.Parse(fontDescriptor.Foreground))
+				};
+				var dialog = new FontDialog(font);
+				await dialog.Show(Essentials.GetTopWindow(), (font) =>
+				{
+			 		CurrentStyle.NormalText = new FontDescriptor
+					{
+						FontFamily = font.FontFamily.Name,
+						FontSize = font.FontSize,
+						FontWeight = font.FontWeight,
+						FontStyle = font.FontStyle,
+						Foreground = font.Foreground.Color.ToString()
+					};
+					CurrentStyle.NormalText.ApplyFontStyle(nameof(CurrentStyle.NormalText));
+				});
 			}, () => true);
 		}
 	}

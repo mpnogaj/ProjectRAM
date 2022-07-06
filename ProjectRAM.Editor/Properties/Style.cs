@@ -4,8 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Avalonia;
 using Avalonia.Media;
+using ProjectRAM.Editor.Models;
 using ProjectRAM.Editor.ViewModels;
-using FontStyle = ProjectRAM.Editor.Models.FontStyle;
 
 namespace ProjectRAM.Editor.Properties
 {
@@ -50,8 +50,8 @@ namespace ProjectRAM.Editor.Properties
 			{
 				string name = property.Name;
 				object value = property.GetValue(this)!;
-				if (property.PropertyType == typeof(FontStyle))
-					((FontStyle)value).ApplyFontStyle(name);
+				if (property.PropertyType == typeof(FontDescriptor))
+					((FontDescriptor)value).ApplyFontStyle(name);
 				else if (name != nameof(FileName) && name != nameof(Name))
 					res[property.Name] = new SolidColorBrush(Color.Parse((string)value));
 			}
@@ -85,9 +85,9 @@ namespace ProjectRAM.Editor.Properties
 
 
 
-		public FontStyle NormalText { get; set; } = new();
+		public FontDescriptor NormalText { get; set; } = new();
 
-		public FontStyle HeaderText { get; set; } = new()
+		public FontDescriptor HeaderText { get; set; } = new()
 		{
 			FontWeight = FontWeight.Bold,
 			FontSize = 15.0
@@ -98,7 +98,7 @@ namespace ProjectRAM.Editor.Properties
 
 		#region Data grid
 
-		public FontStyle DataGridHeader { get; set; } = new()
+		public FontDescriptor DataGridHeader { get; set; } = new()
 		{
 			FontSize = 15.0,
 			FontWeight = FontWeight.Bold
@@ -113,7 +113,7 @@ namespace ProjectRAM.Editor.Properties
 
 		#region Text editor
 
-		public FontStyle TextEditor { get; set; } = new()
+		public FontDescriptor TextEditor { get; set; } = new()
 		{
 			FontFamily = "Courier New"
 		};
@@ -124,12 +124,12 @@ namespace ProjectRAM.Editor.Properties
 
 		#region Simple editor
 
-		public FontStyle SimpleEditor { get; set; } = new()
+		public FontDescriptor SimpleEditor { get; set; } = new()
 		{
 			FontFamily = "Courier New"
 		};
 
-		public FontStyle SimpleEditorHeader { get; set; } = new()
+		public FontDescriptor SimpleEditorHeader { get; set; } = new()
 		{
 			FontWeight = FontWeight.Bold
 		};
@@ -146,14 +146,14 @@ namespace ProjectRAM.Editor.Properties
 		public string MenuFlyoutItemBackgroundPressed { get; set; } = SuperLightGray;
 		public string MenuFlyoutPresenterBackground { get; set; } = White;
 		public string MenuFlyoutItemBackgroundDisabled { get; set; } = SuperLightGray;
-		public FontStyle MenuFlyoutItem { get; set; } = new();
-		public FontStyle MenuFlyoutItemPointerOver { get; set; } = new();
-		public FontStyle MenuFlyoutItemPressed { get; set; } = new();
-		public FontStyle MenuFlyoutItemDisabled { get; set; } = new();
-		public FontStyle MenuFlyoutItemGestureText { get; set; } = new();
-		public FontStyle MenuFlyoutItemGestureTextPointerOver { get; set; } = new();
-		public FontStyle MenuFlyoutItemGestureTextPressed { get; set; } = new();
-		public FontStyle MenuFlyoutItemGestureTextDisabled { get; set; } = new();
+		public FontDescriptor MenuFlyoutItem { get; set; } = new();
+		public FontDescriptor MenuFlyoutItemPointerOver { get; set; } = new();
+		public FontDescriptor MenuFlyoutItemPressed { get; set; } = new();
+		public FontDescriptor MenuFlyoutItemDisabled { get; set; } = new();
+		public FontDescriptor MenuFlyoutItemGestureText { get; set; } = new();
+		public FontDescriptor MenuFlyoutItemGestureTextPointerOver { get; set; } = new();
+		public FontDescriptor MenuFlyoutItemGestureTextPressed { get; set; } = new();
+		public FontDescriptor MenuFlyoutItemGestureTextDisabled { get; set; } = new();
 
 		#endregion
 
@@ -162,8 +162,8 @@ namespace ProjectRAM.Editor.Properties
 		public string InputTapeBackground { get; set; } = White;
 		public string OutputTapeBackground { get; set; } = White;
 
-		public FontStyle InputTape { get; set; } = new();
-		public FontStyle OutputTape { get; set; } = new();
+		public FontDescriptor InputTape { get; set; } = new();
+		public FontDescriptor OutputTape { get; set; } = new();
 
 		#endregion
 

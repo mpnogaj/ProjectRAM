@@ -10,6 +10,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
+using Avalonia.Media;
 using MessageBox.Avalonia;
 using MessageBox.Avalonia.Enums;
 using ProjectRAM.Editor.Views;
