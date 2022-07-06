@@ -25,7 +25,7 @@
             <RowDefinition Height="{Binding Source={StaticResource Settings}, Path=BottomPanelSize, Mode=TwoWay}" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Grid.Column="0" Background="{DynamicResource SideBarBackground}" ZIndex="2">
-            <TabControl>
+            <TabControl Classes="editor">
                 <TabItem Header="{x:Static properties:Strings.memory}" FontSize="{DynamicResource HeaderTextFontSize}">
                     <Border BorderThickness="1" Background="{DynamicResource DataGridBackground}"
                             BorderBrush="LightGray" Margin="0, 0, 0, 5">
@@ -252,7 +252,7 @@
         </Grid>
         <GridSplitter Height="4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" ResizeDirection="Rows" />
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="{DynamicResource BottomBarBackground}">
-            <TabControl>
+            <TabControl Classes="editor">
                 <TabItem Header="{x:Static properties:Strings.verificationReport}">
                     <Border BorderBrush="LightGray" BorderThickness="1"
                             Background="{DynamicResource DataGridBackground}" Margin="0, 0, 0, 5">

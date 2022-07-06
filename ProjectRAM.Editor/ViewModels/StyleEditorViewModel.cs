@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia.Media;
 using AvaloniaFontPicker;
@@ -31,21 +32,36 @@ namespace ProjectRAM.Editor.ViewModels
 		public Style CurrentStyle
 		{
 			get => _currentStyle;
-			set => SetProperty(ref _currentStyle, value);
+			set
+			{
+				value.ApplyStyle();
+				SetProperty(ref _currentStyle, value);
+			}
 		}
 		#endregion
 		#endregion
+
+		public Action OnClose { get; }
 
 		public RelayCommand SaveCommand { get; }
 		public RelayCommand CloseCommand { get; }
 		public AsyncRelayCommand CreateNewStyleCommand { get; }
 
-		public AsyncRelayCommand SetFontCommand { get; }
+		public AsyncRelayCommand<string> SetFontCommand { get; }
 
 		public StyleEditorViewModel()
 		{
 			_styles = new ObservableCollection<Style>(Essentials.GetAllStyles().ToList());
 			_currentStyle = _styles[0];
+
+			OnClose = () =>
+			{
+				if (!Equals(CurrentStyle, Settings.CurrentStyle))
+				{
+					Settings.CurrentStyle.ApplyStyle();
+				}
+			};
+
 			CloseCommand = new RelayCommand(Essentials.CloseTopWindow, () => true);
 			SaveCommand = new RelayCommand(() =>
 			{
@@ -86,9 +102,10 @@ namespace ProjectRAM.Editor.ViewModels
 				}
 			}, () => true);
 
-			SetFontCommand = new AsyncRelayCommand(async () =>
+			SetFontCommand = new AsyncRelayCommand<string>(async (target) =>
 			{
-				var fontDescriptor = CurrentStyle.NormalText;
+				var propertyInfo = typeof(Style).GetProperty(target);
+				var fontDescriptor = (FontDescriptor)propertyInfo!.GetValue(CurrentStyle)!;
 				var font = new Font
 				{
 					FontFamily = fontDescriptor.FontFamily,
@@ -98,17 +115,18 @@ namespace ProjectRAM.Editor.ViewModels
 					Foreground = new SolidColorBrush(Color.Parse(fontDescriptor.Foreground))
 				};
 				var dialog = new FontDialog(font);
-				await dialog.Show(Essentials.GetTopWindow(), (font) =>
+				await dialog.Show(Essentials.GetTopWindow(), (f) =>
 				{
-			 		CurrentStyle.NormalText = new FontDescriptor
+					var newFontDescriptor = new FontDescriptor
 					{
-						FontFamily = font.FontFamily.Name,
-						FontSize = font.FontSize,
-						FontWeight = font.FontWeight,
-						FontStyle = font.FontStyle,
-						Foreground = font.Foreground.Color.ToString()
+						FontFamily = f.FontFamily.Name,
+						FontSize = f.FontSize,
+						FontWeight = f.FontWeight,
+						FontStyle = f.FontStyle,
+						Foreground = f.Foreground.Color.ToString()
 					};
-					CurrentStyle.NormalText.ApplyFontStyle(nameof(CurrentStyle.NormalText));
+					propertyInfo.SetValue(CurrentStyle,  newFontDescriptor);
+					newFontDescriptor.ApplyFontStyle(target);
 				});
 			}, () => true);
 		}

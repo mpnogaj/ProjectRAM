@@ -87,12 +87,27 @@ namespace ProjectRAM.Editor.Properties
 
 		public FontDescriptor NormalText { get; set; } = new();
 
+		#endregion
+
+		#region Header
+
 		public FontDescriptor HeaderText { get; set; } = new()
 		{
 			FontWeight = FontWeight.Bold,
 			FontSize = 15.0
 		};
 
+		public FontDescriptor HeaderTextSelected { get; set; } = new()
+		{
+			FontWeight = FontWeight.Bold,
+			FontSize = 15.0
+		};
+
+		public FontDescriptor HeaderTextPointerOver { get; set; } = new()
+		{
+			FontWeight = FontWeight.Bold,
+			FontSize = 15.0
+		};
 
 		#endregion
 

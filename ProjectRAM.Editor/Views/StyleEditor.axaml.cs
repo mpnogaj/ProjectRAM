@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ProjectRAM.Editor.ViewModels;
+using System.ComponentModel;
 
 namespace ProjectRAM.Editor.Views
 {
@@ -19,6 +20,11 @@ namespace ProjectRAM.Editor.Views
 		private void InitializeComponent()
 		{
 			AvaloniaXamlLoader.Load(this);
+		}
+
+		private void OnClosing(object? sender, CancelEventArgs e)
+		{
+			((StyleEditorViewModel)DataContext!).OnClose();
 		}
 	}
 }
