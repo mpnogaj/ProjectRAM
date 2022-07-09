@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Input;
 using System.Collections.ObjectModel;
@@ -14,6 +16,21 @@ namespace ProjectRAM.Editor.ViewModels
 {
 	public class HostViewModel : ViewModelBase
 	{
+		public IEnumerable Items => new List<string>
+		{
+			"read",
+			"write",
+			"load",
+			"store",
+			"add",
+			"sub",
+			"mult",
+			"div",
+			"jump",
+			"jzero",
+			"jgtz"
+		};
+
 		public CancellationTokenSource? Token { get; set; }
 
 		private ObservableCollection<MemoryRow> _memory;
