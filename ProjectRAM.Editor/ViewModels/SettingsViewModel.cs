@@ -91,7 +91,7 @@ namespace ProjectRAM.Editor.ViewModels
 			_textEditor = Settings.UseTextEditor;
 
 			_styles = Essentials.GetAllStyles().ToList();
-			_style = _styles.Find(x => x.FileName == Settings.CurrentStyle.FileName)!;
+			_style = _styles.Find(x => x.FileName == Settings.CurrentStyle.FileName) ?? _styles[0];
 		}
 	}
 }

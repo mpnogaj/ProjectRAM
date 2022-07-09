@@ -1,0 +1,63 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<Design.PreviewWith>
+		<Border Padding="20">
+			<StackPanel Spacing="20">
+				<TabItem Header="Leaf" />
+				<TabItem Header="Arch" IsSelected="True" />
+			</StackPanel>
+		</Border>
+	</Design.PreviewWith>
+	<Styles.Resources>
+		<x:Double x:Key="TabItemMinHeight">48</x:Double>
+		<x:Double x:Key="TabItemVerticalPipeHeight">24</x:Double>
+		<x:Double x:Key="TabItemPipeThickness">2</x:Double>
+	</Styles.Resources>
+
+	<Style Selector="TabItem > TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource HeaderTextFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource HeaderTextFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource HeaderTextFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource HeaderTextFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource HeaderTextForeground}"/>
+	</Style>
+	<Style Selector="TabItem:selected > TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource HeaderTextSelectedFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource HeaderTextSelectedFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource HeaderTextSelectedFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource HeaderTextSelectedFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource HeaderTextSelectedForeground}"/>
+	</Style>
+	<Style Selector="TabItem:pointerover > TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource HeaderTextPointerOverFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource HeaderTextPointerOverFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource HeaderTextPointerOverFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource HeaderTextPointerOverFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource HeaderTextPointerOverForeground}"/>
+	</Style>
+
+
+    <!--For template headers-->
+	<Style Selector="TabItem > ContentControl > TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource HeaderTextFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource HeaderTextFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource HeaderTextFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource HeaderTextFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource HeaderTextForeground}"/>
+	</Style>
+	<Style Selector="TabItem:selected > ContentControl > TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource HeaderTextSelectedFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource HeaderTextSelectedFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource HeaderTextSelectedFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource HeaderTextSelectedFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource HeaderTextSelectedForeground}"/>
+	</Style>
+	<Style Selector="TabItem:pointerover > ContentControl > TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource HeaderTextPointerOverFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource HeaderTextPointerOverFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource HeaderTextPointerOverFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource HeaderTextPointerOverFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource HeaderTextPointerOverForeground}"/>
+	</Style>
+</Styles>

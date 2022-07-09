@@ -1,0 +1,25 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Design.PreviewWith>
+		<Border Padding="20">
+			
+		</Border>
+	</Design.PreviewWith>
+
+	<Style Selector="TextBlock">
+		<Setter Property="Padding" Value="7, 0, 7, 0"/>
+		<Setter Property="FontFamily" Value="{DynamicResource NormalTextFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource NormalTextFontWeight}"/>
+		<Setter Property="FontSize" Value="{DynamicResource NormalTextFontSize}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource NormalTextFontStyle}"/>
+		<Setter Property="Foreground" Value="{DynamicResource NormalTextForeground}"/>
+	</Style>
+
+    <Style Selector="TextBlock.header">
+		<Setter Property="FontFamily" Value="{DynamicResource HeaderTextFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource HeaderTextFontWeight}"/>
+		<Setter Property="FontSize" Value="{DynamicResource HeaderTextFontSize}"/>
+        <Setter Property="FontStyle" Value="{DynamicResource HeaderTextFontStyle}"/>
+		<Setter Property="Foreground" Value="{DynamicResource HeaderTextForeground}"/>
+	</Style>
+</Styles>

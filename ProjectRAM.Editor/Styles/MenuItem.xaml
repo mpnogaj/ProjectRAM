@@ -49,8 +49,8 @@
     <StreamGeometry x:Key="MenuItemChevronPathData">M 1,0 10,10 l -9,10 -1,-1 L 8,10 -0,1 Z</StreamGeometry>
   </Styles.Resources>
 
-  <Style Selector="MenuItem">
-    <Setter Property="Background" Value="{DynamicResource MenuFlyoutItemBackground}" />
+	<Style Selector="MenuItem">
+    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
     <Setter Property="Padding" Value="{DynamicResource MenuFlyoutItemThemePadding}" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -85,14 +85,23 @@
                                 Grid.Column="1">
                 <ContentPresenter.DataTemplates>
                   <DataTemplate DataType="sys:String">
-                    <AccessText Text="{Binding}" />
+                    <AccessText Text="{Binding}"
+								Foreground="{DynamicResource MenuFlyoutItemForeground}"
+								FontSize="{DynamicResource MenuFlyoutItemFontSize}"
+								FontStyle="{DynamicResource MenuFlyoutItemFontStyle}"
+								FontWeight="{DynamicResource MenuFlyoutItemFontWeight}"
+								FontFamily="{DynamicResource MenuFlyoutItemFontFamily}"/>
                   </DataTemplate>
                 </ContentPresenter.DataTemplates>
               </ContentPresenter>
               <TextBlock x:Name="PART_InputGestureText"
                          Grid.Column="2"
-                         Classes="CaptionTextBlockStyle"
-                         Margin="{DynamicResource MenuInputGestureTextMargin}"
+                         Foreground="{DynamicResource MenuFlyoutItemGestureTextForeground}"
+                         FontFamily="{DynamicResource MenuFlyoutItemGestureTextFontFamily}"
+                         FontSize="{DynamicResource MenuFlyoutItemGestureTextFontSize}"
+                         FontWeight="{DynamicResource MenuFlyoutItemGestureTextFontWeight}"
+                         FontStyle="{DynamicResource MenuFlyoutItemGestureTextFontStyle}"
+						 Margin="{DynamicResource MenuInputGestureTextMargin}"
                          Text="{TemplateBinding InputGesture, Converter={StaticResource KeyGestureConverter}}"
                          HorizontalAlignment="Right"
                          VerticalAlignment="Center" />
@@ -136,7 +145,8 @@
   </Style>
 
   <Style Selector="Menu > MenuItem">
-    <Setter Property="Template">
+	  <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
+	  <Setter Property="Template">
       <ControlTemplate>
         <Border Name="PART_LayoutRoot"
                 Background="{TemplateBinding Background}"
@@ -150,7 +160,12 @@
                               Margin="{TemplateBinding Padding}">
               <ContentPresenter.DataTemplates>
                 <DataTemplate DataType="sys:String">
-                  <AccessText Text="{Binding}" />
+                  <AccessText Text="{Binding}" 
+							  Foreground="{DynamicResource MenuFlyoutItemForeground}"
+							  FontSize="{DynamicResource MenuFlyoutItemFontSize}"
+							  FontStyle="{DynamicResource MenuFlyoutItemFontStyle}"
+							  FontWeight="{DynamicResource MenuFlyoutItemFontWeight}"
+							  FontFamily="{DynamicResource MenuFlyoutItemFontFamily}"/>
                 </DataTemplate>
               </ContentPresenter.DataTemplates>
             </ContentPresenter>
@@ -185,7 +200,6 @@
   </Style>
 
   <Style Selector="MenuItem">
-    <!--  Narrow padding should be used for mouse input, when non-narrow one should be used for touch input in future.  -->
     <Setter Property="Padding" Value="{DynamicResource MenuFlyoutItemThemePaddingNarrow}" />
   </Style>
 

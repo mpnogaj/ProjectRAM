@@ -229,7 +229,7 @@
 	  </Button>
 	</StackPanel>
 	<Grid Grid.Row="2">
-	  <TabControl Classes="editor" Name="Files" Items="{CompiledBinding Pages}" SelectedItem="{CompiledBinding Page, Mode=TwoWay}" DragDrop.AllowDrop="True">
+	  <TabControl Name="Files" Items="{CompiledBinding Pages}" SelectedItem="{CompiledBinding Page, Mode=TwoWay}" DragDrop.AllowDrop="True">
 		<TabControl.ItemTemplate>
 		  <DataTemplate>
 			<ContentControl>

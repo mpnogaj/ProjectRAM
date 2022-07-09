@@ -99,7 +99,7 @@ namespace ProjectRAM.Editor.Helpers
 
 		public static IEnumerable<Style> GetAllStyles()
 		{
-			List<Style> styles = new List<Style>();
+			var styles = new List<Style>();
 			var files = Directory.EnumerateFiles("Styles/");
 			foreach (var file in files)
 			{

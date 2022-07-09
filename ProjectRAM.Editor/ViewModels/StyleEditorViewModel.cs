@@ -52,8 +52,7 @@ namespace ProjectRAM.Editor.ViewModels
 		public StyleEditorViewModel()
 		{
 			_styles = new ObservableCollection<Style>(Essentials.GetAllStyles().ToList());
-			_currentStyle = _styles[0];
-
+			_currentStyle = _styles.FirstOrDefault(x => x.Equals(Settings.CurrentStyle)) ?? _styles[0];
 			OnClose = () =>
 			{
 				if (!Equals(CurrentStyle, Settings.CurrentStyle))

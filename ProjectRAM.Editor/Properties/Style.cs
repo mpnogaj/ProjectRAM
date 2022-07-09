@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 using Avalonia;
 using Avalonia.Media;
 using ProjectRAM.Editor.Models;
-using ProjectRAM.Editor.ViewModels;
 
 namespace ProjectRAM.Editor.Properties
 {
@@ -157,14 +156,16 @@ namespace ProjectRAM.Editor.Properties
 
 		#region Menu
 
+		public string MenuFlyoutPresenterBackground { get; set; } = White;
 		public string MenuFlyoutItemBackgroundPointerOver { get; set; } = SuperLightGray;
 		public string MenuFlyoutItemBackgroundPressed { get; set; } = SuperLightGray;
-		public string MenuFlyoutPresenterBackground { get; set; } = White;
 		public string MenuFlyoutItemBackgroundDisabled { get; set; } = SuperLightGray;
+
 		public FontDescriptor MenuFlyoutItem { get; set; } = new();
 		public FontDescriptor MenuFlyoutItemPointerOver { get; set; } = new();
 		public FontDescriptor MenuFlyoutItemPressed { get; set; } = new();
 		public FontDescriptor MenuFlyoutItemDisabled { get; set; } = new();
+
 		public FontDescriptor MenuFlyoutItemGestureText { get; set; } = new();
 		public FontDescriptor MenuFlyoutItemGestureTextPointerOver { get; set; } = new();
 		public FontDescriptor MenuFlyoutItemGestureTextPressed { get; set; } = new();
