@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using MessageBox.Avalonia;
 using MessageBox.Avalonia.Enums;
 using ProjectRAM.Editor.Views;
@@ -141,6 +143,22 @@ namespace ProjectRAM.Editor.Helpers
 				icon: icon,
 				windowStartupLocation: WindowStartupLocation.CenterOwner);
 			await messageBox.ShowDialog(GetTopWindow());
+		}
+
+
+		public static DataGridCell? GetSelectedCell(this DataGrid dataGrid)
+		{
+			return dataGrid.FindDescendantOfType<DataGridRowsPresenter>()
+				.Children.OfType<DataGridRow>()
+				.SelectMany(row => row.FindDescendantOfType<DataGridCellsPresenter>()
+					.Children.OfType<DataGridCell>())
+				.FirstOrDefault(cell => cell.Classes.Contains(":current"));
+		}
+
+		public static bool IsAlphaNumeric(this Key key, bool numLockOn)
+		{
+			int code = (int)key;
+			return code is >= 34 and <= 69 || (numLockOn && code is >= 74 and <= 83);
 		}
 	}
 }

@@ -6,6 +6,8 @@ using Avalonia.Input;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using Avalonia.Controls.Primitives;
+using Avalonia.VisualTree;
 using ProjectRAM.Editor.ViewModels.Commands;
 using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.Models;
@@ -183,6 +185,8 @@ namespace ProjectRAM.Editor.ViewModels
 
 		public void HandleDataGridKeyEvents(object sender, KeyEventArgs e)
 		{
+			var focusManager = FocusManager.Instance;
+			var dataGrid = (DataGrid)sender;
 			switch (e.Key)
 			{
 				case Key.Insert:
@@ -199,18 +203,35 @@ namespace ProjectRAM.Editor.ViewModels
 
 					e.Handled = true;
 					break;
-				case Key.Delete when FocusManager.Instance.Current is TextBox:
+				case Key.Delete when focusManager?.Current is TextBox:
 					return;
 				case Key.Delete:
-					var programLine = ((DataGrid)sender).SelectedItem as ProgramLine;
-					var selectedIndex = ((DataGrid)sender).SelectedIndex;
-					if (programLine == null) return;
+					var programLine = dataGrid.SelectedItem as ProgramLine;
+					var selectedIndex = dataGrid.SelectedIndex;
+					if (programLine == null)
+					{
+						return;
+					}
 					DeleteLine(programLine);
-					((DataGrid)sender).SelectedIndex = selectedIndex == 0 ? 0 : selectedIndex - 1;
+					//selectedIndex == 0 ? 0 : selectedIndex - 1;
+					dataGrid.SelectedIndex = Math.Max(selectedIndex - 1, 0);
+					break;
+				case Key.Escape when focusManager?.Current is TextBox textBox:
+					dataGrid.Focus();
 					break;
 				default:
-					var item = FocusManager.Instance.Current;
-					if (item is DataGrid) ((DataGrid)sender).BeginEdit();
+					if (e.Key.IsAlphaNumeric(true) || e.Key is Key.OemPlus or Key.OemMinus)
+					{
+						if (focusManager?.Current is DataGrid)
+						{
+							var selectedCell = dataGrid.GetSelectedCell();
+
+							if (selectedCell?.Content is TextBox or AutoCompleteBox)
+							{
+								((IControl)selectedCell.Content).Focus();
+							}
+						}
+					}
 					break;
 			}
 		}
