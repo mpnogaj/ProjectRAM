@@ -2,7 +2,6 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:system="clr-namespace:System;assembly=mscorlib"
 			 xmlns:properties="clr-namespace:ProjectRAM.Editor.Properties"
 			 xmlns:viewmodels="clr-namespace:ProjectRAM.Editor.ViewModels"
 			 xmlns:models="clr-namespace:ProjectRAM.Editor.Models"
@@ -123,8 +122,8 @@
 						</TextBox.Styles>
 					</TextBox>
 					<!--Simple editor-->
-					<Border BorderBrush="Gray"
-							BorderThickness="1"
+					<Border BorderBrush="Black"
+							BorderThickness="2"
 							CornerRadius="5, 5, 5, 5"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
@@ -144,96 +143,28 @@
 								  Items="{CompiledBinding SimpleEditorProgram}"
 								  SelectionMode="Single">
 							<DataGrid.Styles>
-								<Style Selector="DataGridRow:selected DataGridCellsPresenter">
-									<Setter Property="Background" Value="{DynamicResource SimpleEditorSelectedRow}" />
-								</Style>
-								<Style Selector="DataGridRow:pointerover DataGridCellsPresenter TextBox">
-									<Setter Property="Background" Value="{DynamicResource SimpleEditorPointerOverRow}" />
-								</Style>
-
-								<Style Selector="DataGridColumnHeader#SimpleEditor">
-									<Setter Property="FontFamily"
-											Value="{DynamicResource SimpleEditorHeaderFontFamily}" />
-									<Setter Property="FontSize" 
-											Value="{DynamicResource SimpleEditorHeaderFontSize}" />
-									<Setter Property="FontWeight"
-											Value="{DynamicResource SimpleEditorHeaderFontWeight}" />
-                                    <Setter Property="FontStyle"
-											Value="{DynamicResource SimpleEditorHeaderFontStyle}"/>
-									<Setter Property="Foreground"
-											Value="{DynamicResource SimpleEditorHeaderForeground}" />
-									<Setter Property="Background"
-											Value="{DynamicResource SimpleEditorHeaderBackground}" />
-								</Style>
-
-								<Style Selector="DataGridColumnHeader:pointerover/template/Grid">
-									<Setter Property="Background"
-											Value="{DynamicResource SimpleEditorHeaderBackground}" />
-								</Style>
-
-								<Style Selector="DataGridCell">
-									<Setter Property="Padding" Value="1" />
-									<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
-									<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
-									<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
-									<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
-								</Style>
-								<Style Selector="DataGridCell TextBox">
-									<Setter Property="BorderThickness" Value="0"></Setter>
-									<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
-									<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
-									<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
-									<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
-									<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
-								</Style>
-
-								<Style Selector="DataGridCell TextBox:pointerover">
-									<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
-									<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
-									<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
-									<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
-									<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
-								</Style>
-
-								<Style Selector="DataGridCell AutoCompleteBox">
-									<Setter Property="BorderThickness" Value="0"/>
-									<Setter Property="Padding" Value="7, 0, 7, 0"/>
-								</Style>
-
-								<Style Selector="DataGridCell TextBox:focus">
-									<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
-									<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
-									<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
-									<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
-									<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
-								</Style>
-
-								<Style Selector="DataGridCell TextBox/template/Border">
-									<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
-								</Style>
-
-								<Style Selector="DataGridCell TextBox:pointerover/template/Border">
-									<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
-								</Style>
-
-								<Style Selector="DataGridCell TextBox:focus/template/Border">
-									<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
-								</Style>
-
+								<StyleInclude Source="avares://ProjectRAM.Editor/Styles/SimpleEditor.axaml"/>
 							</DataGrid.Styles>
 							<DataGrid.Columns>
 
 								<DataGridTemplateColumn Header="{x:Static properties:Strings.line}"
 														Width="90">
-                                    <DataTemplate x:DataType="models:ProgramLine">
-                                        <TextBlock Text="{CompiledBinding Line}"/>
+									<DataTemplate x:DataType="models:ProgramLine">
+										<TextBlock Text="{CompiledBinding Line}"
+												   VerticalAlignment="Center"
+												   HorizontalAlignment="Center"
+												   Background="Transparent"
+												   FontFamily="{DynamicResource SimpleEditorFontFamily}"
+												   FontSize="{DynamicResource SimpleEditorFontSize}"
+												   FontWeight="{DynamicResource SimpleEditorFontWeight}"
+												   Foreground="{DynamicResource SimpleEditorForeground}"/>
 									</DataTemplate>
 								</DataGridTemplateColumn>
 
 								<DataGridTemplateColumn Header="{x:Static properties:Strings.label}"
 														Width="*">
-                                    <DataTemplate x:DataType="models:ProgramLine">
-                                        <TextBox Text="{CompiledBinding Label}"/>
+									<DataTemplate x:DataType="models:ProgramLine">
+										<TextBox Text="{CompiledBinding Label}"/>
 									</DataTemplate>
 								</DataGridTemplateColumn>
 
@@ -241,14 +172,20 @@
 														Width="*">
 									<DataTemplate x:DataType="models:ProgramLine">
 										<AutoCompleteBox Text="{CompiledBinding Command}"
-														 Items="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:Host}}, Path=DataContext.Items}"/>
+														 Items="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:Host}}, Path=DataContext.Items}">
+											<AutoCompleteBox.Styles>
+												<Style Selector="AutoCompleteBox TextBox">
+													<Setter Property="Padding" Value="10, 6, 6, 6"/>
+												</Style>
+											</AutoCompleteBox.Styles>
+										</AutoCompleteBox>
 									</DataTemplate>
 								</DataGridTemplateColumn>
 
 								<DataGridTemplateColumn Header="{x:Static properties:Strings.argument}"
 													Width="*">
-                                    <DataTemplate x:DataType="models:ProgramLine">
-                                        <TextBox Text="{Binding Argument}"/>
+									<DataTemplate x:DataType="models:ProgramLine">
+										<TextBox Text="{Binding Argument}"/>
 									</DataTemplate>
 								</DataGridTemplateColumn>
 

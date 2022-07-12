@@ -1,0 +1,102 @@
+<Styles xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Style Selector="DataGridRow:selected DataGridCellsPresenter">
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorSelectedRow}" />
+	</Style>
+	<Style Selector="DataGridRow:pointerover DataGridCellsPresenter TextBox">
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorPointerOverRow}" />
+	</Style>
+
+	<Style Selector="DataGridColumnHeader TextBlock">
+		<Setter Property="FontFamily"
+				Value="{DynamicResource SimpleEditorHeaderFontFamily}" />
+		<Setter Property="FontSize"
+				Value="{DynamicResource SimpleEditorHeaderFontSize}" />
+		<Setter Property="FontWeight"
+				Value="{DynamicResource SimpleEditorHeaderFontWeight}" />
+		<Setter Property="FontStyle"
+				Value="{DynamicResource SimpleEditorHeaderFontStyle}"/>
+		<Setter Property="Foreground"
+				Value="{DynamicResource SimpleEditorHeaderForeground}" />
+		<Setter Property="Background"
+				Value="{DynamicResource SimpleEditorHeaderBackground}" />
+	</Style>
+
+	<Style Selector="DataGridRow TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+		<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+		<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+		<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+	</Style>
+
+	<Style Selector="DataGridColumnHeader:pointerover/template/Grid">
+		<Setter Property="Background"
+				Value="{DynamicResource SimpleEditorHeaderBackground}" />
+	</Style>
+	<Style Selector="DataGridCell TextBox">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+		<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+		<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+		<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+	</Style>
+	<Style Selector="DataGridCell AutoCompleteBox">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+		<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+		<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+		<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+	</Style>
+
+	<Style Selector="DataGridCell TextBox:focus">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+		<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+		<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+		<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+	</Style>
+	<Style Selector="DataGridCell AutoCompleteBox:focus">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+		<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+		<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+		<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+	</Style>
+
+	<Style Selector="DataGridCell TextBox:pointerover">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+		<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+		<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+		<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+	</Style>
+	<Style Selector="DataGridCell AutoCompleteBox:pointerover">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="FontFamily" Value="{DynamicResource SimpleEditorFontFamily}" />
+		<Setter Property="FontSize" Value="{DynamicResource SimpleEditorFontSize}" />
+		<Setter Property="FontWeight" Value="{DynamicResource SimpleEditorFontWeight}" />
+		<Setter Property="Foreground" Value="{DynamicResource SimpleEditorForeground}" />
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+	</Style>
+
+	<Style Selector="DataGridCell TextBox/template/Border">
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+	</Style>
+
+	<Style Selector="DataGridCell TextBox:pointerover/template/Border">
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+	</Style>
+
+	<Style Selector="DataGridCell TextBox:focus/template/Border">
+		<Setter Property="Background" Value="{DynamicResource SimpleEditorRowBackground}" />
+	</Style>
+
+</Styles>

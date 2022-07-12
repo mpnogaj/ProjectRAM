@@ -122,7 +122,37 @@
 			</TabItem>
 			<TabItem Header="Edytory">
 
-			</TabItem>
+				<Grid ColumnDefinitions="Auto, *"
+				      RowDefinitions="Auto, Auto, Auto">
+					<TextBlock Grid.Column="0"
+					           Grid.Row="0"
+					           Text="Simple editor tekst"/>
+					<Button Grid.Column="1"
+					        Grid.Row="0"
+					        Content="..."
+					        CommandParameter="SimpleEditor"
+					        Command="{CompiledBinding SetFontCommand}"/>
+
+
+					<TextBlock Grid.Column="0"
+					           Grid.Row="1"
+					           Text="Simple editor nagłówek"/>
+					<Button Grid.Column="1"
+					        Grid.Row="1"
+					        Content="..."
+					        CommandParameter="SimpleEditorHeader"
+					        Command="{CompiledBinding SetFontCommand}"/>
+
+					<TextBlock Grid.Column="0"
+					           Grid.Row="2"
+					           Text="Edytor tekstowy czcionka"/>
+					<Button Grid.Column="1"
+					        Grid.Row="2"
+					        Content="..."
+					        CommandParameter="TextEditor"
+					        Command="{CompiledBinding SetFontCommand}"/>
+				</Grid>
+            </TabItem>
 			<TabItem Header="Pamięć">
 
 			</TabItem>
