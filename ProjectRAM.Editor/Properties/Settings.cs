@@ -83,11 +83,22 @@ namespace ProjectRAM.Editor.Properties
 						StartupLocation = new PixelPoint((int)x.Value, (int)y.Value);
 					}
 
-					if (table[nameof(WindowSize)]["Width"] is TomlInteger width &&
-						table[nameof(WindowSize)]["Height"] is TomlInteger height)
+					var width = table[nameof(WindowSize)]["Width"] switch
 					{
-						WindowSize = new Tuple<double, double>(width.Value, height.Value);
-					}
+						TomlInteger widthInt => widthInt.Value,
+						TomlFloat widthFloat => widthFloat.Value,
+						_ => 800
+					};
+
+					var height = table[nameof(WindowSize)]["Height"] switch
+					{
+						TomlInteger widthInt => widthInt.Value,
+						TomlFloat widthFloat => widthFloat.Value,
+						_ => 600
+					};
+
+					WindowSize = new Tuple<double, double>(width, height);
+
 
 					if (table[nameof(LeftPanelSize)] is TomlInteger leftPanelSize)
 					{
