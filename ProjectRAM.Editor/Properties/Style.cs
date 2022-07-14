@@ -110,18 +110,25 @@ namespace ProjectRAM.Editor.Properties
 
 		#endregion
 
-		#region Data grid
+		#region Memory
 
-		public FontDescriptor DataGridHeader { get; set; } = new()
+		public FontDescriptor AddressHeader { get; set; } = new()
 		{
-			FontSize = 15.0,
-			FontWeight = FontWeight.Bold
+			FontWeight = FontWeight.Bold,
+			FontSize = 15.0
 		};
 
-		public string DataGridHeaderBackground { get; set; } = White;
-		public string DataGridRowBackground { get; set; } = White;
-		public string DataGridAlternativeRowBackground { get; set; } = White;
-		public string DataGridBackground { get; set; } = White;
+		public FontDescriptor Address { get; set; } = new();
+
+		public FontDescriptor ValueHeader { get; set; } = new()
+		{
+			FontWeight = FontWeight.Bold,
+			FontSize = 15.0
+		};
+
+		public FontDescriptor Value { get; set; } = new();
+
+		public string MemoryGridRowColor = White;
 
 		#endregion
 

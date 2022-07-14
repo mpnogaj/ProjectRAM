@@ -5,7 +5,7 @@
 		<FluentTheme Mode="Light"/>
 
 		<StyleInclude Source="avares://AvaloniaColorPicker/ColorPicker.axaml"/>
-        <StyleInclude Source="avares://ProjectRAM.Editor/Styles/TextBlock.axaml"/>
+		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/TextBlock.axaml"/>
 		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/DataGrid.xaml"/>
 		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/MenuItem.xaml"/>
 		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/Tapes.axaml"/>
@@ -15,32 +15,8 @@
 			<Setter Property="GridLinesVisibility" Value="All" />
 			<Setter Property="VerticalGridLinesBrush" Value="LightGray" />
 			<Setter Property="HorizontalGridLinesBrush" Value="LightGray" />
-			<Setter Property="RowBackground" Value="{DynamicResource DataGridRowColor}"/>
-			<Setter Property="AlternatingRowBackground" Value="{DynamicResource DataGridAlternativeRowColor}"/>
 		</Style>
-		<Style Selector="DataGridCell">
-			<Setter Property="Padding" Value="5"/>
-			<Setter Property="FontFamily" Value="{DynamicResource NormalTextFontFamily}"/>
-			<Setter Property="FontWeight" Value="{DynamicResource NormalTextFontWeight}"/>
-			<Setter Property="FontSize" Value="{DynamicResource NormalTextFontSize}"/>
-			<Setter Property="Foreground" Value="{DynamicResource NormalTextForeground}"/>
-		</Style>
-		<Style Selector="DataGridColumnHeader">
-			<Setter Property="HorizontalContentAlignment" Value="Center" />
-			<Setter Property="AreSeparatorsVisible" Value="True" />
-			<Setter Property="SeparatorBrush" Value="LightGray" />
-			<Setter Property="FontFamily" Value="{DynamicResource DataGridHeaderFontFamily}"/>
-			<Setter Property="FontSize" Value="{DynamicResource DataGridHeaderFontSize}" />
-			<Setter Property="FontWeight" Value="{DynamicResource DataGridHeaderFontWeight}"/>
-			<Setter Property="Foreground" Value="{DynamicResource DataGridHeaderForeground}" />
-			<Setter Property="Background" Value="{DynamicResource DataGridHeaderBackground}"/>
-		</Style>
-		<Style Selector="DataGridColumnHeader:pointerover/template/Grid">
-			<Setter Property="Background" Value="{DynamicResource DataGridHeaderBackground}"/>
-		</Style>
-		<Style Selector="DataGridColumnHeader:pointerover/template/Grid">
-			<Setter Property="Background" Value="{DynamicResource DataGridHeaderBackground}"/>
-		</Style>
+
 		<Style Selector="GridSplitter">
 			<Setter Property="Background" Value="{DynamicResource GridSplitterBackground}" />
 			<Setter Property="MinWidth" Value="2" />

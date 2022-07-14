@@ -154,7 +154,45 @@
 				</Grid>
             </TabItem>
 			<TabItem Header="Pamięć">
+				<Grid ColumnDefinitions="Auto, *"
+				      RowDefinitions="Auto, Auto, Auto, Auto">
+					<TextBlock Grid.Column="0"
+					           Grid.Row="0"
+					           Text="Address header"/>
+					<Button Grid.Column="1"
+					        Grid.Row="0"
+					        Content="..."
+					        CommandParameter="AddressHeader"
+					        Command="{CompiledBinding SetFontCommand}"/>
 
+
+					<TextBlock Grid.Column="0"
+					           Grid.Row="1"
+					           Text="Adres"/>
+					<Button Grid.Column="1"
+					        Grid.Row="1"
+					        Content="..."
+					        CommandParameter="Address"
+					        Command="{CompiledBinding SetFontCommand}"/>
+
+					<TextBlock Grid.Column="0"
+					           Grid.Row="2"
+					           Text="Nagłówek wartość"/>
+					<Button Grid.Column="1"
+					        Grid.Row="2"
+					        Content="..."
+					        CommandParameter="ValueHeader"
+					        Command="{CompiledBinding SetFontCommand}"/>
+
+					<TextBlock Grid.Column="0"
+					           Grid.Row="3"
+					           Text="Wartość"/>
+					<Button Grid.Column="1"
+					        Grid.Row="3"
+					        Content="..."
+					        CommandParameter="Value"
+					        Command="{CompiledBinding SetFontCommand}"/>
+				</Grid>
 			</TabItem>
 			<TabItem Header="Lista błędów">
 

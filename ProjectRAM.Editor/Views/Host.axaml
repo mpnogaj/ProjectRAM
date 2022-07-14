@@ -35,17 +35,44 @@
 								  CanUserSortColumns="False"
 								  GridLinesVisibility="All"
 								  Items="{CompiledBinding Memory}">
+
+                            <DataGrid.Styles>
+                                <StyleInclude Source="avares://ProjectRAM.Editor/Styles/MemoryGrid.axaml"/>
+                            </DataGrid.Styles>
+
 							<DataGrid.Columns>
-								<DataGridTextColumn IsReadOnly="True" Width="*" Binding="{CompiledBinding Address}"
-													x:DataType="models:MemoryRow"
-													Header="{x:Static properties:Strings.address}" />
-								<DataGridTextColumn IsReadOnly="True" Width="*" Binding="{CompiledBinding Value}"
-													x:DataType="models:MemoryRow"
-													Header="{x:Static properties:Strings.value}" />
+								<DataGridTemplateColumn Header="{x:Static properties:Strings.address}"
+								                        Width="*">
+									<DataTemplate x:DataType="models:MemoryRow">
+										<TextBlock Text="{CompiledBinding Address}"
+										           VerticalAlignment="Center"
+										           Background="Transparent"
+										           FontFamily="{DynamicResource AddressFontFamily}"
+										           FontSize="{DynamicResource AddressFontSize}"
+										           FontWeight="{DynamicResource AddressFontWeight}"
+                                                   FontStyle="{DynamicResource AddressFontStyle}"
+										           Foreground="{DynamicResource AddressForeground}"/>
+									</DataTemplate>
+								</DataGridTemplateColumn>
+								<DataGridTemplateColumn Header="{x:Static properties:Strings.value}"
+								                        Width="*">
+									<DataTemplate x:DataType="models:MemoryRow">
+										<TextBlock Text="{CompiledBinding Value}"
+										           VerticalAlignment="Center"
+										           Background="Transparent"
+										           FontFamily="{DynamicResource ValueFontFamily}"
+										           FontSize="{DynamicResource ValueFontSize}"
+										           FontWeight="{DynamicResource ValueFontWeight}"
+										           FontStyle="{DynamicResource ValueFontStyle}"
+										           Foreground="{DynamicResource ValueForeground}"/>
+									</DataTemplate>
+								</DataGridTemplateColumn>
 							</DataGrid.Columns>
 						</DataGrid>
 					</Border>
 				</TabItem>
+
+				<TabItem Header="{x:Static properties:Strings.complexityReport}"/>
 			</TabControl>
 		</Grid>
 		<GridSplitter
@@ -134,7 +161,7 @@
 						<DataGrid CanUserSortColumns="False"
 								  Name="SimpleEditor"
 								  IsEnabled="{CompiledBinding !ProgramRunning}"
-								  CanUserReorderColumns="False"
+								  CanUserReorderColumns="True"
 								  VerticalScrollBarVisibility="Visible"
 								  CanUserResizeColumns="True"
 								  KeyDown="OnKeyDown"
@@ -148,7 +175,7 @@
 							<DataGrid.Columns>
 
 								<DataGridTemplateColumn Header="{x:Static properties:Strings.line}"
-														Width="90">
+														Width="85">
 									<DataTemplate x:DataType="models:ProgramLine">
 										<TextBlock Text="{CompiledBinding Line}"
 												   VerticalAlignment="Center"
@@ -226,7 +253,6 @@
 						</DataGrid>
 					</Border>
 				</TabItem>
-				<TabItem Header="{x:Static properties:Strings.complexityReport}"/>
 			</TabControl>
 		</Grid>
 	</Grid>

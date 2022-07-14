@@ -11,7 +11,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
-using Avalonia.Media;
 using Avalonia.VisualTree;
 using MessageBox.Avalonia;
 using MessageBox.Avalonia.Enums;
@@ -48,12 +47,12 @@ namespace ProjectRAM.Editor.Helpers
 
 		public static IClassicDesktopStyleApplicationLifetime GetAppDesktopLifetime()
 		{
-			return (IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime;
+			return (IClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!;
 		}
 
 		public static App GetAppObject()
 		{
-			return (App)Application.Current;
+			return (App)Application.Current!;
 		}
 
 		public static void SetCursor(StandardCursorType cursor)
@@ -99,9 +98,9 @@ namespace ProjectRAM.Editor.Helpers
 			return GetAvailableCultures().Contains(userCulture) ? userCulture : new CultureInfo("en");
 		}
 
-		public static IEnumerable<Style> GetAllStyles()
+		public static HashSet<Style> GetAllStyles()
 		{
-			var styles = new List<Style>();
+			var styles = new HashSet<Style>();
 			var files = Directory.EnumerateFiles("Styles/");
 			foreach (var file in files)
 			{
@@ -133,7 +132,7 @@ namespace ProjectRAM.Editor.Helpers
 		public static Window GetTopWindow()
 		{
 			var lifetime = GetAppDesktopLifetime();
-			Window window = lifetime.Windows[^1];
+			var window = lifetime.Windows[^1];
 			return window;
 		}
 

@@ -15,14 +15,14 @@ namespace ProjectRAM.Editor.Properties
 		private const string PreferencesFile = "preferences.toml";
 
 		public static CultureInfo Language { get; set; } = Essentials.GetDefaultLanguage();
-		public static bool UseDiscordRpc { get; set; } = false;
-		public static bool UseTextEditor { get; set; } = false;
+		public static bool UseDiscordRpc { get; set; }
+		public static bool UseTextEditor { get; set; }
 
-		public static PixelPoint StartupLocation { get; set; } = new PixelPoint(0, 0);
-		public static Tuple<double, double> WindowSize { get; set; } = new Tuple<double, double>(800, 600);
+		public static PixelPoint StartupLocation { get; set; } = new(0, 0);
+		public static Tuple<double, double> WindowSize { get; set; } = new(800, 600);
 
-		public static GridLength LeftPanelSize { get; set; } = new GridLength(250);
-		public static GridLength BottomPanelSize { get; set; } = new GridLength(150);
+		public static GridLength LeftPanelSize { get; set; } = new(250);
+		public static GridLength BottomPanelSize { get; set; } = new(150);
 
 
 		private static Style _currentStyle = new();
@@ -34,7 +34,7 @@ namespace ProjectRAM.Editor.Properties
 		}
 
 		public static string StyleFile { get; set; } = "default.json";
-		public static List<Style> AvailableStyles { get; set; } = Essentials.GetAllStyles().ToList();
+		public static HashSet<Style> AvailableStyles { get; set; } = Essentials.GetAllStyles().ToHashSet();
 
 		public static void RestoreDefault()
 		{
@@ -56,7 +56,7 @@ namespace ProjectRAM.Editor.Properties
 				if (!File.Exists(PreferencesFile)) return;
 				using (var sr = new StreamReader(PreferencesFile))
 				{
-					TomlTable table = TOML.Parse(sr);
+					var table = TOML.Parse(sr);
 					if (table[nameof(Language)] is TomlString lang)
 					{
 						var cultureInfo = new CultureInfo(lang.Value);
@@ -115,14 +115,14 @@ namespace ProjectRAM.Editor.Properties
 						StyleFile = style.Value;
 					}
 				}
-
-				Style? currStyle = AvailableStyles.Find((s) => s.FileName.Equals(StyleFile));
-				if (currStyle == null)
+				
+				var currentStyle = AvailableStyles.FirstOrDefault((s) => s.FileName.Equals(StyleFile));
+				if (currentStyle == null)
 				{
 					Style.CreateDefaultAndSave();
-					currStyle = AvailableStyles.Find((x) => x.Equals(new Style()))!;
+					currentStyle = AvailableStyles.First((x) => x.Equals(new Style()));
 				}
-				CurrentStyle = currStyle;
+				CurrentStyle = currentStyle;
 			}
 			catch
 			{

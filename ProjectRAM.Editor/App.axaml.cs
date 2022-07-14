@@ -24,18 +24,18 @@ namespace ProjectRAM.Editor
 			AvaloniaXamlLoader.Load(this);
 			Settings.Init();
 			Strings.Culture = Settings.Language;
-			ProjectRAM.Core.Properties.Settings.CurrentCulture = Settings.Language;
+			Core.Properties.Settings.CurrentCulture = Settings.Language;
 			Settings.CurrentStyle.ApplyStyle();
 		}
 
 		#region Event handlers
 
-		private void App_Exit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
+		private static void App_Exit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
 		{
 			Settings.Save();
 		}
 
-		private void App_Startup(object? sender, ControlledApplicationLifetimeStartupEventArgs e)
+		private static void App_Startup(object? sender, ControlledApplicationLifetimeStartupEventArgs e)
 		{
 			var mainWindow = Essentials.GetAppDesktopLifetime().MainWindow;
 			mainWindow.Position = Settings.StartupLocation;
