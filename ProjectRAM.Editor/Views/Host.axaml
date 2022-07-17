@@ -36,35 +36,35 @@
 								  GridLinesVisibility="All"
 								  Items="{CompiledBinding Memory}">
 
-                            <DataGrid.Styles>
-                                <StyleInclude Source="avares://ProjectRAM.Editor/Styles/MemoryGrid.axaml"/>
-                            </DataGrid.Styles>
+							<DataGrid.Styles>
+								<StyleInclude Source="avares://ProjectRAM.Editor/Styles/MemoryGrid.axaml"/>
+							</DataGrid.Styles>
 
 							<DataGrid.Columns>
 								<DataGridTemplateColumn Header="{x:Static properties:Strings.address}"
-								                        Width="*">
+														Width="*">
 									<DataTemplate x:DataType="models:MemoryRow">
 										<TextBlock Text="{CompiledBinding Address}"
-										           VerticalAlignment="Center"
-										           Background="Transparent"
-										           FontFamily="{DynamicResource AddressFontFamily}"
-										           FontSize="{DynamicResource AddressFontSize}"
-										           FontWeight="{DynamicResource AddressFontWeight}"
-                                                   FontStyle="{DynamicResource AddressFontStyle}"
-										           Foreground="{DynamicResource AddressForeground}"/>
+												   VerticalAlignment="Center"
+												   Background="Transparent"
+												   FontFamily="{DynamicResource AddressFontFamily}"
+												   FontSize="{DynamicResource AddressFontSize}"
+												   FontWeight="{DynamicResource AddressFontWeight}"
+												   FontStyle="{DynamicResource AddressFontStyle}"
+												   Foreground="{DynamicResource AddressForeground}"/>
 									</DataTemplate>
 								</DataGridTemplateColumn>
 								<DataGridTemplateColumn Header="{x:Static properties:Strings.value}"
-								                        Width="*">
+														Width="*">
 									<DataTemplate x:DataType="models:MemoryRow">
 										<TextBlock Text="{CompiledBinding Value}"
-										           VerticalAlignment="Center"
-										           Background="Transparent"
-										           FontFamily="{DynamicResource ValueFontFamily}"
-										           FontSize="{DynamicResource ValueFontSize}"
-										           FontWeight="{DynamicResource ValueFontWeight}"
-										           FontStyle="{DynamicResource ValueFontStyle}"
-										           Foreground="{DynamicResource ValueForeground}"/>
+												   VerticalAlignment="Center"
+												   Background="Transparent"
+												   FontFamily="{DynamicResource ValueFontFamily}"
+												   FontSize="{DynamicResource ValueFontSize}"
+												   FontWeight="{DynamicResource ValueFontWeight}"
+												   FontStyle="{DynamicResource ValueFontStyle}"
+												   Foreground="{DynamicResource ValueForeground}"/>
 									</DataTemplate>
 								</DataGridTemplateColumn>
 							</DataGrid.Columns>
@@ -75,12 +75,11 @@
 				<TabItem Header="{x:Static properties:Strings.complexityReport}"/>
 			</TabControl>
 		</Grid>
-		<GridSplitter
-			Grid.Row="0"
-			Grid.Column="1"
-			Width="4"
-			ResizeDirection="Columns"
-			VerticalAlignment="Stretch" />
+		<GridSplitter Grid.Row="0"
+					  Grid.Column="1"
+					  Width="4"
+					  ResizeDirection="Columns"
+					  VerticalAlignment="Stretch" />
 		<Grid
 			Grid.Row="0"
 			Grid.Column="2"
@@ -230,7 +229,7 @@
 		</Grid>
 		<GridSplitter Height="4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" ResizeDirection="Rows" />
 		<Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="{DynamicResource BottomBarBackground}">
-			<TabControl Classes="editor">
+			<TabControl>
 				<TabItem Header="{x:Static properties:Strings.verificationReport}">
 					<Border BorderBrush="LightGray" BorderThickness="1"
 							Background="{DynamicResource DataGridBackground}" Margin="0, 0, 0, 5">
@@ -241,13 +240,22 @@
 								  AlternatingRowBackground="White"
 								  RowBackground="White"
 								  Items="{CompiledBinding Errors}">
+							<DataGrid.Styles>
+								<StyleInclude Source="avares://ProjectRAM.Editor/Styles/VerificationReport.axaml"/>
+							</DataGrid.Styles>
 							<DataGrid.Columns>
-								<DataGridTextColumn IsReadOnly="True" Width="75" Header="Line"
-													x:DataType="models:ErrorLine"
-													Binding="{CompiledBinding Line}" />
-								<DataGridTextColumn IsReadOnly="True" Width="*" Header="Message"
-													x:DataType="models:ErrorLine"
-													Binding="{CompiledBinding Message}" />
+								<DataGridTemplateColumn Width="85"
+														Header="{x:Static properties:Strings.line}">
+									<DataTemplate x:DataType="models:ErrorLine">
+										<TextBlock Text="{CompiledBinding Line}"/>
+									</DataTemplate>
+								</DataGridTemplateColumn>
+								<DataGridTemplateColumn Width="*"
+														Header="{x:Static properties:Strings.message}">
+									<DataTemplate x:DataType="models:ErrorLine">
+										<TextBlock Text="{CompiledBinding Message}"/>
+									</DataTemplate>
+								</DataGridTemplateColumn>
 							</DataGrid.Columns>
 
 						</DataGrid>

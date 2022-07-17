@@ -243,4 +243,7 @@
   <data name="importInputTape" xml:space="preserve">
     <value>Import from input tape file</value>
   </data>
+  <data name="message" xml:space="preserve">
+    <value>Message</value>
+  </data>
 </root>

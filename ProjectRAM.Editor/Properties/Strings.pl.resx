@@ -138,4 +138,7 @@
   <data name="importInputTape" xml:space="preserve">
     <value>Importuj z pliku taśmy wejścia</value>
   </data>
+  <data name="message" xml:space="preserve">
+    <value>Wiadomość</value>
+  </data>
 </root>

@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using ProjectRAM.Editor.Models;
 
@@ -43,25 +44,32 @@ namespace ProjectRAM.Editor.Properties
 
 		public void ApplyStyle()
 		{
-			var res = Application.Current.Resources;
+			var res = new ResourceDictionary();
 			var properties = GetType().GetProperties();
 			foreach (var property in properties)
 			{
 				string name = property.Name;
-				object value = property.GetValue(this)!;
+				var value = property.GetValue(this)!;
 				if (property.PropertyType == typeof(FontDescriptor))
-					((FontDescriptor)value).ApplyFontStyle(name);
+				{
+					((FontDescriptor)value).ApplyFontStyle(name, res);
+				}
 				else if (name != nameof(FileName) && name != nameof(Name))
+				{
 					res[property.Name] = new SolidColorBrush(Color.Parse((string)value));
+				}
 			}
+
+			Application.Current!.Resources = res;
 		}
 
 		public void ChangeFontSizes(double val)
 		{
+			var res = Application.Current!.Resources;
 			TextEditor.FontSize += val;
 			SimpleEditor.FontSize += val;
-			TextEditor.ApplyFontStyle(nameof(TextEditor));
-			SimpleEditor.ApplyFontStyle(nameof(SimpleEditor));
+			TextEditor.ApplyFontStyle(nameof(TextEditor), res);
+			SimpleEditor.ApplyFontStyle(nameof(SimpleEditor), res);
 		}
 
 		public static void CreateDefaultAndSave()
@@ -132,6 +140,28 @@ namespace ProjectRAM.Editor.Properties
 
 		#endregion
 
+		#region Verification report
+
+		public FontDescriptor LineHeader { get; set; } = new()
+		{
+			FontWeight = FontWeight.Bold,
+			FontSize = 15.0
+		};
+
+		public FontDescriptor Line { get; set; } = new();
+
+		public FontDescriptor MessageHeader { get; set; } = new()
+		{
+			FontWeight = FontWeight.Bold,
+			FontSize = 15.0
+		};
+
+		public FontDescriptor Message { get; set; } = new();
+
+		public string VerificationReportRowColor = White;
+
+		#endregion
+
 		#region Text editor
 
 		public FontDescriptor TextEditor { get; set; } = new()
@@ -194,9 +224,9 @@ namespace ProjectRAM.Editor.Properties
 
 		#region GridSplitters
 
-		public string GridSplitterBackground { get; set; } = LightGray;
-		public string GridSplitterPointerOverBackground { get; set; } = LightGray;
-		public string GridSplitterPressedBackground { get; set; } = Gray;
+		public string GridSplitterBackground { get; set; } = Black;
+		public string GridSplitterPointerOverBackground { get; set; } = Black;
+		public string GridSplitterPressedBackground { get; set; } = Black;
 
 		#endregion
 

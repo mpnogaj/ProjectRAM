@@ -26,8 +26,7 @@
 						Command="{CompiledBinding CreateNewStyleCommand}"/>
 			</StackPanel>
 		</StackPanel>
-		<TabControl Classes="editor"
-					Grid.Row="1"
+		<TabControl Grid.Row="1"
 					TabStripPlacement="Left"
 					Margin="0, 10, 0, 0">
 			<TabControl.Styles>
@@ -83,119 +82,157 @@
 				<Grid ColumnDefinitions="Auto, *"
 					  RowDefinitions="Auto, Auto, Auto, Auto">
 					<TextBlock Grid.Column="0"
-					           Grid.Row="0"
-					           Text="Taśma wejścia tytuł"/>
+							   Grid.Row="0"
+							   Text="Taśma wejścia tytuł"/>
 					<Button Grid.Column="1"
-					        Grid.Row="0"
-					        Content="..."
-					        CommandParameter="InputTapeLbl"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="0"
+							Content="..."
+							CommandParameter="InputTapeLbl"
+							Command="{CompiledBinding SetFontCommand}"/>
 
 
 					<TextBlock Grid.Column="0"
-					           Grid.Row="1"
-					           Text="Taśma wejścia"/>
+							   Grid.Row="1"
+							   Text="Taśma wejścia"/>
 					<Button Grid.Column="1"
-					        Grid.Row="1"
-					        Content="..."
-					        CommandParameter="InputTape"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="1"
+							Content="..."
+							CommandParameter="InputTape"
+							Command="{CompiledBinding SetFontCommand}"/>
 
 					<TextBlock Grid.Column="0"
-					           Grid.Row="2"
-					           Text="Taśma wyjścia tytył"/>
+							   Grid.Row="2"
+							   Text="Taśma wyjścia tytył"/>
 					<Button Grid.Column="1"
-					        Grid.Row="2"
-					        Content="..."
-					        CommandParameter="OutputTapeLbl"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="2"
+							Content="..."
+							CommandParameter="OutputTapeLbl"
+							Command="{CompiledBinding SetFontCommand}"/>
 
 					<TextBlock Grid.Column="0"
-					           Grid.Row="3"
-					           Text="Taśma wyjścia"/>
+							   Grid.Row="3"
+							   Text="Taśma wyjścia"/>
 					<Button Grid.Column="1"
-					        Grid.Row="3"
-					        Content="..."
-					        CommandParameter="OutputTape"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="3"
+							Content="..."
+							CommandParameter="OutputTape"
+							Command="{CompiledBinding SetFontCommand}"/>
 				</Grid>
 			</TabItem>
 			<TabItem Header="Edytory">
 
 				<Grid ColumnDefinitions="Auto, *"
-				      RowDefinitions="Auto, Auto, Auto">
+					  RowDefinitions="Auto, Auto, Auto">
 					<TextBlock Grid.Column="0"
-					           Grid.Row="0"
-					           Text="Simple editor tekst"/>
+							   Grid.Row="0"
+							   Text="Simple editor tekst"/>
 					<Button Grid.Column="1"
-					        Grid.Row="0"
-					        Content="..."
-					        CommandParameter="SimpleEditor"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="0"
+							Content="..."
+							CommandParameter="SimpleEditor"
+							Command="{CompiledBinding SetFontCommand}"/>
 
 
 					<TextBlock Grid.Column="0"
-					           Grid.Row="1"
-					           Text="Simple editor nagłówek"/>
+							   Grid.Row="1"
+							   Text="Simple editor nagłówek"/>
 					<Button Grid.Column="1"
-					        Grid.Row="1"
-					        Content="..."
-					        CommandParameter="SimpleEditorHeader"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="1"
+							Content="..."
+							CommandParameter="SimpleEditorHeader"
+							Command="{CompiledBinding SetFontCommand}"/>
 
 					<TextBlock Grid.Column="0"
-					           Grid.Row="2"
-					           Text="Edytor tekstowy czcionka"/>
+							   Grid.Row="2"
+							   Text="Edytor tekstowy czcionka"/>
 					<Button Grid.Column="1"
-					        Grid.Row="2"
-					        Content="..."
-					        CommandParameter="TextEditor"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="2"
+							Content="..."
+							CommandParameter="TextEditor"
+							Command="{CompiledBinding SetFontCommand}"/>
 				</Grid>
-            </TabItem>
+			</TabItem>
 			<TabItem Header="Pamięć">
 				<Grid ColumnDefinitions="Auto, *"
-				      RowDefinitions="Auto, Auto, Auto, Auto">
+					  RowDefinitions="Auto, Auto, Auto, Auto">
 					<TextBlock Grid.Column="0"
-					           Grid.Row="0"
-					           Text="Address header"/>
+							   Grid.Row="0"
+							   Text="Address header"/>
 					<Button Grid.Column="1"
-					        Grid.Row="0"
-					        Content="..."
-					        CommandParameter="AddressHeader"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="0"
+							Content="..."
+							CommandParameter="AddressHeader"
+							Command="{CompiledBinding SetFontCommand}"/>
 
 
 					<TextBlock Grid.Column="0"
-					           Grid.Row="1"
-					           Text="Adres"/>
+							   Grid.Row="1"
+							   Text="Adres"/>
 					<Button Grid.Column="1"
-					        Grid.Row="1"
-					        Content="..."
-					        CommandParameter="Address"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="1"
+							Content="..."
+							CommandParameter="Address"
+							Command="{CompiledBinding SetFontCommand}"/>
 
 					<TextBlock Grid.Column="0"
-					           Grid.Row="2"
-					           Text="Nagłówek wartość"/>
+							   Grid.Row="2"
+							   Text="Nagłówek wartość"/>
 					<Button Grid.Column="1"
-					        Grid.Row="2"
-					        Content="..."
-					        CommandParameter="ValueHeader"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="2"
+							Content="..."
+							CommandParameter="ValueHeader"
+							Command="{CompiledBinding SetFontCommand}"/>
 
 					<TextBlock Grid.Column="0"
-					           Grid.Row="3"
-					           Text="Wartość"/>
+							   Grid.Row="3"
+							   Text="Wartość"/>
 					<Button Grid.Column="1"
-					        Grid.Row="3"
-					        Content="..."
-					        CommandParameter="Value"
-					        Command="{CompiledBinding SetFontCommand}"/>
+							Grid.Row="3"
+							Content="..."
+							CommandParameter="Value"
+							Command="{CompiledBinding SetFontCommand}"/>
 				</Grid>
 			</TabItem>
 			<TabItem Header="Lista błędów">
+				<Grid ColumnDefinitions="Auto, *"
+					  RowDefinitions="Auto, Auto, Auto, Auto">
+					<TextBlock Grid.Column="0"
+							   Grid.Row="0"
+							   Text="Line header"/>
+					<Button Grid.Column="1"
+							Grid.Row="0"
+							Content="..."
+							CommandParameter="LineHeader"
+							Command="{CompiledBinding SetFontCommand}"/>
 
+
+					<TextBlock Grid.Column="0"
+							   Grid.Row="1"
+							   Text="Line"/>
+					<Button Grid.Column="1"
+							Grid.Row="1"
+							Content="..."
+							CommandParameter="Line"
+							Command="{CompiledBinding SetFontCommand}"/>
+
+					<TextBlock Grid.Column="0"
+							   Grid.Row="2"
+							   Text="Message header"/>
+					<Button Grid.Column="1"
+							Grid.Row="2"
+							Content="..."
+							CommandParameter="MessageHeader"
+							Command="{CompiledBinding SetFontCommand}"/>
+
+					<TextBlock Grid.Column="0"
+							   Grid.Row="3"
+							   Text="Message"/>
+					<Button Grid.Column="1"
+							Grid.Row="3"
+							Content="..."
+							CommandParameter="Message"
+							Command="{CompiledBinding SetFontCommand}"/>
+				</Grid>
 			</TabItem>
 		</TabControl>
 		<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="15">

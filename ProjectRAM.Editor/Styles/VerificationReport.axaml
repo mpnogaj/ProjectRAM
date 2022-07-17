@@ -1,11 +1,11 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 	<Style Selector="DataGrid">
 		<Setter Property="GridLinesVisibility" Value="All" />
 		<Setter Property="VerticalGridLinesBrush" Value="LightGray" />
 		<Setter Property="HorizontalGridLinesBrush" Value="LightGray" />
-		<Setter Property="RowBackground" Value="{DynamicResource MemoryGridRowColor}"/>
+		<Setter Property="RowBackground" Value="{DynamicResource VerificationReportRowColor}"/>
 	</Style>
 	<Style Selector="DataGridCell">
 		<Setter Property="Padding" Value="5"/>
@@ -24,11 +24,11 @@
 		<Setter Property="Background" Value="Yellow"/>
 	</Style>
     <Style Selector="DataGridColumnHeader:nth-child(1) TextBlock">
-        <Setter Property="FontFamily" Value="{DynamicResource AddressHeaderFontFamily}"/>
-        <Setter Property="FontSize" Value="{DynamicResource AddressHeaderFontSize}"/>
-        <Setter Property="FontWeight" Value="{DynamicResource AddressHeaderFontWeight}"/>
-        <Setter Property="FontStyle" Value="{DynamicResource AddressHeaderFontStyle}"/>
-	    <Setter Property="Foreground" Value="{DynamicResource AddressHeaderForeground}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource LineHeaderFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource LineHeaderFontSize}"/>
+        <Setter Property="FontWeight" Value="{DynamicResource LineHeaderFontWeight}"/>
+        <Setter Property="FontStyle" Value="{DynamicResource LineHeaderFontStyle}"/>
+	    <Setter Property="Foreground" Value="{DynamicResource LineHeaderForeground}"/>
     </Style>
     <Style Selector="DataGridColumnHeader:nth-child(1):pointerover/template/Grid">
 		<Setter Property="Background" Value="Blue"/>
@@ -40,11 +40,11 @@
     </Style>
 
     <Style Selector="DataGridColumnHeader:nth-child(2) TextBlock">
-	    <Setter Property="FontFamily" Value="{DynamicResource ValueHeaderFontFamily}"/>
-	    <Setter Property="FontSize" Value="{DynamicResource ValueHeaderFontSize}"/>
-	    <Setter Property="FontWeight" Value="{DynamicResource ValueHeaderFontWeight}"/>
-	    <Setter Property="FontStyle" Value="{DynamicResource ValueHeaderFontStyle}"/>
-	    <Setter Property="Foreground" Value="{DynamicResource ValueHeaderForeground}"/>
+	    <Setter Property="FontFamily" Value="{DynamicResource MessageHeaderFontFamily}"/>
+	    <Setter Property="FontSize" Value="{DynamicResource MessageHeaderFontSize}"/>
+	    <Setter Property="FontWeight" Value="{DynamicResource MessageHeaderFontWeight}"/>
+	    <Setter Property="FontStyle" Value="{DynamicResource MessageHeaderFontStyle}"/>
+	    <Setter Property="Foreground" Value="{DynamicResource MessageHeaderForeground}"/>
     </Style>
 	<Style Selector="DataGridColumnHeader:nth-child(2):pointerover/template/Grid">
 		<Setter Property="Background" Value="Green"/>

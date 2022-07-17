@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Avalonia;
 using Avalonia.Media;
 using AvaloniaFontPicker;
 using MessageBox.Avalonia;
@@ -125,7 +126,7 @@ namespace ProjectRAM.Editor.ViewModels
 						Foreground = f.Foreground.Color.ToString()
 					};
 					propertyInfo.SetValue(CurrentStyle,  newFontDescriptor);
-					newFontDescriptor.ApplyFontStyle(target);
+					newFontDescriptor.ApplyFontStyle(target, Application.Current!.Resources);
 				});
 			}, () => true);
 		}
