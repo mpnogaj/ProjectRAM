@@ -67,14 +67,16 @@ namespace ProjectRAM.Editor.ViewModels
 
 			Verify = new AsyncRelayCommand<bool>(async shouldShowOnSuccess =>
 			{
-				var exceptions = GetAllErrors(Page!);
+				var exceptions = await GetAllErrors(Page!);
 				var errorList = new ObservableCollection<ErrorLine>();
 				foreach (var exception in exceptions)
+				{
 					errorList.Add(new ErrorLine
 					{
 						Line = exception.Line,
-						Message = exception.LocalizedMessage()
+						Message = exception.Message
 					});
+				}
 
 				if (errorList.Count == 0)
 				{
@@ -320,15 +322,15 @@ namespace ProjectRAM.Editor.ViewModels
 					CreatePageWithCode(Essentials.ReadFromFile(file), file, Path.GetFileNameWithoutExtension(file));
 		}
 
-		private static IEnumerable<RamInterpreterException> GetAllErrors(HostViewModel page)
+		private static async Task<IEnumerable<RamInterpreterException>> GetAllErrors(HostViewModel page)
 		{
 			var programString = page.GetProgramString();
 			var stringCollection = Factory.CreateStringCollection(programString, Environment.NewLine);
 			var program = Factory.StringCollectionToCommandList(stringCollection);
-			return Task.Run(() => Validator.ValidateProgram(program)).Result;
+			return await Task.Run(() => Validator.ValidateProgram(program));
 		}
 
-		private async void SaveCodeFileAs(HostViewModel? page)
+		private async Task SaveCodeFileAs(HostViewModel? page)
 		{
 			var file = page ?? Page!;
 			var sfd = new SaveFileDialog

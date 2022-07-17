@@ -9,22 +9,19 @@ namespace ProjectRAM.Editor.ViewModels.Commands
 	{
 		public event EventHandler? CanExecuteChanged;
 		private readonly Func<T, Task> _execute;
-		private readonly Func<bool> _canExecute;
-		private readonly DispatcherTimer _canExecuteChangedTimer;
-		private bool _isExecuting = false;
+		private readonly Func<bool>? _canExecute;
+		private bool _isExecuting;
 
-		public AsyncRelayCommand(Func<T, Task> execute) : this(execute, () => true) { }
-
-		public AsyncRelayCommand(Func<T, Task> execute, Func<bool> canExecute)
+		public AsyncRelayCommand(Func<T, Task> execute, Func<bool>? canExecute = null)
 		{
 			_execute = execute;
 			_canExecute = canExecute;
-			_canExecuteChangedTimer = new DispatcherTimer
+			var canExecuteChangedTimer = new DispatcherTimer
 			{
 				Interval = new TimeSpan(0, 0, 0, 0, 50),
 			};
-			_canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
-			_canExecuteChangedTimer.Start();
+			canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
+			canExecuteChangedTimer.Start();
 		}
 
 		private void CanExecuteChangedTimer_Tick(object? sender, EventArgs e)
@@ -34,16 +31,7 @@ namespace ProjectRAM.Editor.ViewModels.Commands
 
 		public bool CanExecute(T parameter)
 		{
-			if (_isExecuting)
-			{
-				return false;
-			}
-			if (_canExecute == null)
-			{
-				return true;
-			}
-
-			return _canExecute();
+			return !_isExecuting && (_canExecute == null || _canExecute());
 		}
 
 		public async Task ExecuteAsync(T parameter)
@@ -60,16 +48,13 @@ namespace ProjectRAM.Editor.ViewModels.Commands
 
 		bool ICommand.CanExecute(object? parameter)
 		{
-			if (parameter == null) return false;
-			if (parameter is not T) return false;
-			return CanExecute((T)parameter);
+			return parameter is T param && CanExecute(param);
 		}
 
 		void ICommand.Execute(object? parameter)
 		{
-			if (parameter == null) return;
-			if (parameter is not T) return;
-			_ = ExecuteAsync((T)parameter);
+			if (parameter is not T param) return;
+			_ = ExecuteAsync(param);
 		}
 
 		#endregion
@@ -79,22 +64,19 @@ namespace ProjectRAM.Editor.ViewModels.Commands
 	{
 		public event EventHandler? CanExecuteChanged;
 		private readonly Func<Task> _execute;
-		private readonly Func<bool> _canExecute;
-		private readonly DispatcherTimer _canExecuteChangedTimer;
-		private bool _isExecuting = false;
-
-		public AsyncRelayCommand(Func<Task> execute) : this(execute, () => true) { }
-
-		public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute)
+		private readonly Func<bool>? _canExecute;
+		private bool _isExecuting;
+		
+		public AsyncRelayCommand(Func<Task> execute, Func<bool>? canExecute = null)
 		{
 			_execute = execute;
 			_canExecute = canExecute;
-			_canExecuteChangedTimer = new DispatcherTimer
+			var canExecuteChangedTimer = new DispatcherTimer
 			{
 				Interval = new TimeSpan(0, 0, 0, 0, 50),
 			};
-			_canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
-			_canExecuteChangedTimer.Start();
+			canExecuteChangedTimer.Tick += CanExecuteChangedTimer_Tick;
+			canExecuteChangedTimer.Start();
 		}
 
 		private void CanExecuteChangedTimer_Tick(object? sender, EventArgs e)
@@ -104,16 +86,7 @@ namespace ProjectRAM.Editor.ViewModels.Commands
 
 		public bool CanExecute()
 		{
-			if (_isExecuting)
-			{
-				return false;
-			}
-			if (_canExecute == null)
-			{
-				return true;
-			}
-
-			return _canExecute();
+			return !_isExecuting && (_canExecute == null || _canExecute());
 		}
 
 		public async Task ExecuteAsync()
