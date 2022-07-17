@@ -295,6 +295,15 @@ namespace ProjectRAM.Editor.Properties {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Output tape is too large. Aborting .
+        /// </summary>
+        public static string outputTapeOverflow {
+            get {
+                return ResourceManager.GetString("outputTapeOverflow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Print program.
         /// </summary>
         public static string printProgram {

@@ -19,7 +19,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ProjectRAM.Core.Properties;
 using Essentials = ProjectRAM.Editor.Helpers.Essentials;
+using Settings = ProjectRAM.Editor.Properties.Settings;
 
 namespace ProjectRAM.Editor.ViewModels
 {
@@ -52,13 +54,17 @@ namespace ProjectRAM.Editor.ViewModels
 
 				CreateCodePagesFromFiles(files);
 			});
-			SaveFileAs = new RelayCommand(() => SaveCodeFileAs(Page!), IsFileOpened);
-			SaveFile = new RelayCommand(() =>
+			SaveFileAs = new AsyncRelayCommand(async () => await SaveCodeFileAs(Page!), IsFileOpened);
+			SaveFile = new AsyncRelayCommand(async () =>
 			{
 				if (string.IsNullOrEmpty(Page!.Path))
-					SaveCodeFileAs(Page!);
+				{
+					await SaveCodeFileAs(Page!);
+				}
 				else
+				{
 					Essentials.WriteToFile(Page!.Path, Page!.GetProgramString());
+				}
 			}, IsFileOpened);
 			CloseProgram = new RelayCommand(Essentials.Exit, () => true);
 
@@ -235,9 +241,9 @@ namespace ProjectRAM.Editor.ViewModels
 
 		public AsyncRelayCommand OpenFile { get; }
 
-		public RelayCommand SaveFileAs { get; }
+		public AsyncRelayCommand SaveFileAs { get; }
 
-		public RelayCommand SaveFile { get; }
+		public AsyncRelayCommand SaveFile { get; }
 
 		public AsyncRelayCommand RunProgram { get; }
 
@@ -299,7 +305,7 @@ namespace ProjectRAM.Editor.ViewModels
 		private void ClosePage(HostViewModel page)
 		{
 			// Thread safe
-			Dispatcher.UIThread.InvokeAsync(() => Pages!.Remove(page));
+			Dispatcher.UIThread.InvokeAsync(() => Pages.Remove(page));
 		}
 
 		private void CreateEmptyPage(string header = Constant.DefaultHeader)
@@ -347,7 +353,7 @@ namespace ProjectRAM.Editor.ViewModels
 				Essentials.WriteToFile(res, file.GetProgramString());
 			}
 
-			file.Header = Path.GetFileNameWithoutExtension(res);
+			file.Header = Path.GetFileNameWithoutExtension(res)!;
 		}
 
 		private void CreateAndRunProgram(CancellationToken token)
@@ -369,21 +375,21 @@ namespace ProjectRAM.Editor.ViewModels
 			var inputTape = Factory.CreateInputTapeFromString(input);
 			var interpreter = new Interpreter(commands);
 			var sb = new StringBuilder();
-			interpreter.ReadFromInputTape += (sender, eventArgs) =>
+			interpreter.ReadFromInputTape += (_, eventArgs) =>
 			{
 				eventArgs.Input = inputTape.Count > 0
 					? inputTape.Dequeue()
 					: null;
 			};
-			interpreter.WriteToOutputTape += (sender, eventArgs) =>
+			interpreter.WriteToOutputTape += (_, eventArgs) =>
 			{
 				sb.Append($" {eventArgs.Output}");
 				if(sb.Length >= StringBuilderMaxCapacity)
 				{
-					throw new OutOfMemoryException("Output tape is too large. Aborting");
+					throw new OutOfMemoryException(Strings.outputTapeOverflow);
 				}
 			};
-			interpreter.ProgramFinished += (sender, eventArgs) =>
+			interpreter.ProgramFinished += (_, _) =>
 			{
 				Page!.ProgramRunning = false;
 			};

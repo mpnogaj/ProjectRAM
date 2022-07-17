@@ -141,4 +141,7 @@
   <data name="message" xml:space="preserve">
     <value>Wiadomość</value>
   </data>
+    <data name="outputTapeOverflow" xml:space="preserve">
+        <value>Taśma wyjścia jest za duża. Przerywanie</value>
+    </data>
 </root>
