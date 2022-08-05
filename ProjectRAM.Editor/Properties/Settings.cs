@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using ProjectRAM.Editor.Helpers;
+using ProjectRAM.Editor.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,7 +11,7 @@ using Tommy;
 
 namespace ProjectRAM.Editor.Properties
 {
-	public class Settings
+    public class Settings
 	{
 		private const string PreferencesFile = "preferences.toml";
 

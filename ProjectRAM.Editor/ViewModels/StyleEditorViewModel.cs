@@ -56,7 +56,7 @@ namespace ProjectRAM.Editor.ViewModels
 			_currentStyle = _styles.FirstOrDefault(x => x.Equals(Settings.CurrentStyle)) ?? _styles[0];
 			OnClose = () =>
 			{
-				if (!Equals(CurrentStyle, Settings.CurrentStyle))
+				if (!CurrentStyle.Identical(Settings.CurrentStyle))
 				{
 					Settings.CurrentStyle.ApplyStyle();
 				}
@@ -96,7 +96,10 @@ namespace ProjectRAM.Editor.ViewModels
 				{
 					Styles.Add(new Style
 					{
-						Name = res.Message,
+						StyleDescriptor =
+						{
+							Name = res.Message
+						},
 						FileName = $"{res.Message.ToLower()}.json"
 					});
 				}
@@ -104,8 +107,8 @@ namespace ProjectRAM.Editor.ViewModels
 
 			SetFontCommand = new AsyncRelayCommand<string>(async (target) =>
 			{
-				var propertyInfo = typeof(Style).GetProperty(target);
-				var fontDescriptor = (FontDescriptor)propertyInfo!.GetValue(CurrentStyle)!;
+				var propertyInfo = typeof(StyleDescriptor).GetProperty(target);
+				var fontDescriptor = (FontDescriptor)propertyInfo!.GetValue(CurrentStyle.StyleDescriptor)!;
 				var font = new Font
 				{
 					FontFamily = fontDescriptor.FontFamily,
@@ -125,8 +128,8 @@ namespace ProjectRAM.Editor.ViewModels
 						FontStyle = f.FontStyle,
 						Foreground = f.Foreground.Color.ToString()
 					};
-					propertyInfo.SetValue(CurrentStyle,  newFontDescriptor);
-					newFontDescriptor.ApplyFontStyle(target, Application.Current!.Resources);
+					propertyInfo.SetValue(CurrentStyle.StyleDescriptor,  newFontDescriptor);
+					newFontDescriptor.ApplyFontStyle(Application.Current!.Resources, target);
 				});
 			}, () => true);
 		}

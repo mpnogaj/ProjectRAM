@@ -1,89 +1,55 @@
-using System;
-using System.IO;
+﻿using Avalonia.Media;
+using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Media;
-using ProjectRAM.Editor.Models;
 
-namespace ProjectRAM.Editor.Properties
+namespace ProjectRAM.Editor.Models
 {
-	public class Style
+	public class StyleDescriptor
 	{
-		#region Constants
-
 		private const string White = "#FFFFFF";
 		private const string Black = "#000000";
 		private const string LightGray = "#D3D3D3";
 		private const string Gray = "#808080";
 		private const string SuperLightGray = "#E6E6E6";
 
-		#endregion
-
-		#region Info
-
-		[JsonIgnore] public string FileName { get; set; } = "default.json";
+		[Info]
 		public string Name { get; set; } = "default";
-
-		#endregion
-
-		#region Methods
 
 		public string ToJson()
 		{
-			return JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
-		}
-
-		public void Save()
-		{
-			using var sr = new StreamWriter($"Styles/{FileName}");
-			sr.Write(ToJson());
-			sr.Flush();
-		}
-
-		public void ApplyStyle()
-		{
-			var res = new ResourceDictionary();
-			var properties = GetType().GetProperties();
-			foreach (var property in properties)
-			{
-				string name = property.Name;
-				var value = property.GetValue(this)!;
-				if (property.PropertyType == typeof(FontDescriptor))
-				{
-					((FontDescriptor)value).ApplyFontStyle(name, res);
-				}
-				else if (name != nameof(FileName) && name != nameof(Name))
-				{
-					res[property.Name] = new SolidColorBrush(Color.Parse((string)value));
-				}
-			}
-
-			Application.Current!.Resources = res;
+			return JsonSerializer.Serialize(this);
 		}
 
 		public void ChangeFontSizes(double val)
 		{
-			var res = Application.Current!.Resources;
-			TextEditor.FontSize += val;
-			SimpleEditor.FontSize += val;
-			TextEditor.ApplyFontStyle(nameof(TextEditor), res);
-			SimpleEditor.ApplyFontStyle(nameof(SimpleEditor), res);
+			TextEditor = new FontDescriptor
+			{
+				FontFamily = TextEditor.FontFamily,
+				FontStyle = TextEditor.FontStyle,
+				FontWeight = TextEditor.FontWeight,
+				FontSize = TextEditor.FontSize + val
+			};
+			SimpleEditor = new FontDescriptor
+			{
+				FontFamily = SimpleEditor.FontFamily,
+				FontStyle = SimpleEditor.FontStyle,
+				FontWeight = SimpleEditor.FontWeight,
+				FontSize = SimpleEditor.FontSize + val
+			};
 		}
 
-		public static void CreateDefaultAndSave()
+		public bool Equals(StyleDescriptor lhs)
 		{
-			var def = new Style();
-			def.Save();
+			return typeof(StyleDescriptor).GetProperties()
+				.Where(pi => !pi.GetCustomAttributes(typeof(InfoAttribute), false).Any())
+				.All(property => !(property.GetValue(this)?.Equals(property.GetValue(lhs)) ?? false));
 		}
 
-		#endregion
+		#region Visuals
 
 		#region General
 
 		public string HostBackground { get; set; } = White;
-
 		public string Background { get; set; } = White;
 
 		public string SideBarBackground { get; set; } = White;
@@ -95,7 +61,6 @@ namespace ProjectRAM.Editor.Properties
 		public FontDescriptor NormalText { get; set; } = new();
 
 		#endregion
-
 		#region Header
 
 		public FontDescriptor HeaderText { get; set; } = new()
@@ -117,7 +82,6 @@ namespace ProjectRAM.Editor.Properties
 		};
 
 		#endregion
-
 		#region Memory
 
 		public FontDescriptor AddressHeader { get; set; } = new()
@@ -139,7 +103,6 @@ namespace ProjectRAM.Editor.Properties
 		public string MemoryGridRowColor = White;
 
 		#endregion
-
 		#region Verification report
 
 		public FontDescriptor LineHeader { get; set; } = new()
@@ -161,7 +124,6 @@ namespace ProjectRAM.Editor.Properties
 		public string VerificationReportRowColor = White;
 
 		#endregion
-
 		#region Text editor
 
 		public FontDescriptor TextEditor { get; set; } = new()
@@ -172,7 +134,6 @@ namespace ProjectRAM.Editor.Properties
 		public string TextEditorBackground { get; set; } = White;
 
 		#endregion
-
 		#region Simple editor
 
 		public FontDescriptor SimpleEditor { get; set; } = new()
@@ -189,8 +150,9 @@ namespace ProjectRAM.Editor.Properties
 		public string SimpleEditorBackground { get; set; } = White;
 		public string SimpleEditorRowBackground { get; set; } = White;
 
-		#endregion
 
+
+		#endregion
 		#region Menu
 
 		public string MenuFlyoutPresenterBackground { get; set; } = White;
@@ -208,8 +170,9 @@ namespace ProjectRAM.Editor.Properties
 		public FontDescriptor MenuFlyoutItemGestureTextPressed { get; set; } = new();
 		public FontDescriptor MenuFlyoutItemGestureTextDisabled { get; set; } = new();
 
-		#endregion
 
+
+		#endregion
 		#region Tapes
 
 		public string InputTapeBackground { get; set; } = White;
@@ -221,7 +184,6 @@ namespace ProjectRAM.Editor.Properties
 		public FontDescriptor OutputTapeLbl { get; set; } = new();
 
 		#endregion
-
 		#region GridSplitters
 
 		public string GridSplitterBackground { get; set; } = Black;
@@ -230,33 +192,7 @@ namespace ProjectRAM.Editor.Properties
 
 		#endregion
 
-		#region Overrides
-
-		public override bool Equals(object? obj)
-		{
-			if (obj == null) return false;
-			if (obj.GetType() != typeof(Style)) return false;
-			Style lhs = (Style)obj;
-			return lhs.FileName == FileName;
-		}
-
-		public override int GetHashCode()
-		{
-			var hashCode = new HashCode();
-			var properties = GetType().GetProperties();
-			foreach (var property in properties)
-			{
-				object value = property.GetValue(this)!;
-				hashCode.Add(value);
-			}
-			return hashCode.ToHashCode();
-		}
-
-		public override string ToString()
-		{
-			return Name;
-		}
-
 		#endregion
+
 	}
 }

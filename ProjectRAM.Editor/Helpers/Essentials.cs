@@ -14,9 +14,10 @@ using Avalonia.Input;
 using Avalonia.VisualTree;
 using MessageBox.Avalonia;
 using MessageBox.Avalonia.Enums;
+using ProjectRAM.Editor.Models;
 using ProjectRAM.Editor.Views;
 using ProjectRAM.Editor.Properties;
-using Style = ProjectRAM.Editor.Properties.Style;
+using Style = ProjectRAM.Editor.Models.Style;
 
 namespace ProjectRAM.Editor.Helpers
 {
@@ -109,10 +110,16 @@ namespace ProjectRAM.Editor.Helpers
 				if (string.IsNullOrEmpty(content)) continue;
 				try
 				{
-					var style = JsonSerializer.Deserialize<Style>(content);
-					if (style == null) continue;
-					style.FileName = Path.GetFileName(file);
-					styles.Add(style);
+					var styleDescriptor = JsonSerializer.Deserialize<StyleDescriptor>(content);
+					if (styleDescriptor == null)
+					{
+						continue;
+					}
+					styles.Add(new Style
+					{
+						FileName = Path.GetFileName(file),
+						StyleDescriptor = styleDescriptor
+					});
 				}
 				catch
 				{

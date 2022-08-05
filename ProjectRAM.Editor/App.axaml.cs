@@ -5,10 +5,11 @@ using Avalonia.Markup.Xaml;
 using ProjectRAM.Editor.Views;
 using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.Helpers;
+using ProjectRAM.Editor.Models;
 
 namespace ProjectRAM.Editor
 {
-	public class App : Application
+    public class App : Application
 	{
 		public override void Initialize()
 		{

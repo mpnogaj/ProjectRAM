@@ -34,7 +34,7 @@
             <ComboBox Items="{CompiledBinding Styles}" SelectedItem="{CompiledBinding Style}" Width="200">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{CompiledBinding Name}"/>
+                        <TextBlock Text="{CompiledBinding }"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>

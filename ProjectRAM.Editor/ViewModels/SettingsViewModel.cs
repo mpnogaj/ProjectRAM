@@ -2,12 +2,13 @@
 using System.Globalization;
 using System.Linq;
 using ProjectRAM.Editor.Helpers;
+using ProjectRAM.Editor.Models;
 using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.ViewModels.Commands;
 
 namespace ProjectRAM.Editor.ViewModels
 {
-	public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : ViewModelBase
 	{
 		private List<CultureInfo> _languages;
 
