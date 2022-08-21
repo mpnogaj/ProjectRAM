@@ -2,8 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
-using AvaloniaFontPicker;
+using FontPicker;
 using MessageBox.Avalonia;
 using MessageBox.Avalonia.DTO;
 using MessageBox.Avalonia.Models;
@@ -117,20 +118,26 @@ namespace ProjectRAM.Editor.ViewModels
 					FontStyle = fontDescriptor.FontStyle,
 					Foreground = new SolidColorBrush(Color.Parse(fontDescriptor.Foreground))
 				};
-				var dialog = new FontDialog(font);
-				await dialog.Show(Essentials.GetTopWindow(), (f) =>
+				var dialog = new FontPickerDialog(Strings.Culture)
 				{
-					var newFontDescriptor = new FontDescriptor
-					{
-						FontFamily = f.FontFamily.Name,
-						FontSize = f.FontSize,
-						FontWeight = f.FontWeight,
-						FontStyle = f.FontStyle,
-						Foreground = f.Foreground.Color.ToString()
-					};
-					propertyInfo.SetValue(CurrentStyle.StyleDescriptor,  newFontDescriptor);
-					newFontDescriptor.ApplyFontStyle(Application.Current!.Resources, target);
-				});
+					StartupLocation = WindowStartupLocation.CenterOwner
+				};
+				var newFont = await dialog.OpenDialog(Essentials.GetTopWindow(), font);
+				// Check if user closed the dialog or the cancel button was clicked
+				if (newFont == null)
+				{
+					return;
+				}
+				var newFontDescriptor = new FontDescriptor
+				{
+					FontFamily = newFont.FontFamily.Name,
+					FontSize = newFont.FontSize,
+					FontWeight = newFont.FontWeight,
+					FontStyle = newFont.FontStyle,
+					Foreground = newFont.Foreground.Color.ToString()
+				};
+				propertyInfo.SetValue(CurrentStyle.StyleDescriptor, newFontDescriptor);
+				newFontDescriptor.ApplyFontStyle(Application.Current!.Resources, target);
 			}, () => true);
 		}
 	}

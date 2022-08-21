@@ -4,7 +4,8 @@
 	<Application.Styles>
 		<FluentTheme Mode="Light"/>
 
-		<StyleInclude Source="avares://AvaloniaColorPicker/ColorPicker.axaml"/>
+		<StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml"/>
+
 		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/TextBlock.axaml"/>
 		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/DataGrid.xaml"/>
 		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/MenuItem.xaml"/>
