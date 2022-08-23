@@ -5,9 +5,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using FontPicker;
-using MessageBox.Avalonia;
-using MessageBox.Avalonia.DTO;
-using MessageBox.Avalonia.Models;
 using ProjectRAM.Editor.Helpers;
 using ProjectRAM.Editor.Models;
 using ProjectRAM.Editor.Properties;
@@ -47,6 +44,7 @@ namespace ProjectRAM.Editor.ViewModels
 
 		public RelayCommand SaveCommand { get; }
 		public RelayCommand CloseCommand { get; }
+		public RelayCommand RevertToDefaultCommand { get; }
 		public AsyncRelayCommand CreateNewStyleCommand { get; }
 
 		public AsyncRelayCommand<string> SetFontCommand { get; }
@@ -57,7 +55,7 @@ namespace ProjectRAM.Editor.ViewModels
 			_currentStyle = _styles.FirstOrDefault(x => x.Equals(Settings.CurrentStyle)) ?? _styles[0];
 			OnClose = () =>
 			{
-				if (!CurrentStyle.Identical(Settings.CurrentStyle))
+				if (!CurrentStyle.Identical(Settings.CurrentStyle) && CurrentStyle.FileName != Settings.CurrentStyle.FileName)
 				{
 					Settings.CurrentStyle.ApplyStyle();
 				}
@@ -71,39 +69,27 @@ namespace ProjectRAM.Editor.ViewModels
 					style.Save();
 				}
 			}, () => true);
+			RevertToDefaultCommand = new RelayCommand(() =>
+			{
+				CurrentStyle.StyleDescriptor = new StyleDescriptor
+				{
+					Name = CurrentStyle.StyleDescriptor.Name
+				};
+				CurrentStyle.ApplyStyle();
+			}, () => true);
 
+			//Currently broken
+			//Replace with builtin dialogs asap
 			CreateNewStyleCommand = new AsyncRelayCommand(async () =>
 			{
-				var dialog = MessageBoxManager.GetMessageBoxInputWindow(new MessageBoxInputParams
+				Styles.Add(new Style
 				{
-					ButtonDefinitions = new []
+					StyleDescriptor =
 					{
-						new ButtonDefinition
-						{
-							IsCancel = false,
-							IsDefault = true,
-							Name = "Add"
-						},
-						new ButtonDefinition
-						{
-							IsCancel = true,
-							IsDefault = false,
-							Name = "Cancel"
-						}
-					}
+						Name = "TEMP"
+					},
+					FileName = $"temp.json"
 				});
-				var res = await dialog.ShowDialog(Essentials.GetTopWindow());
-				if (res.Button == "Add")
-				{
-					Styles.Add(new Style
-					{
-						StyleDescriptor =
-						{
-							Name = res.Message
-						},
-						FileName = $"{res.Message.ToLower()}.json"
-					});
-				}
 			}, () => true);
 
 			SetFontCommand = new AsyncRelayCommand<string>(async (target) =>

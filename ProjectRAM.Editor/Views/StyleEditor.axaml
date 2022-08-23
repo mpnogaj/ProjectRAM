@@ -240,7 +240,8 @@
 					Command="{CompiledBinding SaveCommand}" />
 			<Button Content="Close" 
 					Command="{CompiledBinding CloseCommand}"/>
-			<Button Content="Revert to default"/>
+			<Button Content="Revert to default"
+			        Command="{CompiledBinding RevertToDefaultCommand}"/>
 		</StackPanel>
 	</Grid>
 </Window>
