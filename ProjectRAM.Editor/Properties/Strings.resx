@@ -247,6 +247,6 @@
     <value>Message</value>
   </data>
   <data name="outputTapeOverflow" xml:space="preserve">
-      <value>Output tape is too large. Aborting </value>
+      <value>Output tape is too large. Aborting</value>
   </data>
 </root>

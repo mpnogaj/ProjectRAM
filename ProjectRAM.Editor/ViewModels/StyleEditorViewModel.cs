@@ -5,6 +5,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using FontPicker;
+using ProjectRAM.Editor.Dialogs;
+using ProjectRAM.Editor.Dialogs.Params;
 using ProjectRAM.Editor.Helpers;
 using ProjectRAM.Editor.Models;
 using ProjectRAM.Editor.Properties;
@@ -82,6 +84,20 @@ namespace ProjectRAM.Editor.ViewModels
 			//Replace with builtin dialogs asap
 			CreateNewStyleCommand = new AsyncRelayCommand(async () =>
 			{
+				var res = await DialogManager.ShowInputDialog("Create new style",
+					"Style name:",
+					Essentials.GetTopWindow(),
+					new InputDialogParams
+					{
+						DefaultButtonText = "Add",
+						MinHeight = 75
+					});
+
+				if (string.IsNullOrWhiteSpace(res))
+				{
+					return;
+				}
+
 				Styles.Add(new Style
 				{
 					StyleDescriptor =

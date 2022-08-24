@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:ProjectRAM.Editor.Dialogs.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="100"
+        x:Class="ProjectRAM.Editor.Dialogs.Views.InputDialog"
+        x:DataType="viewModel:InputDialogViewModel"
+        Padding="5"
+        Title="{Binding Title}"
+        CanResize="{Binding CanResize}"
+        WindowStartupLocation="{Binding StartupLocation}"
+        SizeToContent="{Binding SizeToContent}"
+        Width="{Binding Width}"
+        Height="{Binding Height}"
+        MinWidth="{Binding MinWidth}"
+        MinHeight="{Binding MinHeight}"
+        MaxWidth="{Binding MaxWidth}"
+        MaxHeight="{Binding MaxHeight}">
+	<Design.DataContext>
+		<viewModel:InputDialogViewModel />
+	</Design.DataContext>
+	<Grid RowDefinitions="*, Auto, Auto">
+		<TextBlock Grid.Row="0" 
+		           Text="{Binding Message}"
+		           TextWrapping="Wrap"/>
+        <TextBox Grid.Row="1"
+                 VerticalContentAlignment="Center"
+                 Margin="0, 5"
+                 Text="{Binding InputText}"
+                 MinWidth="250"/>
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="10">
+			<Button IsDefault="True"
+			        Content="{Binding DefaultButtonText}"
+			        Click="DefaultBtn_OnClick"/>
+			<Button IsCancel="True"
+			        Content="{Binding CancelButtonText}"
+			        Click="CancelBtn_OnClick"/>
+        </StackPanel>
+    </Grid>
+</Window>

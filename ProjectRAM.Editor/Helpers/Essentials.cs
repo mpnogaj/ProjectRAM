@@ -1,4 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.VisualTree;
+using ProjectRAM.Editor.Dialogs;
+using ProjectRAM.Editor.Models;
+using ProjectRAM.Editor.Properties;
+using ProjectRAM.Editor.Views;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -6,17 +16,6 @@ using System.Resources;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Controls.Primitives;
-using Avalonia.Input;
-using Avalonia.VisualTree;
-using MessageBox.Avalonia;
-using MessageBox.Avalonia.Enums;
-using ProjectRAM.Editor.Models;
-using ProjectRAM.Editor.Views;
-using ProjectRAM.Editor.Properties;
 using Style = ProjectRAM.Editor.Models.Style;
 
 namespace ProjectRAM.Editor.Helpers
@@ -143,12 +142,13 @@ namespace ProjectRAM.Editor.Helpers
 			return window;
 		}
 
-		public static async Task ShowMessageBox(string title, string message, Icon icon)
+		public static async Task ShowMessageBox(string title, string message)
 		{
-			var messageBox = MessageBoxManager.GetMessageBoxStandardWindow(title, message,
+			await DialogManager.ShowInfoDialog(title, message, GetTopWindow());
+			/*var messageBox = MessageBoxManager.GetMessageBoxStandardWindow(title, message,
 				icon: icon,
 				windowStartupLocation: WindowStartupLocation.CenterOwner);
-			await messageBox.ShowDialog(GetTopWindow());
+			await messageBox.ShowDialog(GetTopWindow());*/
 		}
 
 

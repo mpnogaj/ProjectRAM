@@ -1,12 +1,13 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
-namespace ProjectRAM.Editor.Views
+namespace ProjectRAM.Editor.Dialogs.Views
 {
-	public partial class Dialog : Window
+	public partial class InfoDialog : Window
 	{
-		public Dialog()
+		public InfoDialog()
 		{
 			InitializeComponent();
 #if DEBUG
@@ -19,9 +20,10 @@ namespace ProjectRAM.Editor.Views
 			AvaloniaXamlLoader.Load(this);
 		}
 
-		public static bool ShowDialog()
+		private void OkBtn_Clicked(object? sender, RoutedEventArgs e)
 		{
-			return true;
+			e.Handled = true;
+			this.Close();
 		}
 	}
 }

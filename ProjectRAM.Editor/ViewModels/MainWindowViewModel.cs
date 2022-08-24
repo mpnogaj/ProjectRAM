@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
-using MessageBox.Avalonia.Enums;
 using ProjectRAM.Core;
 using ProjectRAM.Core.Models;
 using ProjectRAM.Editor.Converters;
@@ -19,7 +18,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ProjectRAM.Core.Properties;
 using Essentials = ProjectRAM.Editor.Helpers.Essentials;
 using Settings = ProjectRAM.Editor.Properties.Settings;
 
@@ -87,15 +85,14 @@ namespace ProjectRAM.Editor.ViewModels
 				if (errorList.Count == 0)
 				{
 					if (shouldShowOnSuccess)
-						await Essentials.ShowMessageBox(Strings.verification, Strings.everythingAlright, Icon.Info);
+						await Essentials.ShowMessageBox(Strings.verification, Strings.everythingAlright);
 					return;
 				}
 
 				Page!.Errors = errorList;
 
 				await Essentials.ShowMessageBox(Strings.verification,
-					errorList.Count == 1 ? Strings.foundError : string.Format(Strings.foundErrors, errorList.Count),
-					Icon.Warning);
+					errorList.Count == 1 ? Strings.foundError : string.Format(Strings.foundErrors, errorList.Count));
 			}, () => !IsProgramRunning() && IsFileOpened());
 
 			RunProgram = new AsyncRelayCommand(async () =>
@@ -118,11 +115,11 @@ namespace ProjectRAM.Editor.ViewModels
 				catch (RamInterpreterException ex)
 				{
 					await Essentials.ShowMessageBox(Strings.error,
-						ex.LocalizedMessage(), Icon.Error);
+						ex.LocalizedMessage());
 				}
 				catch (Exception ex)
 				{
-					await Essentials.ShowMessageBox(Strings.error, ex.Message, Icon.Error);
+					await Essentials.ShowMessageBox(Strings.error, ex.Message);
 					Page!.Memory =
 						MemoryDictionaryToMemoryRowConverter.MemoryDictionaryToMemoryRows(new Dictionary<string, string>()
 						{
