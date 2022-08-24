@@ -7,6 +7,10 @@
 		<Setter Property="Background" Value="{DynamicResource SimpleEditorPointerOverRow}" />
 	</Style>
 
+	<Style Selector="DataGridCell">
+		<Setter Property="Padding" Value="2"/>
+	</Style>
+
 	<Style Selector="DataGridColumnHeader TextBlock">
 		<Setter Property="FontFamily"
 				Value="{DynamicResource SimpleEditorHeaderFontFamily}" />
