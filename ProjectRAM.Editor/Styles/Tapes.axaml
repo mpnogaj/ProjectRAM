@@ -17,6 +17,14 @@
 		<Setter Property="Background" Value="{DynamicResource InputTapeBackground}"/>
 	</Style>
 
+	<Style Selector="TextBox#inputTapeBox /template/ TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource InputTapeFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource InputTapeFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource InputTapeFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource InputTapeFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource InputTapeForeground}"/>
+	</Style>
+
 	<Style Selector="TextBox#inputTapeBox:pointerover">
 		<Setter Property="FontFamily" Value="{DynamicResource InputTapeFontFamily}"/>
 		<Setter Property="FontWeight" Value="{DynamicResource InputTapeFontWeight}"/>
@@ -43,6 +51,13 @@
 		<Setter Property="Foreground" Value="{DynamicResource OutputTapeLblForeground}" />
 	</Style>
 
+	<Style Selector="TextBlock#outputTapeLbl /template/ TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource OutputTapeLblFontFamily}" />
+		<Setter Property="FontWeight" Value="{DynamicResource OutputTapeLblFontWeight}" />
+		<Setter Property="FontSize" Value="{DynamicResource OutputTapeLblFontSize}" />
+		<Setter Property="Foreground" Value="{DynamicResource OutputTapeLblForeground}" />
+	</Style>
+
 	<Style Selector="TextBox#outputTape:disabled">
 		<Setter Property="FontFamily" Value="{DynamicResource OutputTapeFontFamily}"/>
 		<Setter Property="FontWeight" Value="{DynamicResource OutputTapeFontWeight}"/>
@@ -50,6 +65,14 @@
 		<Setter Property="FontSize" Value="{DynamicResource OutputTapeFontSize}"/>
 		<Setter Property="Foreground" Value="{DynamicResource OutputTapeForeground}"/>
 		<Setter Property="Background" Value="{DynamicResource OutputTapeBackground}"/>
+	</Style>
+
+	<Style Selector="TextBox#outputTape /template/ TextBlock">
+		<Setter Property="FontFamily" Value="{DynamicResource OutputTapeFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource OutputTapeFontWeight}"/>
+		<Setter Property="FontStyle" Value="{DynamicResource OutputTapeFontStyle}"/>
+		<Setter Property="FontSize" Value="{DynamicResource OutputTapeFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource OutputTapeForeground}"/>
 	</Style>
 
 	<Style Selector="TextBox#outputTape:disabled /template/ Border">
