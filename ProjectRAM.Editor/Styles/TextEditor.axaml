@@ -1,0 +1,52 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Style Selector="TextBox#TextEditor">
+        <Setter Property="FontSize" Value="{DynamicResource TextEditorFontSize}"/>
+		<Setter Property="FontFamily" Value="{DynamicResource TextEditorFontFamily}"/>
+        <Setter Property="FontWeight" Value="{DynamicResource TextEditorFontWeight}"/>
+        <Setter Property="FontSize" Value="{DynamicResource TextEditorFontSize}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextEditorForeground}"/>
+        <Setter Property="Background" Value="{DynamicResource TextEditorBackground}"/>
+        <Setter Property="AcceptsTab" Value="True"/>
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+        <Setter Property="Margin" Value="8, 5"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+	<Style Selector="TextBox#TextEditor:focus /template/ TextPresenter">
+		<Setter Property="CaretBrush" Value="{DynamicResource TextEditorCaretColor}"/>
+        <Setter Property="SelectionBrush" Value="{DynamicResource TextEditorSelectionColor}"></Setter>
+	</Style>
+
+	<Style Selector="TextBox#TextEditor:focus">
+		<Setter Property="FontSize" Value="{DynamicResource TextEditorFontSize}"/>
+		<Setter Property="FontFamily" Value="{DynamicResource TextEditorFontFamily}"/>
+		<Setter Property="FontWeight" Value="{DynamicResource TextEditorFontWeight}"/>
+		<Setter Property="FontSize" Value="{DynamicResource TextEditorFontSize}"/>
+		<Setter Property="Foreground" Value="{DynamicResource TextEditorForeground}"/>
+	</Style>
+
+    <Style Selector="TextBox#TextEditor:pointerover">
+	    <Setter Property="FontSize" Value="{DynamicResource TextEditorFontSize}"/>
+	    <Setter Property="FontFamily" Value="{DynamicResource TextEditorFontFamily}"/>
+	    <Setter Property="FontWeight" Value="{DynamicResource TextEditorFontWeight}"/>
+	    <Setter Property="FontSize" Value="{DynamicResource TextEditorFontSize}"/>
+	    <Setter Property="Foreground" Value="{DynamicResource TextEditorForeground}"/>
+        <Setter Property="CornerRadius" Value="3"/>
+    </Style>
+
+	<Style Selector="TextBox#TextEditor:focus /template/ Border">
+		<Setter Property="Background" Value="{DynamicResource TextEditorBackground}"/>
+	    <Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="CornerRadius" Value="3"/>
+    </Style>
+
+	<Style Selector="TextBox#TextEditor:pointerover /template/ Border">
+		<Setter Property="Background" Value="{DynamicResource TextEditorBackground}"/>
+		<Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CornerRadius" Value="3"/>
+	</Style>
+</Styles>

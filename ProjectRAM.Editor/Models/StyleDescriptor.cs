@@ -1,6 +1,10 @@
-﻿using Avalonia.Media;
+﻿using Avalonia;
+using Avalonia.Media;
+using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using Color = Avalonia.Media.Color;
 
 namespace ProjectRAM.Editor.Models
 {
@@ -11,6 +15,7 @@ namespace ProjectRAM.Editor.Models
 		private const string LightGray = "#D3D3D3";
 		private const string Gray = "#808080";
 		private const string SuperLightGray = "#E6E6E6";
+		private const string SelectionBlue = "#FF0077D7";
 
 		[Info]
 		public string Name { get; set; } = "default";
@@ -43,6 +48,17 @@ namespace ProjectRAM.Editor.Models
 			return typeof(StyleDescriptor).GetProperties()
 				.Where(pi => !pi.GetCustomAttributes(typeof(InfoAttribute), false).Any())
 				.All(property => !(property.GetValue(this)?.Equals(property.GetValue(lhs)) ?? false));
+		}
+
+		private static void UpdateColor(ref string storage, string value, [CallerMemberName] string? caller = null)
+		{
+			if (storage == value)
+			{
+				return;
+			}
+			storage = value;
+			Application.Current!.Resources[caller ?? throw new ArgumentNullException(nameof(caller))] =
+				new SolidColorBrush(Color.Parse(value));
 		}
 
 		#region Visuals
@@ -133,7 +149,26 @@ namespace ProjectRAM.Editor.Models
 			FontFamily = "Courier New"
 		};
 
-		public string TextEditorBackground { get; set; } = White;
+		private string _textEditorForeground = White;
+		public string TextEditorBackground
+		{
+			get => _textEditorForeground;
+			set => UpdateColor(ref _textEditorForeground, value);
+		}
+
+		private string _textEditorCaretColor = Black;
+		public string TextEditorCaretColor
+		{
+			get => _textEditorCaretColor;
+			set => UpdateColor(ref _textEditorCaretColor, value);
+		}
+
+		private string _textEditorSelectionColor = SelectionBlue;
+		public string TextEditorSelectionColor
+		{
+			get => _textEditorSelectionColor;
+			set => UpdateColor(ref _textEditorSelectionColor, value);
+		}
 
 		#endregion
 		#region Simple editor

@@ -128,30 +128,16 @@
 							   Text="{x:Static properties:Strings.outputTape}" />
 				</StackPanel>
 				<Grid DockPanel.Dock="Top" x:Name="PrintProgram">
-					<!--Text editor-->
-					<TextBox HorizontalAlignment="Stretch"
-							 VerticalAlignment="Stretch"
+					<Grid.Styles>
+                        <StyleInclude Source="avares://ProjectRAM.Editor/Styles/TextEditor.axaml"/>
+					</Grid.Styles>
+					<TextBox Name="TextEditor"
 							 IsEnabled="{CompiledBinding !ProgramRunning}"
 							 IsVisible="{CompiledBinding !SimpleEditorUsage}"
-							 Margin="8, 5, 8, 5"
-							 AcceptsReturn="True"
-							 TextWrapping="Wrap"
-							 FontFamily="{DynamicResource TextEditorFontFamily}"
-							 FontWeight="{DynamicResource TextEditorFontWeight}"
-							 FontSize="{DynamicResource TextEditorFontSize}"
-							 Foreground="{DynamicResource TextEditorForeground}"
-							 Background="{DynamicResource TextEditorBackground}"
-							 AcceptsTab="True"
-							 Text="{CompiledBinding TextEditorProgram}">
-						<TextBox.Styles>
-							<Style Selector="TextBox:pointerover/template/Border">
-								<Setter Property="Background" Value="{DynamicResource TextEditorBackground}" />
-							</Style>
-						</TextBox.Styles>
-					</TextBox>
+							 Text="{CompiledBinding TextEditorProgram}"/>
 					<!--Simple editor-->
 					<Border BorderBrush="Black"
-							BorderThickness="2"
+							BorderThickness="3"
 							CornerRadius="5, 5, 5, 5"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
