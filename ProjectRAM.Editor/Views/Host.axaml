@@ -80,10 +80,12 @@
 					  Width="4"
 					  ResizeDirection="Columns"
 					  VerticalAlignment="Stretch" />
-		<Grid
-			Grid.Row="0"
-			Grid.Column="2"
-			RowDefinitions="*">
+		<Grid Grid.Row="0"
+		      Grid.Column="2"
+		      RowDefinitions="*">
+            <Grid.Styles>
+                <StyleInclude Source="avares://ProjectRAM.Editor/Styles/Tapes.axaml"/>
+            </Grid.Styles>
 			<DockPanel
 				Grid.Row="0"
 				LastChildFill="True">

@@ -60,6 +60,8 @@ namespace ProjectRAM.Editor.Models
 
 		public FontDescriptor NormalText { get; set; } = new();
 
+		public FontDescriptor TextBoxText { get; set; } = new();
+
 		#endregion
 		#region Header
 

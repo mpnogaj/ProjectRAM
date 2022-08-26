@@ -79,9 +79,7 @@ namespace ProjectRAM.Editor.ViewModels
 				};
 				CurrentStyle.ApplyStyle();
 			}, () => true);
-
-			//Currently broken
-			//Replace with builtin dialogs asap
+			
 			CreateNewStyleCommand = new AsyncRelayCommand(async () =>
 			{
 				var res = await DialogManager.ShowInputDialog("Create new style",

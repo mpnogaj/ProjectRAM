@@ -1,0 +1,20 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--Currently not supporting pointerover-->
+	
+	<Style Selector="TextBox">
+	    <Setter Property="FontFamily" Value="{DynamicResource TextBoxTextFontFamily}"/>
+	    <Setter Property="FontWeight" Value="{DynamicResource TextBoxTextFontWeight}"/>
+	    <Setter Property="FontSize" Value="{DynamicResource TextBoxTextFontSize}"/>
+	    <Setter Property="FontStyle" Value="{DynamicResource TextBoxTextFontStyle}"/>
+	    <Setter Property="Foreground" Value="{DynamicResource TextBoxTextForeground}"/>
+    </Style>
+
+    <Style Selector="TextBox /template/ TextBlock">
+	    <Setter Property="FontFamily" Value="{DynamicResource TextBoxTextFontFamily}"/>
+	    <Setter Property="FontWeight" Value="{DynamicResource TextBoxTextFontWeight}"/>
+	    <Setter Property="FontSize" Value="{DynamicResource TextBoxTextFontSize}"/>
+	    <Setter Property="FontStyle" Value="{DynamicResource TextBoxTextFontStyle}"/>
+	    <Setter Property="Foreground" Value="{DynamicResource TextBoxTextForeground}"/>
+    </Style>
+</Styles>

@@ -39,7 +39,7 @@
 			</TabControl.Styles>
 			<TabItem Header="Główne">
 				<Grid ColumnDefinitions="Auto, *"
-					  RowDefinitions="Auto, Auto, Auto, Auto">
+					  RowDefinitions="Auto, Auto, Auto, Auto, Auto">
 					<TextBlock Grid.Column="0"
 							   Grid.Row="0"
 							   Text="Normalny tekst"/>
@@ -49,30 +49,38 @@
 							CommandParameter="NormalText"
 							Command="{CompiledBinding SetFontCommand}"/>
 
+					<TextBlock Grid.Column="0"
+					           Grid.Row="1"
+					           Text="Tekst pola tekstowego"/>
+					<Button Grid.Column="1"
+					        Grid.Row="1"
+					        Content="..."
+					        CommandParameter="TextBoxText"
+					        Command="{CompiledBinding SetFontCommand}"/>
 					
 					<TextBlock Grid.Column="0"
-							   Grid.Row="1"
+							   Grid.Row="2"
 							   Text="Nagłówek"/>
 					<Button Grid.Column="1"
-							Grid.Row="1"
+							Grid.Row="2"
 							Content="..."
 							CommandParameter="HeaderText"
 							Command="{CompiledBinding SetFontCommand}"/>
 
 					<TextBlock Grid.Column="0"
-							   Grid.Row="2"
+							   Grid.Row="3"
 							   Text="Nagłówek wybrany"/>
 					<Button Grid.Column="1"
-							Grid.Row="2"
+							Grid.Row="3"
 							Content="..."
 							CommandParameter="HeaderTextSelected"
 							Command="{CompiledBinding SetFontCommand}"/>
 
 					<TextBlock Grid.Column="0"
-							   Grid.Row="3"
+							   Grid.Row="4"
 							   Text="Nagłówek najechany"/>
 					<Button Grid.Column="1"
-							Grid.Row="3"
+							Grid.Row="4"
 							Content="..."
 							CommandParameter="HeaderTextPointerOver"
 							Command="{CompiledBinding SetFontCommand}"/>

@@ -9,8 +9,8 @@
 		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/TextBlock.axaml"/>
 		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/DataGrid.xaml"/>
 		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/MenuItem.xaml"/>
-		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/Tapes.axaml"/>
 		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/TabItem.axaml"/>
+		<StyleInclude Source="avares://ProjectRAM.Editor/Styles/TextBox.axaml"/>
 
 		<Style Selector="DataGrid">
 			<Setter Property="GridLinesVisibility" Value="All" />
