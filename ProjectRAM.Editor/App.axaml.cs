@@ -22,11 +22,14 @@ namespace ProjectRAM.Editor
 			{
 				Style.CreateDefaultAndSave();
 			}
-			AvaloniaXamlLoader.Load(this);
+
+			StyleManager.Init();
 			Settings.Init();
 			Strings.Culture = Settings.Language;
 			Core.Properties.Settings.CurrentCulture = Settings.Language;
 			Settings.CurrentStyle.ApplyStyle();
+
+			AvaloniaXamlLoader.Load(this);
 		}
 
 		#region Event handlers

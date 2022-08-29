@@ -4,10 +4,11 @@ using Avalonia.Media;
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 
 namespace ProjectRAM.Editor.Models
 {
-	public class Style
+	public class Style : ICloneable
 	{
 		public string FileName { get; init; } = "default.json";
 		public StyleDescriptor StyleDescriptor { get; set; } = new();
@@ -74,13 +75,23 @@ namespace ProjectRAM.Editor.Models
 		}
 
 		public override int GetHashCode()
-		{
-			return HashCode.Combine(FileName);
-		}
+			=> HashCode.Combine(FileName);
 
 		public override string ToString()
-		{
-			return StyleDescriptor.Name;
-		}
+			=> StyleDescriptor.Name;
+
+		/// <summary>
+		/// Create deep clone of the object. Results in new address
+		/// </summary>
+		/// <returns></returns>
+		public object Clone()
+			=> JsonSerializer.Deserialize<Style>(JsonSerializer.Serialize(this))!;
+
+		/// <summary>
+		/// Update current object. Preserves address
+		/// </summary>
+		/// <param name="rhs"></param>
+		public void CopyValues(Style rhs)
+			=> this.StyleDescriptor = (StyleDescriptor)(rhs.StyleDescriptor.Clone());
 	}
 }

@@ -29,5 +29,9 @@
 		<Style Selector="GridSplitter:pressed">
 			<Setter Property="Background" Value="{DynamicResource GridSplitterPressedBackground}"/>
 		</Style>
+
+        <Style Selector="Window">
+            <Setter Property="Background" Value="{DynamicResource Background}"/>
+        </Style>
 	</Application.Styles>
 </Application>

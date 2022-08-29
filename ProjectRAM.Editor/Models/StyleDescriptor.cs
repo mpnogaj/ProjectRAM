@@ -4,17 +4,18 @@ using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Color = Avalonia.Media.Color;
 
 namespace ProjectRAM.Editor.Models
 {
-	public class StyleDescriptor
+	public class StyleDescriptor : ICloneable
 	{
-		private const string White = "#FFFFFF";
-		private const string Black = "#000000";
-		private const string LightGray = "#D3D3D3";
-		private const string Gray = "#808080";
-		private const string SuperLightGray = "#E6E6E6";
+		private const string White = "#FFFFFFFF";
+		private const string Black = "#FF000000";
+		private const string LightGray = "#FFD3D3D3";
+		private const string Gray = "#FF808080";
+		private const string SuperLightGray = "#FFE6E6E6";
 		private const string SelectionBlue = "#FF0077D7";
 
 		[Info]
@@ -22,7 +23,10 @@ namespace ProjectRAM.Editor.Models
 
 		public string ToJson()
 		{
-			return JsonSerializer.Serialize(this);
+			return JsonSerializer.Serialize(this, new JsonSerializerOptions
+			{
+				WriteIndented = true
+			});
 		}
 
 		public void ChangeFontSizes(double val)
@@ -65,12 +69,33 @@ namespace ProjectRAM.Editor.Models
 
 		#region General
 
-		public string HostBackground { get; set; } = White;
-		public string Background { get; set; } = White;
+		private string _hostBackground = White;
+		public string HostBackground
+		{
+			get => _hostBackground;
+			set => UpdateColor(ref _hostBackground, value);
+		}
 
-		public string SideBarBackground { get; set; } = White;
+		private string _background = White;
+		public string Background
+		{
+			get => _background;
+			set => UpdateColor(ref _background, value);
+		}
 
-		public string BottomBarBackground { get; set; } = White;
+		private string _sideBarBackground = White;
+		public string SideBarBackground
+		{
+			get => _sideBarBackground;
+			set => UpdateColor(ref _sideBarBackground, value);
+		}
+
+		private string _bottomBarBackground = White;
+		public string BottomBarBackground
+		{
+			get => _bottomBarBackground;
+			set => UpdateColor(ref _bottomBarBackground, value);
+		}
 
 
 
@@ -231,5 +256,7 @@ namespace ProjectRAM.Editor.Models
 
 		#endregion
 
+		public object Clone()
+			=> JsonSerializer.Deserialize<StyleDescriptor>(this.ToJson())!;
 	}
 }

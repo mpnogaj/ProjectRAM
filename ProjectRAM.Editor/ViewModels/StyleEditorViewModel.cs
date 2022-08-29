@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -16,31 +17,24 @@ namespace ProjectRAM.Editor.ViewModels
 {
 	public class StyleEditorViewModel : ViewModelBase
 	{
-		#region Properties
-		#region Styles
-		private ObservableCollection<Style> _styles;
-
-		public ObservableCollection<Style> Styles
-		{
-			get => _styles;
-			set => SetProperty(ref _styles, value);
-		}
-		#endregion
-
-		#region CurrentStyle
 		private Style _currentStyle;
-
 		public Style CurrentStyle
 		{
 			get => _currentStyle;
 			set
 			{
+				// ask save changes
 				value.ApplyStyle();
 				SetProperty(ref _currentStyle, value);
 			}
 		}
-		#endregion
-		#endregion
+
+		private ObservableCollection<Style> _styles;
+		public ObservableCollection<Style> Styles
+		{
+			get => _styles;
+			set => SetProperty(ref _styles, value);
+		}
 
 		public Action OnClose { get; }
 
@@ -53,23 +47,11 @@ namespace ProjectRAM.Editor.ViewModels
 
 		public StyleEditorViewModel()
 		{
-			_styles = new ObservableCollection<Style>(Essentials.GetAllStyles().ToList());
-			_currentStyle = _styles.FirstOrDefault(x => x.Equals(Settings.CurrentStyle)) ?? _styles[0];
-			OnClose = () =>
-			{
-				if (!CurrentStyle.Identical(Settings.CurrentStyle) && CurrentStyle.FileName != Settings.CurrentStyle.FileName)
-				{
-					Settings.CurrentStyle.ApplyStyle();
-				}
-			};
-
+			OnClose = Settings.CurrentStyle.ApplyStyle;
 			CloseCommand = new RelayCommand(Essentials.CloseTopWindow, () => true);
 			SaveCommand = new RelayCommand(() =>
 			{
-				foreach (var style in _styles)
-				{
-					style.Save();
-				}
+				StyleManager.UpdateStyle(CurrentStyle);
 			}, () => true);
 			RevertToDefaultCommand = new RelayCommand(() =>
 			{
@@ -96,14 +78,7 @@ namespace ProjectRAM.Editor.ViewModels
 					return;
 				}
 
-				Styles.Add(new Style
-				{
-					StyleDescriptor =
-					{
-						Name = "TEMP"
-					},
-					FileName = $"temp.json"
-				});
+				AddStyle(res.EndsWith(".json") ? res : res + ".json");
 			}, () => true);
 
 			SetFontCommand = new AsyncRelayCommand<string>(async (target) =>
@@ -139,6 +114,25 @@ namespace ProjectRAM.Editor.ViewModels
 				propertyInfo.SetValue(CurrentStyle.StyleDescriptor, newFontDescriptor);
 				newFontDescriptor.ApplyFontStyle(Application.Current!.Resources, target);
 			}, () => true);
+
+			_styles = new ObservableCollection<Style>(StyleManager.GetCopyOfStyles());
+			CurrentStyle = _styles[0];
+
+			//Make sure that the list is deep cloned
+			// ReSharper disable once PossibleUnintendedReferenceComparison
+			Debug.Assert(_currentStyle != StyleManager.GetStyles()[0]);
+		}
+
+		private void AddStyle(string fileName)
+		{
+			Styles.Add(new Style
+			{
+				FileName = fileName,
+				StyleDescriptor = new StyleDescriptor
+				{
+					Name = Path.GetFileNameWithoutExtension(fileName)
+				}
+			});
 		}
 	}
 }

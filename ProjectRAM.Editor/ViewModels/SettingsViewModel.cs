@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using ProjectRAM.Editor.Helpers;
@@ -11,23 +12,18 @@ namespace ProjectRAM.Editor.ViewModels
     public class SettingsViewModel : ViewModelBase
 	{
 		private List<CultureInfo> _languages;
-
 		public List<CultureInfo> Languages
 		{
 			get => _languages;
 			set => SetProperty(ref _languages, value);
 		}
 
-		private List<Style> _styles;
-
-		public List<Style> Styles
+		public ReadOnlyCollection<Style> Styles
 		{
-			get => _styles;
-			set => SetProperty(ref _styles, value);
+			get => StyleManager.GetStyles();
 		}
 
 		private Style _style;
-
 		public Style Style
 		{
 			get => _style;
@@ -91,8 +87,7 @@ namespace ProjectRAM.Editor.ViewModels
 			_discordRpc = Settings.UseDiscordRpc;
 			_textEditor = Settings.UseTextEditor;
 
-			_styles = Essentials.GetAllStyles().ToList();
-			_style = _styles.Find(x => x.FileName == Settings.CurrentStyle.FileName) ?? _styles[0];
+			_style = Settings.CurrentStyle;
 		}
 	}
 }

@@ -35,7 +35,6 @@ namespace ProjectRAM.Editor.Properties
 		}
 
 		public static string StyleFile { get; set; } = "default.json";
-		public static HashSet<Style> AvailableStyles { get; set; } = Essentials.GetAllStyles().ToHashSet();
 
 		public static void RestoreDefault()
 		{
@@ -46,7 +45,7 @@ namespace ProjectRAM.Editor.Properties
 			WindowSize = new Tuple<double, double>(800, 600);
 			LeftPanelSize = new GridLength(250);
 			BottomPanelSize = new GridLength(150);
-			StyleFile = "default.json";
+			StyleFile = StyleManager.DefaultFileName;
 			CurrentStyle = new Style();
 		}
 
@@ -116,14 +115,7 @@ namespace ProjectRAM.Editor.Properties
 						StyleFile = style.Value;
 					}
 				}
-				
-				var currentStyle = AvailableStyles.FirstOrDefault((s) => s.FileName.Equals(StyleFile));
-				if (currentStyle == null)
-				{
-					Style.CreateDefaultAndSave();
-					currentStyle = AvailableStyles.First((x) => x.Equals(new Style()));
-				}
-				CurrentStyle = currentStyle;
+				CurrentStyle = StyleManager.GetStyle(StyleFile) ?? StyleManager.Default;
 			}
 			catch
 			{

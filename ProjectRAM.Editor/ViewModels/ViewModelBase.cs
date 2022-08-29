@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -8,9 +9,10 @@ namespace ProjectRAM.Editor.ViewModels
 	{
 		public event PropertyChangedEventHandler? PropertyChanged;
 
-		private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+		public void OnPropertyChanged([CallerMemberName] string? propertyName = null)
 		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			PropertyChanged?.Invoke(this,
+				new PropertyChangedEventArgs(propertyName ?? throw new ArgumentNullException(nameof(propertyName))));
 		}
 
 		protected void SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = "")

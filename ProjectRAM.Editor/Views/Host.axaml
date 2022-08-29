@@ -35,7 +35,6 @@
 								  CanUserSortColumns="False"
 								  GridLinesVisibility="All"
 								  Items="{CompiledBinding Memory}">
-
 							<DataGrid.Styles>
 								<StyleInclude Source="avares://ProjectRAM.Editor/Styles/MemoryGrid.axaml"/>
 							</DataGrid.Styles>
@@ -82,8 +81,9 @@
 					  VerticalAlignment="Stretch" />
 		<Grid Grid.Row="0"
 		      Grid.Column="2"
-		      RowDefinitions="*">
-            <Grid.Styles>
+		      RowDefinitions="*"
+		      Background="{DynamicResource HostBackground}">
+			<Grid.Styles>
                 <StyleInclude Source="avares://ProjectRAM.Editor/Styles/Tapes.axaml"/>
             </Grid.Styles>
 			<DockPanel

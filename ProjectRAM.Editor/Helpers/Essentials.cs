@@ -98,36 +98,6 @@ namespace ProjectRAM.Editor.Helpers
 			return GetAvailableCultures().Contains(userCulture) ? userCulture : new CultureInfo("en");
 		}
 
-		public static HashSet<Style> GetAllStyles()
-		{
-			var styles = new HashSet<Style>();
-			var files = Directory.EnumerateFiles("Styles/");
-			foreach (var file in files)
-			{
-				if (Path.GetExtension(file) != ".json") continue;
-				var content = File.ReadAllText(file);
-				if (string.IsNullOrEmpty(content)) continue;
-				try
-				{
-					var styleDescriptor = JsonSerializer.Deserialize<StyleDescriptor>(content);
-					if (styleDescriptor == null)
-					{
-						continue;
-					}
-					styles.Add(new Style
-					{
-						FileName = Path.GetFileName(file),
-						StyleDescriptor = styleDescriptor
-					});
-				}
-				catch
-				{
-					// ignored
-				}
-			}
-			return styles;
-		}
-
 		public static void CloseTopWindow()
 		{
 			var window = GetTopWindow();
