@@ -249,4 +249,31 @@
   <data name="outputTapeOverflow" xml:space="preserve">
       <value>Output tape is too large. Aborting</value>
   </data>
+  <data name="BackgroundColor" xml:space="preserve">
+    <value>Background color</value>
+  </data>
+  <data name="TabBackgroundColor" xml:space="preserve">
+    <value>Tab background color</value>
+  </data>
+  <data name="SidebarBackgroundColor" xml:space="preserve">
+    <value>Sidebar background color</value>
+  </data>
+  <data name="BottomBarBackgroundColor" xml:space="preserve">
+    <value>Bottom bar background color</value>
+  </data>
+  <data name="MemoryGridRowColor" xml:space="preserve">
+    <value>Memory grid row color</value>
+  </data>
+  <data name="VerificationReportRowColor" xml:space="preserve">
+    <value>Verification report row color</value>
+  </data>
+  <data name="TextEditorBackgroundColor" xml:space="preserve">
+    <value>Text editor background color</value>
+  </data>
+  <data name="TextEditorCaretColor" xml:space="preserve">
+    <value>Text editor's cursor color</value>
+  </data>
+  <data name="TextEditorSelectionColor" xml:space="preserve">
+    <value>Text editor's selection color</value>
+  </data>
 </root>

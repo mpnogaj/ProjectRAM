@@ -88,6 +88,24 @@ namespace ProjectRAM.Editor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background color.
+        /// </summary>
+        public static string BackgroundColor {
+            get {
+                return ResourceManager.GetString("BackgroundColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bottom bar background color.
+        /// </summary>
+        public static string BottomBarBackgroundColor {
+            get {
+                return ResourceManager.GetString("BottomBarBackgroundColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
         public static string clear {
@@ -259,6 +277,15 @@ namespace ProjectRAM.Editor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Memory grid row color.
+        /// </summary>
+        public static string MemoryGridRowColor {
+            get {
+                return ResourceManager.GetString("MemoryGridRowColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Message.
         /// </summary>
         public static string message {
@@ -358,6 +385,15 @@ namespace ProjectRAM.Editor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sidebar background color.
+        /// </summary>
+        public static string SidebarBackgroundColor {
+            get {
+                return ResourceManager.GetString("SidebarBackgroundColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop program.
         /// </summary>
         public static string stopProgram {
@@ -372,6 +408,42 @@ namespace ProjectRAM.Editor.Properties {
         public static string switchEditor {
             get {
                 return ResourceManager.GetString("switchEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tab background color.
+        /// </summary>
+        public static string TabBackgroundColor {
+            get {
+                return ResourceManager.GetString("TabBackgroundColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text editor background color.
+        /// </summary>
+        public static string TextEditorBackgroundColor {
+            get {
+                return ResourceManager.GetString("TextEditorBackgroundColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text editor&apos;s cursor color.
+        /// </summary>
+        public static string TextEditorCaretColor {
+            get {
+                return ResourceManager.GetString("TextEditorCaretColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text editor&apos;s selection color.
+        /// </summary>
+        public static string TextEditorSelectionColor {
+            get {
+                return ResourceManager.GetString("TextEditorSelectionColor", resourceCulture);
             }
         }
         
@@ -408,6 +480,15 @@ namespace ProjectRAM.Editor.Properties {
         public static string verificationReport {
             get {
                 return ResourceManager.GetString("verificationReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verification report row color.
+        /// </summary>
+        public static string VerificationReportRowColor {
+            get {
+                return ResourceManager.GetString("VerificationReportRowColor", resourceCulture);
             }
         }
         

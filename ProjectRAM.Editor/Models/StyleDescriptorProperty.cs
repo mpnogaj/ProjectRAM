@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.ViewModels;
 
 namespace ProjectRAM.Editor.Models
@@ -11,8 +12,8 @@ namespace ProjectRAM.Editor.Models
 	{
 		private readonly StyleEditorViewModel _viewModel;
 		private readonly PropertyInfo _propertyInfo;
-
-		public string PropertyName => _propertyInfo.Name;
+		
+		public string PropertyName { get; }
 
 		public string PropertyValue
 		{
@@ -29,6 +30,9 @@ namespace ProjectRAM.Editor.Models
 
 			_propertyInfo = pi;
 			_viewModel = viewModel;
+
+			var attr = pi.GetCustomAttribute(typeof(LocalizedDisplayNameAttribute), false);
+			PropertyName = attr != null ? ((LocalizedDisplayNameAttribute)attr).DisplayName : pi.Name;
 		}
 
 		public void CurrentStyleChanged()

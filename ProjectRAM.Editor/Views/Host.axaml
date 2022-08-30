@@ -14,7 +14,7 @@
 	<UserControl.Resources>
 		<properties:Settings x:Key="Settings" />
 	</UserControl.Resources>
-	<Grid Background="{DynamicResource HostBackground}">
+	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="{Binding Source={StaticResource Settings}, Path=LeftPanelSize, Mode=TwoWay}" />
 			<ColumnDefinition Width="4" />
@@ -25,7 +25,7 @@
 			<RowDefinition Height="4" />
 			<RowDefinition Height="{Binding Source={StaticResource Settings}, Path=BottomPanelSize, Mode=TwoWay}" />
 		</Grid.RowDefinitions>
-		<Grid Grid.Row="0" Grid.Column="0" Background="{DynamicResource SideBarBackground}" ZIndex="2">
+		<Grid Grid.Row="0" Grid.Column="0" Background="{DynamicResource SidebarBackground}" ZIndex="2">
 			<TabControl Classes="editor">
 				<TabItem Header="{x:Static properties:Strings.memory}">
 					<Border BorderThickness="1" Background="{DynamicResource DataGridBackground}"
@@ -82,7 +82,7 @@
 		<Grid Grid.Row="0"
 		      Grid.Column="2"
 		      RowDefinitions="*"
-		      Background="{DynamicResource HostBackground}">
+		      Background="{DynamicResource TabBackground}">
 			<Grid.Styles>
                 <StyleInclude Source="avares://ProjectRAM.Editor/Styles/Tapes.axaml"/>
             </Grid.Styles>

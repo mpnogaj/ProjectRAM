@@ -141,7 +141,34 @@
   <data name="message" xml:space="preserve">
     <value>Wiadomość</value>
   </data>
-    <data name="outputTapeOverflow" xml:space="preserve">
+  <data name="outputTapeOverflow" xml:space="preserve">
         <value>Taśma wyjścia jest za duża. Przerywanie</value>
     </data>
+  <data name="BackgroundColor" xml:space="preserve">
+    <value>Kolor tła</value>
+  </data>
+  <data name="TabBackgroundColor" xml:space="preserve">
+    <value>Kolor tła karty</value>
+  </data>
+  <data name="SidebarBackgroundColor" xml:space="preserve">
+    <value>Kolor tła panelu bocznego</value>
+  </data>
+  <data name="BottomBarBackgroundColor" xml:space="preserve">
+    <value>Kolor tła panelu dolnego</value>
+  </data>
+  <data name="MemoryGridRowColor" xml:space="preserve">
+    <value>Kolor rzędu tabeli pamięci</value>
+  </data>
+  <data name="VerificationReportRowColor" xml:space="preserve">
+    <value>Kolor rzędu raportu weryfikacji</value>
+  </data>
+  <data name="TextEditorBackgroundColor" xml:space="preserve">
+    <value>Kolor tła edytora tekstowego</value>
+  </data>
+  <data name="TextEditorCaretColor" xml:space="preserve">
+    <value>Kolor kursora edytora tekstowego</value>
+  </data>
+  <data name="TextEditorSelectionColor" xml:space="preserve">
+    <value>Kolor zaznaczenia edytora tekstowego</value>
+  </data>
 </root>

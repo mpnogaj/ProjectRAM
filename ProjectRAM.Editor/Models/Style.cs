@@ -13,16 +13,13 @@ namespace ProjectRAM.Editor.Models
 		public string FileName { get; init; } = "default.json";
 		public StyleDescriptor StyleDescriptor { get; set; } = new();
 
-		public bool Identical(Style lhs)
-		{
-			return StyleDescriptor.Equals(lhs.StyleDescriptor);
-		}
+		public bool Identical(Style lhs) 
+			=> StyleDescriptor.Equals(lhs.StyleDescriptor);
 
 		public void Save()
 		{
 			using var sr = new StreamWriter($"Styles/{FileName}");
 			sr.Write(StyleDescriptor.ToJson());
-			sr.Flush();
 		}
 
 		public void ApplyStyle()
@@ -33,7 +30,7 @@ namespace ProjectRAM.Editor.Models
 				.ToList()
 				.ForEach(property =>
 				{
-					string name = property.Name;
+					var name = property.Name;
 					var value = property.GetValue(this.StyleDescriptor);
 					switch (value)
 					{
@@ -58,21 +55,11 @@ namespace ProjectRAM.Editor.Models
 			StyleDescriptor.SimpleEditor.ApplyFontStyle(res);
 		}
 
-		public static void CreateDefaultAndSave()
-		{
-			var def = new Style();
-			def.Save();
-		}
+		public static void CreateDefaultAndSave() 
+			=> new Style().Save();
 
-		public override bool Equals(object? obj)
-		{
-			if (obj is not Style lhs)
-			{
-				return false;
-			}
-
-			return lhs.GetHashCode() == GetHashCode();
-		}
+		public override bool Equals(object? obj) 
+			=> obj is Style lhs && lhs.GetHashCode() == GetHashCode();
 
 		public override int GetHashCode()
 			=> HashCode.Combine(FileName);
