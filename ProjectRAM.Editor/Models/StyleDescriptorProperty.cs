@@ -3,27 +3,27 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
-using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.ViewModels;
 
 namespace ProjectRAM.Editor.Models
 {
-	public sealed class StyleDescriptorProperty : INotifyPropertyChanged
+	public sealed class StyleDescriptorProperty<T> : INotifyPropertyChanged
 	{
 		private readonly StyleEditorViewModel _viewModel;
 		private readonly PropertyInfo _propertyInfo;
 		
 		public string PropertyName { get; }
+		public string LocalizedName { get; }
 
-		public string PropertyValue
+		public T PropertyValue
 		{
-			get => (string)_propertyInfo.GetValue(_viewModel.CurrentStyle.StyleDescriptor)!;
+			get => (T)_propertyInfo.GetValue(_viewModel.CurrentStyle.StyleDescriptor)!;
 			set => _propertyInfo.SetValue(_viewModel.CurrentStyle.StyleDescriptor, value);
 		}
 
 		public StyleDescriptorProperty(PropertyInfo pi, StyleEditorViewModel viewModel)
 		{
-			if (pi.PropertyType != typeof(string))
+			if (pi.PropertyType != typeof(string) && pi.PropertyType != typeof(FontDescriptor))
 			{
 				throw new ArgumentException();
 			}
@@ -31,8 +31,10 @@ namespace ProjectRAM.Editor.Models
 			_propertyInfo = pi;
 			_viewModel = viewModel;
 
+			PropertyName = pi.Name;
+
 			var attr = pi.GetCustomAttribute(typeof(LocalizedDisplayNameAttribute), false);
-			PropertyName = attr != null ? ((LocalizedDisplayNameAttribute)attr).DisplayName : pi.Name;
+			LocalizedName = attr != null ? ((LocalizedDisplayNameAttribute)attr).DisplayName : PropertyName;
 		}
 
 		public void CurrentStyleChanged()

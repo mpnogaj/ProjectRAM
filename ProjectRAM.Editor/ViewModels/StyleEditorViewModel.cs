@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -20,7 +19,7 @@ namespace ProjectRAM.Editor.ViewModels
 {
 	public class StyleEditorViewModel : ViewModelBase
 	{
-		private Style _currentStyle;
+		private Style _currentStyle = null!;
 		public Style CurrentStyle
 		{
 			get => _currentStyle;
@@ -43,21 +42,19 @@ namespace ProjectRAM.Editor.ViewModels
 			set => SetProperty(ref _styles, value);
 		}
 
-		public List<StyleDescriptorProperty> ColorProperties { get; }
+		public List<StyleDescriptorProperty<string>> ColorProperties { get; }
+		public List<StyleDescriptorProperty<FontDescriptor>> FontsProperties { get; }
 
 		public Action OnClose { get; }
 
 		public RelayCommand SaveCommand { get; }
-		public RelayCommand CloseCommand { get; }
 		public RelayCommand RevertToDefaultCommand { get; }
 		public AsyncRelayCommand CreateNewStyleCommand { get; }
-
 		public AsyncRelayCommand<string> SetFontCommand { get; }
 
 		public StyleEditorViewModel()
 		{
 			OnClose = Settings.CurrentStyle.ApplyStyle;
-			CloseCommand = new RelayCommand(Essentials.CloseTopWindow, () => true);
 			SaveCommand = new RelayCommand(() =>
 			{
 				StyleManager.UpdateStyle(CurrentStyle);
@@ -121,17 +118,24 @@ namespace ProjectRAM.Editor.ViewModels
 					Foreground = newFont.Foreground.Color.ToString()
 				};
 				propertyInfo.SetValue(CurrentStyle.StyleDescriptor, newFontDescriptor);
-				newFontDescriptor.ApplyFontStyle(Application.Current!.Resources, target);
 			}, () => true);
 
 			_styles = new ObservableCollection<Style>(StyleManager.GetCopyOfStyles());
 
-			ColorProperties =
-				typeof(StyleDescriptor).GetProperties()
-					.Where(pi => pi.PropertyType == typeof(string) && 
-					             !pi.GetCustomAttributes(typeof(InfoAttribute), false).Any())
-					.Select(pi => new StyleDescriptorProperty(pi, this))
-					.ToList();
+			var allProps = typeof(StyleDescriptor).GetProperties();
+
+			ColorProperties = allProps
+				.Where(propertyInfo => 
+					propertyInfo.PropertyType == typeof(string) && 
+					!propertyInfo.GetCustomAttributes(typeof(InfoAttribute), false).Any())
+				.Select(propertyInfo => new StyleDescriptorProperty<string>(propertyInfo, this))
+				.ToList();
+
+			FontsProperties = allProps
+				.Where(propertyInfo => propertyInfo.PropertyType == typeof(FontDescriptor))
+				.Select(propertyInfo => new StyleDescriptorProperty<FontDescriptor>(propertyInfo, this))
+				.ToList();
+				
 			CurrentStyle = _styles[0];
 			//Make sure that the list is deep cloned
 			// ReSharper disable once PossibleUnintendedReferenceComparison

@@ -6,6 +6,7 @@
         xmlns:converters="clr-namespace:ProjectRAM.Editor.Converters"
         xmlns:reflection="clr-namespace:System.Reflection;assembly=System.Runtime"
         xmlns:models="clr-namespace:ProjectRAM.Editor.Models"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ProjectRAM.Editor.Views.StyleEditor"
         x:DataType="viewModels:StyleEditorViewModel"
@@ -55,9 +56,12 @@
                 <ScrollViewer>
                     <ItemsPresenter Items="{CompiledBinding ColorProperties}">
                         <ItemsPresenter.ItemTemplate>
-                            <DataTemplate DataType="models:StyleDescriptorProperty">
-                                <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <TextBlock Text="{CompiledBinding PropertyName}"/>
+                            <DataTemplate>
+                                <DataTemplate.DataType>
+                                    <x:Type TypeName="models:StyleDescriptorProperty" x:TypeArguments="system:String"/>
+                                </DataTemplate.DataType>
+	                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="{CompiledBinding LocalizedName}"/>
                                     <ColorPicker HorizontalAlignment="Right" 
                                                  HsvColor="{CompiledBinding PropertyValue,
                                                             Converter={StaticResource StringToHsvColorConverter},
@@ -72,7 +76,23 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Czcionki">
-                
+	            <ScrollViewer>
+		            <ItemsPresenter Items="{CompiledBinding FontsProperties}">
+			            <ItemsPresenter.ItemTemplate>
+				            <DataTemplate>
+                                <DataTemplate.DataType>
+                                     <x:Type TypeName="models:StyleDescriptorProperty" x:TypeArguments="models:FontDescriptor"/>
+                                </DataTemplate.DataType>
+					            <StackPanel Orientation="Horizontal" Spacing="10">
+						            <TextBlock Text="{CompiledBinding LocalizedName}"/>
+						            <Button Content="..."
+						                    Command="{Binding DataContext.SetFontCommand, ElementName=StyleEditor}"
+						                    CommandParameter="{CompiledBinding PropertyName}"/>
+					            </StackPanel>
+				            </DataTemplate>
+			            </ItemsPresenter.ItemTemplate>
+		            </ItemsPresenter>
+	            </ScrollViewer>
             </TabItem>
         </TabControl>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="15">
