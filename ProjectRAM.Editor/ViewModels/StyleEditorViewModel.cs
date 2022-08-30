@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -26,6 +29,10 @@ namespace ProjectRAM.Editor.ViewModels
 				// ask save changes
 				value.ApplyStyle();
 				SetProperty(ref _currentStyle, value);
+				foreach (var colorProperty in ColorProperties)
+				{
+					colorProperty.CurrentStyleChanged();
+				}
 			}
 		}
 
@@ -35,6 +42,8 @@ namespace ProjectRAM.Editor.ViewModels
 			get => _styles;
 			set => SetProperty(ref _styles, value);
 		}
+
+		public List<StyleDescriptorProperty> ColorProperties { get; }
 
 		public Action OnClose { get; }
 
@@ -116,8 +125,14 @@ namespace ProjectRAM.Editor.ViewModels
 			}, () => true);
 
 			_styles = new ObservableCollection<Style>(StyleManager.GetCopyOfStyles());
-			CurrentStyle = _styles[0];
 
+			ColorProperties =
+				typeof(StyleDescriptor).GetProperties()
+					.Where(pi => pi.PropertyType == typeof(string) && 
+					             !pi.GetCustomAttributes(typeof(InfoAttribute), false).Any())
+					.Select(pi => new StyleDescriptorProperty(pi, this))
+					.ToList();
+			CurrentStyle = _styles[0];
 			//Make sure that the list is deep cloned
 			// ReSharper disable once PossibleUnintendedReferenceComparison
 			Debug.Assert(_currentStyle != StyleManager.GetStyles()[0]);

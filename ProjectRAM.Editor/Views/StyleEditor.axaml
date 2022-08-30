@@ -4,17 +4,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:ProjectRAM.Editor.ViewModels"
         xmlns:converters="clr-namespace:ProjectRAM.Editor.Converters"
+        xmlns:reflection="clr-namespace:System.Reflection;assembly=System.Runtime"
+        xmlns:models="clr-namespace:ProjectRAM.Editor.Models"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ProjectRAM.Editor.Views.StyleEditor"
         x:DataType="viewModels:StyleEditorViewModel"
+        x:Name="StyleEditor"
         Title="Style editor" Height="500" Width="600"
         MinHeight="150" MinWidth="200"
         WindowStartupLocation="CenterOwner"
         Background="{DynamicResource Background}"
         Closing="OnClosing">
+
+    <Design.DataContext>
+        <viewModels:StyleEditorViewModel/>
+    </Design.DataContext>
     <Window.Resources>
         <converters:StringToHsvColorConverter x:Key="StringToHsvColorConverter"/>
         <converters:StringToColorConverter x:Key="StringToColorConverter"/>
+        <converters:StyleDescriptorValueConverter x:Key="StyleDescriptorValueConverter"/>
     </Window.Resources>
 
     <Grid RowDefinitions="Auto,*,50" 
@@ -33,7 +41,7 @@
             </StackPanel>
         </StackPanel>
         <TabControl Grid.Row="1"
-                    TabStripPlacement="Left"
+                    TabStripPlacement="Top"
                     Margin="0, 10, 0, 0">
             <TabControl.Styles>
                 <Style Selector="TextBlock">
@@ -43,308 +51,33 @@
                             Value="0, 0,30, 0"/>
                 </Style>
             </TabControl.Styles>
-            <TabItem Header="Główne">
-                <Grid ColumnDefinitions="Auto, *"
-                      RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="0"
-                               Text="Normalny tekst"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="0"
-                            Content="..."
-                            CommandParameter="NormalText"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="1"
-                               Text="Tekst pola tekstowego"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="1"
-                            Content="..."
-                            CommandParameter="TextBoxText"
-                            Command="{CompiledBinding SetFontCommand}"/>
-                    
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="2"
-                               Text="Nagłówek"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="2"
-                            Content="..."
-                            CommandParameter="HeaderText"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="3"
-                               Text="Nagłówek wybrany"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="3"
-                            Content="..."
-                            CommandParameter="HeaderTextSelected"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="4"
-                               Text="Nagłówek najechany"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="4"
-                            Content="..."
-                            CommandParameter="HeaderTextPointerOver"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="5"
-                               Text="Kolor okna"/>
-                    <ColorPicker Grid.Column="1"
-                                 Grid.Row="5"
-                                 HorizontalAlignment="Left"
-                                 HsvColor="{CompiledBinding CurrentStyle.StyleDescriptor.Background, 
-                                            Mode=OneWay, 
-                                            Converter={StaticResource StringToHsvColorConverter}}"
-                                 Color="{CompiledBinding CurrentStyle.StyleDescriptor.Background,
-										 Mode=TwoWay,
-                                         Converter={StaticResource StringToColorConverter}}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="6"
-                               Text="Kolor hosta"/>
-                    <ColorPicker Grid.Column="1"
-                                 Grid.Row="6"
-                                 HorizontalAlignment="Left"
-                                 HsvColor="{CompiledBinding CurrentStyle.StyleDescriptor.HostBackground, 
-                                            Mode=OneWay, 
-                                            Converter={StaticResource StringToHsvColorConverter}}"
-                                 Color="{CompiledBinding CurrentStyle.StyleDescriptor.HostBackground,
-										 Mode=TwoWay,
-                                         Converter={StaticResource StringToColorConverter}}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="7"
-                               Text="Kolor dolnego panelu"/>
-                    <ColorPicker Grid.Column="1"
-                                 Grid.Row="7"
-                                 HorizontalAlignment="Left"
-                                 HsvColor="{CompiledBinding CurrentStyle.StyleDescriptor.BottomBarBackground, 
-                                            Mode=OneWay, 
-                                            Converter={StaticResource StringToHsvColorConverter}}"
-                                 Color="{CompiledBinding CurrentStyle.StyleDescriptor.BottomBarBackground,
-										 Mode=TwoWay,
-                                         Converter={StaticResource StringToColorConverter}}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="8"
-                               Text="Kolor bocznego panelu"/>
-                    <ColorPicker Grid.Column="1"
-                                 Grid.Row="8"
-                                 HorizontalAlignment="Left"
-                                 HsvColor="{CompiledBinding CurrentStyle.StyleDescriptor.SideBarBackground, 
-                                            Mode=OneWay, 
-                                            Converter={StaticResource StringToHsvColorConverter}}"
-                                 Color="{CompiledBinding CurrentStyle.StyleDescriptor.SideBarBackground,
-										 Mode=TwoWay,
-                                         Converter={StaticResource StringToColorConverter}}"/>
-                </Grid>
+            <TabItem Header="Kolory">
+                <ScrollViewer>
+                    <ItemsPresenter Items="{CompiledBinding ColorProperties}">
+                        <ItemsPresenter.ItemTemplate>
+                            <DataTemplate DataType="models:StyleDescriptorProperty">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="{CompiledBinding PropertyName}"/>
+                                    <ColorPicker HorizontalAlignment="Right" 
+                                                 HsvColor="{CompiledBinding PropertyValue,
+                                                            Converter={StaticResource StringToHsvColorConverter},
+                                                            Mode=OneWay}"
+                                                 Color="{CompiledBinding PropertyValue,
+                                                         Converter={StaticResource StringToColorConverter},
+                                                         Mode=TwoWay}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsPresenter.ItemTemplate>
+                    </ItemsPresenter>
+                </ScrollViewer>
             </TabItem>
-            <TabItem Header="Taśmy">
-                <Grid ColumnDefinitions="Auto, *"
-                      RowDefinitions="Auto, Auto, Auto, Auto">
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="0"
-                               Text="Taśma wejścia tytuł"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="0"
-                            Content="..."
-                            CommandParameter="InputTapeLbl"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="1"
-                               Text="Taśma wejścia"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="1"
-                            Content="..."
-                            CommandParameter="InputTape"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="2"
-                               Text="Taśma wyjścia tytył"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="2"
-                            Content="..."
-                            CommandParameter="OutputTapeLbl"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="3"
-                               Text="Taśma wyjścia"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="3"
-                            Content="..."
-                            CommandParameter="OutputTape"
-                            Command="{CompiledBinding SetFontCommand}"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Edytory">
-
-                <Grid ColumnDefinitions="Auto, *"
-                      RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="0"
-                               Text="Simple editor tekst"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="0"
-                            Content="..."
-                            CommandParameter="SimpleEditor"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="1"
-                               Text="Simple editor nagłówek"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="1"
-                            Content="..."
-                            CommandParameter="SimpleEditorHeader"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="2"
-                               Text="Edytor tekstowy czcionka"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="2"
-                            Content="..."
-                            CommandParameter="TextEditor"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="3"
-                               Text="Edytor tekstowy tło"/>
-                    <ColorPicker Grid.Column="1"
-                                 Grid.Row="3"
-                                 HorizontalAlignment="Left"
-                                 HsvColor="{CompiledBinding CurrentStyle.StyleDescriptor.TextEditorBackground, 
-                                            Mode=OneWay, 
-                                            Converter={StaticResource StringToHsvColorConverter}}"
-                                 Color="{CompiledBinding CurrentStyle.StyleDescriptor.TextEditorBackground,
-										 Mode=TwoWay,
-                                         Converter={StaticResource StringToColorConverter}}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="4"
-                               Text="Edytor tekstowy kursor"/>
-                    <ColorPicker Grid.Column="1"
-                                 Grid.Row="4"
-                                 HorizontalAlignment="Left"
-                                 HsvColor="{CompiledBinding CurrentStyle.StyleDescriptor.TextEditorCaretColor, 
-                                            Mode=OneWay, 
-                                            Converter={StaticResource StringToHsvColorConverter}}"
-                                 Color="{CompiledBinding CurrentStyle.StyleDescriptor.TextEditorCaretColor,
-										 Mode=TwoWay,
-                                         Converter={StaticResource StringToColorConverter}}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="5"
-                               Text="Edytor tekstowy zaznaczenie"/>
-                    <ColorPicker Grid.Column="1"
-                                 Grid.Row="5"
-                                 HorizontalAlignment="Left"
-                                 HsvColor="{CompiledBinding CurrentStyle.StyleDescriptor.TextEditorSelectionColor, 
-                                            Mode=OneWay, 
-                                            Converter={StaticResource StringToHsvColorConverter}}"
-                                 Color="{CompiledBinding CurrentStyle.StyleDescriptor.TextEditorSelectionColor,
-										 Mode=TwoWay,
-                                         Converter={StaticResource StringToColorConverter}}"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Pamięć">
-                <Grid ColumnDefinitions="Auto, *"
-                      RowDefinitions="Auto, Auto, Auto, Auto">
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="0"
-                               Text="Address header"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="0"
-                            Content="..."
-                            CommandParameter="AddressHeader"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="1"
-                               Text="Adres"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="1"
-                            Content="..."
-                            CommandParameter="Address"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="2"
-                               Text="Nagłówek wartość"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="2"
-                            Content="..."
-                            CommandParameter="ValueHeader"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="3"
-                               Text="Wartość"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="3"
-                            Content="..."
-                            CommandParameter="Value"
-                            Command="{CompiledBinding SetFontCommand}"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Lista błędów">
-                <Grid ColumnDefinitions="Auto, *"
-                      RowDefinitions="Auto, Auto, Auto, Auto">
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="0"
-                               Text="Line header"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="0"
-                            Content="..."
-                            CommandParameter="LineHeader"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="1"
-                               Text="Line"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="1"
-                            Content="..."
-                            CommandParameter="Line"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="2"
-                               Text="Message header"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="2"
-                            Content="..."
-                            CommandParameter="MessageHeader"
-                            Command="{CompiledBinding SetFontCommand}"/>
-
-                    <TextBlock Grid.Column="0"
-                               Grid.Row="3"
-                               Text="Message"/>
-                    <Button Grid.Column="1"
-                            Grid.Row="3"
-                            Content="..."
-                            CommandParameter="Message"
-                            Command="{CompiledBinding SetFontCommand}"/>
-                </Grid>
+            <TabItem Header="Czcionki">
+                
             </TabItem>
         </TabControl>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="15">
             <Button Content="Save" 
                     Command="{CompiledBinding SaveCommand}" />
-            <Button Content="Close" 
-                    Command="{CompiledBinding CloseCommand}"/>
             <Button Content="Revert to default"
                     Command="{CompiledBinding RevertToDefaultCommand}"/>
         </StackPanel>
