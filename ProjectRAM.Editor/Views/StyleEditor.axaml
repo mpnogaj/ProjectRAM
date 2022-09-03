@@ -54,22 +54,31 @@
             </TabControl.Styles>
             <TabItem Header="Kolory">
                 <ScrollViewer>
-                    <ItemsPresenter Items="{CompiledBinding ColorProperties}">
+                    <ItemsPresenter Items="{CompiledBinding ColorProperties}"
+                                    Grid.IsSharedSizeScope="True">
                         <ItemsPresenter.ItemTemplate>
                             <DataTemplate>
                                 <DataTemplate.DataType>
                                     <x:Type TypeName="models:StyleDescriptorProperty" x:TypeArguments="system:String"/>
                                 </DataTemplate.DataType>
-	                            <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <TextBlock Text="{CompiledBinding LocalizedName}"/>
-                                    <ColorPicker HorizontalAlignment="Right" 
+	                            <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"
+                                                          SharedSizeGroup="PropertyName"/>
+                                        <ColumnDefinition Width="Auto"
+                                                          SharedSizeGroup="ColorPicker"/>
+                                    </Grid.ColumnDefinitions>
+		                            <TextBlock Text="{CompiledBinding LocalizedName}"
+		                                       Grid.Column="0"/>
+                                    <ColorPicker Width="100"
                                                  HsvColor="{CompiledBinding PropertyValue,
                                                             Converter={StaticResource StringToHsvColorConverter},
                                                             Mode=OneWay}"
                                                  Color="{CompiledBinding PropertyValue,
                                                          Converter={StaticResource StringToColorConverter},
-                                                         Mode=TwoWay}"/>
-                                </StackPanel>
+                                                         Mode=TwoWay}"
+                                                 Grid.Column="1"/>
+                                </Grid>
                             </DataTemplate>
                         </ItemsPresenter.ItemTemplate>
                     </ItemsPresenter>
@@ -77,18 +86,27 @@
             </TabItem>
             <TabItem Header="Czcionki">
 	            <ScrollViewer>
-		            <ItemsPresenter Items="{CompiledBinding FontsProperties}">
+		            <ItemsPresenter Items="{CompiledBinding FontsProperties}"
+		                            Grid.IsSharedSizeScope="True">
 			            <ItemsPresenter.ItemTemplate>
 				            <DataTemplate>
                                 <DataTemplate.DataType>
                                      <x:Type TypeName="models:StyleDescriptorProperty" x:TypeArguments="models:FontDescriptor"/>
                                 </DataTemplate.DataType>
-					            <StackPanel Orientation="Horizontal" Spacing="10">
-						            <TextBlock Text="{CompiledBinding LocalizedName}"/>
-						            <Button Content="..."
+					            <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"
+                                                          SharedSizeGroup="PropertyName"/>
+                                        <ColumnDefinition Width="Auto"
+                                                          SharedSizeGroup="Button"/>
+                                    </Grid.ColumnDefinitions>
+						            <TextBlock Grid.Column="0" 
+						                       Text="{CompiledBinding LocalizedName}"/>
+						            <Button Grid.Column="1" 
+						                    Content="..."
 						                    Command="{Binding DataContext.SetFontCommand, ElementName=StyleEditor}"
 						                    CommandParameter="{CompiledBinding PropertyName}"/>
-					            </StackPanel>
+					            </Grid>
 				            </DataTemplate>
 			            </ItemsPresenter.ItemTemplate>
 		            </ItemsPresenter>

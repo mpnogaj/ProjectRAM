@@ -82,17 +82,20 @@ namespace ProjectRAM.Editor.ViewModels
 					});
 				}
 
-				if (errorList.Count == 0)
-				{
-					if (shouldShowOnSuccess)
-						await Essentials.ShowMessageBox(Strings.verification, Strings.everythingAlright);
-					return;
-				}
-
 				Page!.Errors = errorList;
 
-				await Essentials.ShowMessageBox(Strings.verification,
-					errorList.Count == 1 ? Strings.foundError : string.Format(Strings.foundErrors, errorList.Count));
+				switch (errorList.Count)
+				{
+					case 0 when shouldShowOnSuccess:
+						await Essentials.ShowMessageBox(Strings.verification, Strings.everythingAlright);
+						break;
+					case > 0:
+						await Essentials.ShowMessageBox(Strings.verification,
+							errorList.Count == 1
+								? Strings.foundError
+								: string.Format(Strings.foundErrors, errorList.Count));
+						break;
+				}
 			}, () => !IsProgramRunning() && IsFileOpened());
 
 			RunProgram = new AsyncRelayCommand(async () =>

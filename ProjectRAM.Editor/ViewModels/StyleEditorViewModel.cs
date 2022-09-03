@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Media;
 using FontPicker;
 using ProjectRAM.Editor.Dialogs;
@@ -14,6 +7,12 @@ using ProjectRAM.Editor.Helpers;
 using ProjectRAM.Editor.Models;
 using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.ViewModels.Commands;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace ProjectRAM.Editor.ViewModels
 {
@@ -28,10 +27,7 @@ namespace ProjectRAM.Editor.ViewModels
 				// ask save changes
 				value.ApplyStyle();
 				SetProperty(ref _currentStyle, value);
-				foreach (var colorProperty in ColorProperties)
-				{
-					colorProperty.CurrentStyleChanged();
-				}
+				NotifyAllPropertiesChanged();
 			}
 		}
 
@@ -65,9 +61,10 @@ namespace ProjectRAM.Editor.ViewModels
 				{
 					Name = CurrentStyle.StyleDescriptor.Name
 				};
+				NotifyAllPropertiesChanged();
 				CurrentStyle.ApplyStyle();
 			}, () => true);
-			
+
 			CreateNewStyleCommand = new AsyncRelayCommand(async () =>
 			{
 				var res = await DialogManager.ShowInputDialog("Create new style",
@@ -125,8 +122,8 @@ namespace ProjectRAM.Editor.ViewModels
 			var allProps = typeof(StyleDescriptor).GetProperties();
 
 			ColorProperties = allProps
-				.Where(propertyInfo => 
-					propertyInfo.PropertyType == typeof(string) && 
+				.Where(propertyInfo =>
+					propertyInfo.PropertyType == typeof(string) &&
 					!propertyInfo.GetCustomAttributes(typeof(InfoAttribute), false).Any())
 				.Select(propertyInfo => new StyleDescriptorProperty<string>(propertyInfo, this))
 				.ToList();
@@ -135,11 +132,19 @@ namespace ProjectRAM.Editor.ViewModels
 				.Where(propertyInfo => propertyInfo.PropertyType == typeof(FontDescriptor))
 				.Select(propertyInfo => new StyleDescriptorProperty<FontDescriptor>(propertyInfo, this))
 				.ToList();
-				
+
 			CurrentStyle = _styles[0];
 			//Make sure that the list is deep cloned
 			// ReSharper disable once PossibleUnintendedReferenceComparison
 			Debug.Assert(_currentStyle != StyleManager.GetStyles()[0]);
+		}
+
+		private void NotifyAllPropertiesChanged()
+		{
+			foreach (var colorProperty in ColorProperties)
+			{
+				colorProperty.CurrentStyleChanged();
+			}
 		}
 
 		private void AddStyle(string fileName)
