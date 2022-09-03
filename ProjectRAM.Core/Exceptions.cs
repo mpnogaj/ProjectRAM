@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using ProjectRAM.Core.Properties;
 
 namespace ProjectRAM.Core
@@ -11,26 +12,18 @@ namespace ProjectRAM.Core
 	[ExcludeFromCodeCoverage]
 	public class AccumulatorEmptyException : RamInterpreterException
 	{
-		#region Private Fields
-
-		private readonly string _message;
-
-		#endregion Private Fields
-
-		#region Properties
-
-		public override string Message => _message;
-
-		#endregion Properties
-
-		#region Constructors
+		public override string Message { get; }
 
 		public AccumulatorEmptyException(long line) : base(line)
 		{
-			_message = Resources.accumulatorUninitializedMessage;
+			Message = Resources.ResourceManager.GetString(nameof(Resources.accumulatorUninitializedMessage),
+				CultureInfo.InvariantCulture) ?? throw new Exception();
 		}
 
-		#endregion Constructors
+		public override string LocalizedMessage()
+		{
+			return Resources.accumulatorUninitializedMessage;
+		}
 	}
 
 	/// <summary>
@@ -40,26 +33,18 @@ namespace ProjectRAM.Core
 	[ExcludeFromCodeCoverage]
 	public class ArgumentIsNotValidException : RamInterpreterException
 	{
-		#region Private Fields
-
-		private readonly string _message;
-
-		#endregion Private Fields
-
-		#region Properties
-
-		public override string Message => _message;
-
-		#endregion Properties
-
-		#region Constructors
+		public override string Message { get; }
 
 		public ArgumentIsNotValidException(long line) : base(line)
 		{
-			_message = Resources.invalidArgumentMessage;
+			Message = Resources.ResourceManager.GetString(nameof(Resources.invalidArgumentMessage),
+				CultureInfo.InvariantCulture) ?? throw new Exception(); 
 		}
 
-		#endregion Constructors
+		public override string LocalizedMessage()
+		{
+			return Resources.invalidArgumentMessage;
+		}
 	}
 
 	///<summary>
@@ -67,28 +52,19 @@ namespace ProjectRAM.Core
 	///Runtime exception
 	///</summary>
 	[ExcludeFromCodeCoverage]
-	public class CellDoesntExistException : RamInterpreterException
+	public class UninitializedCellException : RamInterpreterException
 	{
-		#region Private Fields
-
-		private readonly string _message;
-
-		#endregion Private Fields
-
-		#region Properties
-
-		public override string Message => _message;
-
-		#endregion Properties
-
-		#region Constructors
-
-		public CellDoesntExistException(long line) : base(line)
+		public override string Message { get; }
+		
+		public UninitializedCellException(long line) : base(line)
 		{
-			_message = Resources.cellUninitializedMessage;
+			Message = Resources.cellUninitializedMessage;
 		}
 
-		#endregion Constructors
+		public override string LocalizedMessage()
+		{
+			return Resources.cellUninitializedMessage;
+		}
 	}
 
 	/// <summary>
@@ -98,26 +74,18 @@ namespace ProjectRAM.Core
 	[ExcludeFromCodeCoverage]
 	public class InputTapeEmptyException : RamInterpreterException
 	{
-		#region Private Fields
-
-		private readonly string _message;
-
-		#endregion Private Fields
-
-		#region Properties
-
-		public override string Message => _message;
-
-		#endregion Properties
-
-		#region Constructors
+		public override string Message { get; }
 
 		public InputTapeEmptyException(long line) : base(line)
 		{
-			_message = Resources.inputTapeEmptyMessage;
+			Message = Resources.ResourceManager.GetString(nameof(Resources.inputTapeEmptyMessage),
+				CultureInfo.InvariantCulture) ?? throw new Exception();
 		}
 
-		#endregion Constructors
+		public override string LocalizedMessage()
+		{
+			return Resources.inputTapeEmptyMessage;
+		}
 	}
 
 	/// <summary>
@@ -125,31 +93,22 @@ namespace ProjectRAM.Core
 	/// Can me verified
 	/// </summary>
 	[ExcludeFromCodeCoverage]
-	public class LabelDoesntExistException : RamInterpreterException
+	public class UnknownLabelException : RamInterpreterException
 	{
-		#region Private Fileds
+		private string Label { get; }
+		public override string Message { get; }
 
-		private readonly string _label;
-		private readonly string _message;
-
-		#endregion Private Fileds
-
-		#region Properties
-
-		public string Label => _label;
-		public override string Message => _message;
-
-		#endregion Properties
-
-		#region Constructors
-
-		public LabelDoesntExistException(long line, string label) : base(line)
+		public UnknownLabelException(long line, string label) : base(line)
 		{
-			_message = string.Format(Resources.labelDoesntExistMessage, label);
-			_label = label;
+			Message = string.Format(Resources.ResourceManager.GetString(nameof(Resources.labelDoesntExistMessage), 
+				CultureInfo.InvariantCulture) ?? throw new Exception(), label);
+			Label = label;
 		}
 
-		#endregion Constructors
+		public override string LocalizedMessage()
+{
+			return string.Format(Resources.labelDoesntExistMessage, Label);
+		}
 	}
 
 	/// <summary>
@@ -159,71 +118,18 @@ namespace ProjectRAM.Core
 	[ExcludeFromCodeCoverage]
 	public class LineIsEmptyException : RamInterpreterException
 	{
-		#region Private Fields
-
-		private readonly string _message;
-
-		#endregion Private Fields
-
-		#region Properties
-
-		public override string Message => _message;
-
-		#endregion Properties
-
-		#region Constructors
+		public override string Message { get; }
 
 		public LineIsEmptyException(long line) : base(line)
 		{
-			_message = Resources.invalidaLineMessage;
+			Message = Resources.ResourceManager.GetString(nameof(Resources.invalidaLineMessage), 
+				CultureInfo.InvariantCulture) ?? throw new Exception();
 		}
 
-		#endregion Constructors
-	}
-
-	/// <summary>
-	/// Special type of exception threw by RAM Interpreter
-	/// </summary>
-	[ExcludeFromCodeCoverage]
-	public class RamInterpreterException : Exception
-	{
-		#region Private Fileds
-
-		private readonly long _line;
-
-		#endregion Private Fileds
-
-		#region Properties
-
-		public long Line => _line;
-
-		#endregion Properties
-
-		#region Constructors
-
-		public RamInterpreterException(long line)
+		public override string LocalizedMessage()
 		{
-			_line = line;
+			return Resources.invalidaLineMessage;
 		}
-
-		#endregion Constructors
-
-		#region Methods
-
-		public static string ManualMessage() => Resources.manualMessage;
-
-		/// <summary>
-		/// Get full exception message based on current culture. Change culture by setting CurrentCulture property in Settings class
-		/// </summary>
-		/// <returns>Full exception message based on current culture</returns>
-		public string GetFullLocalizedMessage() =>
-			$"{LocalizedMessage()} {LineMessage()} {ManualMessage()}";
-
-		public string LineMessage() => string.Format(Resources.lineMessage, Line);
-
-		public virtual string LocalizedMessage() => string.Empty;
-
-		#endregion Methods
 	}
 
 	/// <summary>
@@ -233,25 +139,43 @@ namespace ProjectRAM.Core
 	[ExcludeFromCodeCoverage]
 	public class UnknownCommandTypeException : RamInterpreterException
 	{
-		#region Private Fields
-
-		private readonly string _message;
-
-		#endregion Private Fields
-
-		#region Properties
-
-		public override string Message => _message;
-
-		#endregion Properties
-
-		#region Constructors
+		public override string Message { get; }
 
 		public UnknownCommandTypeException(long line) : base(line)
 		{
-			_message = Resources.unknownCommandMessage;
+			Message = Resources.ResourceManager.GetString(nameof(Resources.unknownCommandMessage),
+				CultureInfo.InvariantCulture) ?? throw new Exception();
 		}
 
-		#endregion Constructors
+		public override string LocalizedMessage()
+		{
+			return Resources.unknownCommandMessage;
+		}
+	}
+
+	/// <summary>
+	/// Special type of exception threw by RAM Interpreter
+	/// </summary>
+	[ExcludeFromCodeCoverage]
+	public class RamInterpreterException : Exception
+	{
+		public long Line { get; }
+
+		protected RamInterpreterException(long line)
+		{
+			Line = line;
+		}
+
+		private static string ManualMessage() => Resources.manualMessage;
+		private string LineMessage() => string.Format(Resources.lineMessage, Line);
+
+		/// <summary>
+		/// Get full exception message based on current culture. Change culture by setting CurrentCulture property in Settings class
+		/// </summary>
+		/// <returns>Full exception message based on current culture</returns>
+		public string GetFullLocalizedMessage() =>
+			$"{LocalizedMessage()} {LineMessage()} {ManualMessage()}";
+
+		public virtual string LocalizedMessage() => string.Empty;
 	}
 }

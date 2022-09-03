@@ -12,6 +12,7 @@ namespace ProjectRAM.Core
 		private readonly Dictionary<string, int> _jumpMap;
 		private readonly List<Command> _program;
 		private string _currentInput = "";
+		private const string UninitializedValue = "?";
 
 
 		public event EventHandler<WriteFromTapeEventArgs>? WriteToOutputTape;
@@ -24,11 +25,11 @@ namespace ProjectRAM.Core
 			_jumpMap = MapLabels();
 			Memory = new Dictionary<string, string>()
 			{
-				{"0", "?"}
+				{"0", UninitializedValue}
 			};
 			MaxMemory = new Dictionary<string, string>()
 			{
-				{"0", "?"}
+				{"0", UninitializedValue}
 			};
 			Complexity = new Complexity(this);
 		}
@@ -67,7 +68,7 @@ namespace ProjectRAM.Core
 
 			if (!Memory.ContainsKey(formattedArg))
 			{
-				throw new CellDoesntExistException(c.Line);
+				throw new UninitializedCellException(c.Line);
 			}
 
 			return Memory[formattedArg];
@@ -79,7 +80,7 @@ namespace ProjectRAM.Core
 			{
 				return _jumpMap[lbl] - 1;
 			}
-			throw new LabelDoesntExistException(_program[index].Line, lbl);
+			throw new UnknownLabelException(_program[index].Line, lbl);
 		}
 
 		private Dictionary<string, int> MapLabels()
@@ -215,7 +216,7 @@ namespace ProjectRAM.Core
 					{
 						if (!Memory.ContainsKey(arg))
 						{
-							throw new CellDoesntExistException(command.Line);
+							throw new UninitializedCellException(command.Line);
 						}
 
 						output = Memory[arg];
@@ -264,10 +265,15 @@ namespace ProjectRAM.Core
 						throw new ArgumentIsNotValidException(command.Line);
 					}
 
+					if (Memory["0"] == UninitializedValue)
+					{
+						throw new AccumulatorEmptyException(command.Line);
+					}
+
 					#endregion ExceptionHandling
 
 					SetMemory("0", BigInteger
-							.Add(BigInteger.Parse(Memory["0"] ?? throw new AccumulatorEmptyException(command.Line)),
+							.Add(BigInteger.Parse(Memory["0"]),
 								BigInteger.Parse(GetValue(command, arg))).ToString());
 					break;
 
@@ -280,10 +286,15 @@ namespace ProjectRAM.Core
 						throw new ArgumentIsNotValidException(command.Line);
 					}
 
+					if (Memory["0"] == UninitializedValue)
+					{
+						throw new AccumulatorEmptyException(command.Line);
+					}
+
 					#endregion ExceptionHandling
 
 					SetMemory("0", BigInteger
-							.Subtract(BigInteger.Parse(Memory["0"] ?? throw new AccumulatorEmptyException(command.Line)),
+							.Subtract(BigInteger.Parse(Memory["0"]),
 								BigInteger.Parse(GetValue(command, arg))).ToString());
 					break;
 
@@ -296,10 +307,15 @@ namespace ProjectRAM.Core
 						throw new ArgumentIsNotValidException(command.Line);
 					}
 
+					if (Memory["0"] == UninitializedValue)
+					{
+						throw new AccumulatorEmptyException(command.Line);
+					}
+
 					#endregion ExceptionHandling
 
 					SetMemory("0", BigInteger
-							.Multiply(BigInteger.Parse(Memory["0"] ?? throw new AccumulatorEmptyException(command.Line)),
+							.Multiply(BigInteger.Parse(Memory["0"]),
 								BigInteger.Parse(GetValue(command, arg))).ToString());
 					break;
 
@@ -312,6 +328,11 @@ namespace ProjectRAM.Core
 						throw new ArgumentIsNotValidException(command.Line);
 					}
 
+					if (Memory["0"] == UninitializedValue)
+					{
+						throw new AccumulatorEmptyException(command.Line);
+					}
+
 					if (GetValue(command, arg) == "0")
 					{
 						throw new DivideByZeroException();
@@ -320,7 +341,7 @@ namespace ProjectRAM.Core
 					#endregion ExceptionHandling
 
 					SetMemory("0", BigInteger
-						.Divide(BigInteger.Parse(Memory["0"] ?? throw new AccumulatorEmptyException(command.Line)),
+						.Divide(BigInteger.Parse(Memory["0"]),
 							BigInteger.Parse(GetValue(command, arg))).ToString());
 					break;
 			}
