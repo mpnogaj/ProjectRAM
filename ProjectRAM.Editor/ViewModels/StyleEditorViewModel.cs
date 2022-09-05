@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProjectRAM.Editor.ViewModels
 {
@@ -24,8 +25,7 @@ namespace ProjectRAM.Editor.ViewModels
 			get => _currentStyle;
 			set
 			{
-				// ask save changes
-				value.ApplyStyle();
+				OnSelectedStyleChanged(_currentStyle, value);
 				SetProperty(ref _currentStyle, value);
 				NotifyAllPropertiesChanged();
 			}
@@ -149,14 +149,47 @@ namespace ProjectRAM.Editor.ViewModels
 
 		private void AddStyle(string fileName)
 		{
-			Styles.Add(new Style
+			var newStyle = new Style
 			{
 				FileName = fileName,
 				StyleDescriptor = new StyleDescriptor
 				{
 					Name = Path.GetFileNameWithoutExtension(fileName)
 				}
-			});
+			};
+			Styles.Add(newStyle);
+			CurrentStyle = newStyle;
+		}
+
+		private async Task OnSelectedStyleChanged(Style? oldStyle, Style newStyle)
+		{
+			if (oldStyle != null)
+			{
+				var corresponding = StyleManager.GetStyle(oldStyle.FileName);
+				if (corresponding == null || !corresponding.Identical(oldStyle))
+				{
+					var res = await DialogManager.ShowYesNoDialog("Unsaved changes",
+						$"Do you want to save your changes done to {oldStyle.StyleDescriptor.Name}?",
+						Essentials.GetTopWindow());
+					if (res)
+					{
+						StyleManager.UpdateStyle(oldStyle);
+					}
+					else
+					{
+						if (corresponding != null)
+						{
+							oldStyle.CopyValues(corresponding);
+						}
+						else
+						{
+							Styles.Remove(oldStyle);
+						}
+					}
+				}
+			}
+
+			newStyle.ApplyStyle();
 		}
 	}
 }

@@ -27,14 +27,8 @@ namespace ProjectRAM.Editor.Properties
 
 		public static Style? GetStyle(string fileName)
 		{
-			try
-			{
-				return Styles.Values[Styles.IndexOfKey(fileName)];
-			}
-			catch (IndexOutOfRangeException)
-			{
-				return null;
-			}
+			var index = Styles.IndexOfKey(fileName);
+			return index == -1 ? null : Styles.Values[index];
 		}
 
 		public static void Init()
@@ -70,6 +64,10 @@ namespace ProjectRAM.Editor.Properties
 			});
 		}
 
+		/// <summary>
+		/// Updates style in collection. Styles are matched by theirs file names.
+		/// </summary>
+		/// <param name="style">New version of the style.</param>
 		public static void UpdateStyle(Style style)
 		{
 			if (!Styles.TryGetValue(style.FileName, out var myStyle))

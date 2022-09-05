@@ -2,6 +2,7 @@
 using Avalonia.Media;
 using ProjectRAM.Editor.Properties;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -114,13 +115,13 @@ namespace ProjectRAM.Editor.Models
 		public string Name { get; set; }
 
 		#region Methods
-		public string ToJson()
-			=> JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+		public string ToJson(bool writeIndented = true)
+			=> JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = writeIndented });
 
-		public bool Equals(StyleDescriptor lhs)
+		public bool Equals(StyleDescriptor lhs) 
 			=> typeof(StyleDescriptor).GetProperties()
 				.Where(pi => !pi.GetCustomAttributes(typeof(InfoAttribute), false).Any())
-				.All(property => !(property.GetValue(this)?.Equals(property.GetValue(lhs)) ?? false));
+				.All(property => property.GetValue(this)?.Equals(property.GetValue(lhs)) ?? property.GetValue(lhs) == null);
 
 		public object Clone()
 			=> JsonSerializer.Deserialize<StyleDescriptor>(this.ToJson())!;
