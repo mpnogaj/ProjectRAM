@@ -9,7 +9,7 @@ namespace ProjectRAM.Core
 		{
 			List<RamInterpreterException> exceptions = new();
 			List<string> requiredLabels = new();
-			for (int i = 0; i < commands.Count; i++)
+			for (var i = 0; i < commands.Count; i++)
 			{
 				if (commands[i].ArgumentType == ArgumentType.Label)
 				{
@@ -24,7 +24,7 @@ namespace ProjectRAM.Core
 					exceptions.Add(ex);
 				}
 			}
-			for (int i = 0; i < requiredLabels.Count; i++)
+			for (var i = 0; i < requiredLabels.Count; i++)
 			{
 				if (FindLabel(commands, requiredLabels[i]))
 				{
@@ -34,7 +34,7 @@ namespace ProjectRAM.Core
 			}
 			if (requiredLabels.Count > 0)
 			{
-				for (int i = 0; i < commands.Count; i++)
+				for (var i = 0; i < commands.Count; i++)
 				{
 					if (commands[i].ArgumentType != ArgumentType.Label)
 					{
@@ -77,10 +77,10 @@ namespace ProjectRAM.Core
 			if (c.ArgumentType == ArgumentType.Null && c.CommandType != CommandType.Halt ||
 				c.ArgumentType != ArgumentType.Null && c.CommandType == CommandType.Null)
 			{
-				throw new LineIsEmptyException(c.Line);
+				throw new LineIsInvalidException(c.Line);
 			}
 
-			CommandType t = c.CommandType;
+			var t = c.CommandType;
 			if (t == CommandType.Halt)
 			{
 				if (c.ArgumentType != ArgumentType.Null)

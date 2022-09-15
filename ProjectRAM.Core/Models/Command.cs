@@ -78,15 +78,15 @@ namespace ProjectRAM.Core.Models
 			Comment = string.Empty;
 			CommandType = CommandType.Null;
 			ArgumentType = ArgumentType.Null;
-			string lineWithoutComment = line;
-			int commentPos = line.IndexOf('#');
+			var lineWithoutComment = line;
+			var commentPos = line.IndexOf('#');
 			if (commentPos >= 0)
 			{
 				lineWithoutComment = line[..commentPos];
 				Comment = line[(commentPos + 1)..].Trim();
 			}
-			string lineWithoutCommentAndLabel = string.Empty;
-			int labelPos = lineWithoutComment.IndexOf(':');
+			var lineWithoutCommentAndLabel = string.Empty;
+			var labelPos = lineWithoutComment.IndexOf(':');
 			if (labelPos >= 0)
 			{
 				Label = Regex.Replace(lineWithoutComment[..labelPos].Trim(), @"\s+", string.Empty);
@@ -158,7 +158,7 @@ namespace ProjectRAM.Core.Models
 		/// <returns>{label}: {command} {argument} #{comment}</returns>
 		public override string ToString()
 		{
-			string output = "";
+			var output = "";
 			if (!string.IsNullOrWhiteSpace(Label))
 			{
 				output = $"{Label}: ";

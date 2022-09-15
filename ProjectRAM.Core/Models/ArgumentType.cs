@@ -6,6 +6,7 @@
 	public enum ArgumentType
 	{
 		Null,
+		Invalid,
 		Label,
 		DirectAddress,
 		IndirectAddress,

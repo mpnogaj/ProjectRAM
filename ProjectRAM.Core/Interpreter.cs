@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Threading;
+using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Commands.Abstractions;
+using ProjectRAM.Core.Commands.Models;
 using static ProjectRAM.Core.Utilities;
 
 namespace ProjectRAM.Core
@@ -10,361 +13,156 @@ namespace ProjectRAM.Core
 	public class Interpreter
 	{
 		private readonly Dictionary<string, int> _jumpMap;
-		private readonly List<Command> _program;
-		private string _currentInput = "";
-		private const string UninitializedValue = "?";
+		private readonly List<CommandBase> _program;
+		private int _currentPosition = 0;
+		public const string UninitializedValue = "?";
+		public const string AccumulatorAddress = "0";
 
 
-		public event EventHandler<WriteFromTapeEventArgs>? WriteToOutputTape;
+		public event EventHandler<WriteToTapeEventArgs>? WriteToOutputTape;
 		public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
 		public event EventHandler? ProgramFinished;
-		
-		public Interpreter(List<Command> program)
+
+		public Interpreter(string[] program) : this(CommandFactory.CreateCommandList(program))
+		{
+
+		}
+
+		public Interpreter(List<CommandBase> program)
 		{
 			_program = program;
+
+			//Validator.ValidateProgram()
+
 			_jumpMap = MapLabels();
 			Memory = new Dictionary<string, string>()
 			{
-				{"0", UninitializedValue}
+				{AccumulatorAddress, UninitializedValue}
 			};
 			MaxMemory = new Dictionary<string, string>()
 			{
-				{"0", UninitializedValue}
+				{AccumulatorAddress, UninitializedValue}
 			};
 			Complexity = new Complexity(this);
 		}
 
-		public Complexity Complexity { get; private set; }
-		internal Dictionary<string, string> MaxMemory { get; private set; }
-		internal Dictionary<string, string> Memory { get; private set; }
+		public Complexity Complexity { get; }
+		internal Dictionary<string, string> MaxMemory { get; }
+		internal Dictionary<string, string> Memory { get; }
 
-		public Dictionary<string, string> RunCommands() => RunCommands(CancellationToken.None);
+		public Dictionary<string, string> RunCommands() 
+			=> RunCommands(CancellationToken.None);
 
 		public Dictionary<string, string> RunCommands(CancellationToken cancellationToken)
 		{
-			for (var i = 0; i < _program.Count; i++)
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+			// Halt command sets i to -1 when executed
+			_currentPosition = 0;
+			while(_currentPosition < _program.Count && _currentPosition != -1)
 			{
 				if (cancellationToken.IsCancellationRequested)
 				{
 					ProgramFinished?.Invoke(this, EventArgs.Empty);
 					cancellationToken.ThrowIfCancellationRequested();
 				}
-				
-				if (RunCommand(ref i))
-				{
-					return Memory;
-				}
+
+				RunCommand();
+
+				ProgramFinished?.Invoke(this, EventArgs.Empty);
+				return Memory;
 			}
 			ProgramFinished?.Invoke(this, EventArgs.Empty);
 			return Memory;
 		}
-
-		private string GetValue(Command c, string formattedArg)
-		{
-			if (c.ArgumentType == ArgumentType.Const)
-			{
-				return formattedArg;
-			}
-
-			if (!Memory.ContainsKey(formattedArg))
-			{
-				throw new UninitializedCellException(c.Line);
-			}
-
-			return Memory[formattedArg];
-		}
-
-		private int Jump(string lbl, int index)
-		{
-			if (_jumpMap.ContainsKey(lbl))
-			{
-				return _jumpMap[lbl] - 1;
-			}
-			throw new UnknownLabelException(_program[index].Line, lbl);
-		}
-
+		
 		private Dictionary<string, int> MapLabels()
 		{
-			var i = 0;
 			Dictionary<string, int> labels = new();
-			foreach (var command in _program)
+			for (var i = 0; i < _program.Count; i++)
 			{
-				if (!string.IsNullOrWhiteSpace(command.Label))
+				var label = _program[i].Label;
+				if (label != null)
 				{
-					labels.Add(command.Label, i);
+					labels.Add(label, i);
 				}
-				i++;
 			}
 			return labels;
 		}
 
-		private bool RunCommand(ref int i)
+		private void RunCommand()
 		{
-			var command = _program[i];
-			//bool exists;
-			string arg = command.FormattedArg();
-			if (command.ArgumentType == ArgumentType.IndirectAddress)
+			var command = _program[_currentPosition];
+			var line = command.Line;
+			switch (command)
 			{
-				arg = Memory[arg];
+				case JumpCommandBase jumpCommand:
+					if (jumpCommand.CanJump(jumpCommand is JumpCommand ? string.Empty : GetMemory(AccumulatorAddress, line)))
+					{
+						MakeJump(jumpCommand.FormattedArgument, out _currentPosition);
+						return;
+					}
+					break;
+				case MathCommandBase mathCommand:
+					mathCommand.Calculate(GetMemory, SetMemory);
+					break;
+
+				case MemoryManagementCommand memoryManagementCommand:
+					memoryManagementCommand.Execute(GetMemory, SetMemory);
+					break;
+
+				case ReadCommand readCommand:
+					readCommand.Execute(GetMemory, SetMemory, ReadFromInputTape);
+					break;
+
+				case WriteCommand writeCommand:
+					writeCommand.Execute(GetMemory, WriteToOutputTape);
+					break;
+
+				case HaltCommand:
+					_currentPosition = -1;
+					return;
 			}
 
-			switch (command.CommandType)
-			{
-				case CommandType.Halt:
-					return true;
-
-				case CommandType.Jump:
-
-					#region ExceptionHandling
-
-					if (command.ArgumentType != ArgumentType.Label)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					#endregion ExceptionHandling
-
-					i = Jump(arg, i);
-					break;
-
-				case CommandType.Jgtz:
-
-					#region ExceptionHandling
-
-					if (command.ArgumentType != ArgumentType.Label)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					#endregion ExceptionHandling
-
-					if (Memory["0"] != "" &&
-						Memory["0"][0] != '-' &&
-						Memory["0"] != "0")
-					{
-						i = Jump(arg, i);
-					}
-
-					break;
-
-				case CommandType.Jzero:
-
-					#region ExceptionHandling
-
-					if (command.ArgumentType != ArgumentType.Label)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					#endregion ExceptionHandling
-
-					if (Memory["0"] != "" &&
-						Memory["0"] == "0")
-					{
-						i = Jump(arg, i);
-					}
-
-					break;
-
-				case CommandType.Read:
-
-					#region Exception handling
-
-					if (command.ArgumentType != ArgumentType.DirectAddress &&
-						command.ArgumentType != ArgumentType.IndirectAddress)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					#endregion Exception handling
-
-					string val;
-
-					if (ReadFromInputTape == null)
-					{
-						throw new InputTapeEmptyException(i);
-					}
-
-					var eventArgs = new ReadFromTapeEventArgs();
-					ReadFromInputTape?.Invoke(this, eventArgs);
-
-					val = eventArgs.Input ?? throw new InputTapeEmptyException(i);
-
-					_currentInput = val;
-					SetMemory(arg, val);
-					break;
-
-				case CommandType.Write:
-
-					#region ExceptionHandling
-
-					if (command.ArgumentType == ArgumentType.Label)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					#endregion ExceptionHandling
-
-					string output;
-
-					if (command.ArgumentType == ArgumentType.Const)
-					{
-						output = arg;
-						//_outputTape.Enqueue(arg);
-					}
-					else
-					{
-						if (!Memory.ContainsKey(arg))
-						{
-							throw new UninitializedCellException(command.Line);
-						}
-
-						output = Memory[arg];
-						//_outputTape.Enqueue(Memory[arg]);
-					}
-
-					WriteToOutputTape?.Invoke(this, new WriteFromTapeEventArgs(output));
-
-					break;
-
-				case CommandType.Store:
-
-					#region ExceptionHandling
-
-					if (command.ArgumentType == ArgumentType.Const ||
-						command.ArgumentType == ArgumentType.Label)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					#endregion ExceptionHandling
-
-					SetMemory(arg, Memory["0"]);
-					break;
-
-				case CommandType.Load:
-
-					#region ExceptionHandling
-
-					if (command.ArgumentType == ArgumentType.Label)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					#endregion ExceptionHandling
-
-					SetMemory("0", GetValue(command, arg));
-					break;
-
-				case CommandType.Add:
-
-					#region ExceptionHandling
-
-					if (command.ArgumentType == ArgumentType.Label)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					if (Memory["0"] == UninitializedValue)
-					{
-						throw new AccumulatorEmptyException(command.Line);
-					}
-
-					#endregion ExceptionHandling
-
-					SetMemory("0", BigInteger
-							.Add(BigInteger.Parse(Memory["0"]),
-								BigInteger.Parse(GetValue(command, arg))).ToString());
-					break;
-
-				case CommandType.Sub:
-
-					#region ExceptionHandling
-
-					if (command.ArgumentType == ArgumentType.Label)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					if (Memory["0"] == UninitializedValue)
-					{
-						throw new AccumulatorEmptyException(command.Line);
-					}
-
-					#endregion ExceptionHandling
-
-					SetMemory("0", BigInteger
-							.Subtract(BigInteger.Parse(Memory["0"]),
-								BigInteger.Parse(GetValue(command, arg))).ToString());
-					break;
-
-				case CommandType.Mult:
-
-					#region ExceptionHandling
-
-					if (command.ArgumentType == ArgumentType.Label)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					if (Memory["0"] == UninitializedValue)
-					{
-						throw new AccumulatorEmptyException(command.Line);
-					}
-
-					#endregion ExceptionHandling
-
-					SetMemory("0", BigInteger
-							.Multiply(BigInteger.Parse(Memory["0"]),
-								BigInteger.Parse(GetValue(command, arg))).ToString());
-					break;
-
-				case CommandType.Div:
-
-					#region ExceptionHandling
-
-					if (command.ArgumentType == ArgumentType.Label)
-					{
-						throw new ArgumentIsNotValidException(command.Line);
-					}
-
-					if (Memory["0"] == UninitializedValue)
-					{
-						throw new AccumulatorEmptyException(command.Line);
-					}
-
-					if (GetValue(command, arg) == "0")
-					{
-						throw new DivideByZeroException();
-					}
-
-					#endregion ExceptionHandling
-
-					SetMemory("0", BigInteger
-						.Divide(BigInteger.Parse(Memory["0"]),
-							BigInteger.Parse(GetValue(command, arg))).ToString());
-					break;
-			}
-
-			if (command.CommandType != CommandType.Null && command.CommandType != CommandType.Unknown)
-			{
-				Complexity.UpdateTimeComplexity(command, _currentInput);
-			}
-			return false;
+			_currentPosition++;
 		}
 
-		private void SetMemory(string key, string value)
+		private void MakeJump(string label, out int i)
 		{
-			if (!Memory.ContainsKey(key))
+			i = _jumpMap[label];
+		}
+
+		private string GetMemory(string address, long line)
+		{
+			if (!Memory.ContainsKey(address))
 			{
-				Memory[key] = value;
-				MaxMemory[key] = value;
+				throw address == AccumulatorAddress
+					? new AccumulatorEmptyException(line)
+					: new UninitializedCellException(line);
+			}
+
+			var value = Memory[address];
+			if (value == UninitializedValue)
+			{
+				throw address == AccumulatorAddress
+					? new AccumulatorEmptyException(line)
+					: new UninitializedCellException(line);
+			}
+
+			return value;
+		}
+
+		private void SetMemory(string address, string value)
+		{
+			if (!Memory.ContainsKey(address))
+			{
+				Memory[address] = value;
+				MaxMemory[address] = value;
 			}
 			else
 			{
-				string oldValue = Memory[key];
-				Memory[key] = value;
-				MaxMemory[key] = oldValue == "?" ? value : Max(MaxMemory[key], value);
+				var oldValue = Memory[address];
+				Memory[address] = value;
+				MaxMemory[address] = oldValue == "?" ? value : Max(MaxMemory[address], value);
 			}
 		}
 	}

@@ -7,11 +7,11 @@ namespace ProjectRAM.Core
 		public string? Input { get; set; }
 	}
 
-	public class WriteFromTapeEventArgs : EventArgs
+	public class WriteToTapeEventArgs : EventArgs
 	{
 		public string Output { get; }
 
-		public WriteFromTapeEventArgs(string output)
+		public WriteToTapeEventArgs(string output)
 		{
 			Output = output;
 		}

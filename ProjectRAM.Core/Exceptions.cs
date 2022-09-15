@@ -112,15 +112,15 @@ namespace ProjectRAM.Core
 	}
 
 	/// <summary>
-	/// Line is not complete. The command or ragument is missing
+	/// Line is not complete. The command or argument is missing
 	/// Can be verified
 	/// </summary>
 	[ExcludeFromCodeCoverage]
-	public class LineIsEmptyException : RamInterpreterException
+	public class LineIsInvalidException : RamInterpreterException
 	{
 		public override string Message { get; }
 
-		public LineIsEmptyException(long line) : base(line)
+		public LineIsInvalidException(long line) : base(line)
 		{
 			Message = Resources.ResourceManager.GetString(nameof(Resources.invalidaLineMessage), 
 				CultureInfo.InvariantCulture) ?? throw new Exception();
@@ -153,6 +153,39 @@ namespace ProjectRAM.Core
 		}
 	}
 
+	[ExcludeFromCodeCoverage]
+	public class LabelIsNotValidException : RamInterpreterException
+	{
+		public override string Message { get; }
+
+		public LabelIsNotValidException(long line) : base(line)
+		{
+			Message = "Label is not valid";
+		}
+	}
+
+	[ExcludeFromCodeCoverage]
+	public class DivByZero : RamInterpreterException
+	{
+		public override string Message { get; }
+
+		public DivByZero(long line) : base(line)
+		{
+			Message = "Attempted to divide by 0";
+		}
+	}
+
+	[ExcludeFromCodeCoverage]
+	public class ValueIsNaN : RamInterpreterException
+	{
+		public override string Message { get; }
+
+		public ValueIsNaN(long line) : base(line)
+		{
+			Message = "Value is not a number";
+		}
+	}
+
 	/// <summary>
 	/// Special type of exception threw by RAM Interpreter
 	/// </summary>
@@ -176,6 +209,6 @@ namespace ProjectRAM.Core
 		public string GetFullLocalizedMessage() =>
 			$"{LocalizedMessage()} {LineMessage()} {ManualMessage()}";
 
-		public virtual string LocalizedMessage() => string.Empty;
+		public virtual string LocalizedMessage() => Message;
 	}
 }

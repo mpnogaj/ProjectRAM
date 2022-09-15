@@ -63,7 +63,7 @@ namespace ProjectRAM.Core
 				{
 					sb.Append(c);
 				}
-				string number = sb.ToString();
+				var number = sb.ToString();
 				// Double check
 				if (number.IsNumber())
 				{
@@ -94,7 +94,7 @@ namespace ProjectRAM.Core
 				{
 					sb.Append(c);
 				}
-				string finalNum = sb.ToString();
+				var finalNum = sb.ToString();
 				if (finalNum.IsNumber())
 				{
 					inputTape.Enqueue(finalNum);
@@ -111,16 +111,16 @@ namespace ProjectRAM.Core
 		/// <returns>String representation of output tape</returns>
 		public static string CreateOutputTapeFromQueue(Queue<string>? tape)
 		{
-			string outputTape = string.Empty;
+			var outputTape = string.Empty;
 			while (tape is { Count: > 0 })
 			{
-				string number = tape.Dequeue();
+				var number = tape.Dequeue();
 				StringBuilder sb = new();
 				foreach (var c in number.Where(c => char.IsDigit(c) || c == '-'))
 				{
 					sb.Append(c);
 				}
-				string finalNumber = sb.ToString();
+				var finalNumber = sb.ToString();
 				if (finalNumber.IsNumber())
 				{
 					outputTape += $"{finalNumber} ";
@@ -133,7 +133,7 @@ namespace ProjectRAM.Core
 		{
 			var outCollection = new StringCollection();
 			var arr = text.Split(separator);
-			foreach (string t in arr)
+			foreach (var t in arr)
 			{
 				if (!string.IsNullOrWhiteSpace(t))
 				{
