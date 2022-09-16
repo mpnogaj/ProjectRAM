@@ -1,19 +1,18 @@
 ﻿using System;
 
-namespace ProjectRAM.Core
+namespace ProjectRAM.Core;
+
+public class ReadFromTapeEventArgs : EventArgs
 {
-	public class ReadFromTapeEventArgs : EventArgs
-	{
-		public string? Input { get; set; }
-	}
+	public string? Input { get; set; }
+}
 
-	public class WriteToTapeEventArgs : EventArgs
-	{
-		public string Output { get; }
+public class WriteToTapeEventArgs : EventArgs
+{
+	public string Output { get; }
 
-		public WriteToTapeEventArgs(string output)
-		{
-			Output = output;
-		}
+	public WriteToTapeEventArgs(string output)
+	{
+		Output = output;
 	}
 }

@@ -1,113 +1,112 @@
 ﻿using ProjectRAM.Core.Models;
 using System.Collections.Generic;
 
-namespace ProjectRAM.Core
+namespace ProjectRAM.Core;
+
+public static class Validator
 {
-	public static class Validator
+	public static List<RamInterpreterException> ValidateProgram(List<Command> commands)
 	{
-		public static List<RamInterpreterException> ValidateProgram(List<Command> commands)
+		List<RamInterpreterException> exceptions = new();
+		List<string> requiredLabels = new();
+		for (var i = 0; i < commands.Count; i++)
 		{
-			List<RamInterpreterException> exceptions = new();
-			List<string> requiredLabels = new();
+			if (commands[i].ArgumentType == ArgumentType.Label)
+			{
+				requiredLabels.Add(commands[i].Argument);
+			}
+			try
+			{
+				ValidateCommand(commands[i]);
+			}
+			catch (RamInterpreterException ex)
+			{
+				exceptions.Add(ex);
+			}
+		}
+		for (var i = 0; i < requiredLabels.Count; i++)
+		{
+			if (FindLabel(commands, requiredLabels[i]))
+			{
+				requiredLabels.RemoveAt(i);
+				i--;
+			}
+		}
+		if (requiredLabels.Count > 0)
+		{
 			for (var i = 0; i < commands.Count; i++)
 			{
-				if (commands[i].ArgumentType == ArgumentType.Label)
+				if (commands[i].ArgumentType != ArgumentType.Label)
 				{
-					requiredLabels.Add(commands[i].Argument);
+					continue;
 				}
-				try
-				{
-					ValidateCommand(commands[i]);
-				}
-				catch (RamInterpreterException ex)
-				{
-					exceptions.Add(ex);
-				}
-			}
-			for (var i = 0; i < requiredLabels.Count; i++)
-			{
-				if (FindLabel(commands, requiredLabels[i]))
-				{
-					requiredLabels.RemoveAt(i);
-					i--;
-				}
-			}
-			if (requiredLabels.Count > 0)
-			{
-				for (var i = 0; i < commands.Count; i++)
-				{
-					if (commands[i].ArgumentType != ArgumentType.Label)
-					{
-						continue;
-					}
 
-					if (requiredLabels.Contains(commands[i].Argument))
-					{
-						exceptions.Add(new UnknownLabelException(commands[i].Line, commands[i].Argument));
-					}
+				if (requiredLabels.Contains(commands[i].Argument))
+				{
+					exceptions.Add(new UnknownLabelException(commands[i].Line, commands[i].Argument));
 				}
 			}
-			return exceptions;
+		}
+		return exceptions;
+	}
+
+	private static bool FindLabel(List<Command> c, string lbl)
+	{
+		foreach (var z in c)
+		{
+			if (z.Label == lbl)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static void ValidateCommand(Command c)
+	{
+		if (c.CommandType == CommandType.Null && c.ArgumentType == ArgumentType.Null && c.Label == string.Empty)
+		{
+			return;
 		}
 
-		private static bool FindLabel(List<Command> c, string lbl)
+		if (c.CommandType == CommandType.Unknown)
 		{
-			foreach (var z in c)
-			{
-				if (z.Label == lbl)
-				{
-					return true;
-				}
-			}
-			return false;
+			throw new UnknownCommandTypeException(c.Line);
 		}
 
-		private static void ValidateCommand(Command c)
+		if (c.ArgumentType == ArgumentType.Null && c.CommandType != CommandType.Halt ||
+		    c.ArgumentType != ArgumentType.Null && c.CommandType == CommandType.Null)
 		{
-			if (c.CommandType == CommandType.Null && c.ArgumentType == ArgumentType.Null && c.Label == string.Empty)
-			{
-				return;
-			}
+			throw new LineIsInvalidException(c.Line);
+		}
 
-			if (c.CommandType == CommandType.Unknown)
+		var t = c.CommandType;
+		if (t == CommandType.Halt)
+		{
+			if (c.ArgumentType != ArgumentType.Null)
 			{
-				throw new UnknownCommandTypeException(c.Line);
+				throw new ArgumentIsNotValidException(c.Line);
 			}
-
-			if (c.ArgumentType == ArgumentType.Null && c.CommandType != CommandType.Halt ||
-				c.ArgumentType != ArgumentType.Null && c.CommandType == CommandType.Null)
+		}
+		else if (t == CommandType.Jump || t == CommandType.Jzero || t == CommandType.Jgtz)
+		{
+			if (c.ArgumentType != ArgumentType.Label)
 			{
-				throw new LineIsInvalidException(c.Line);
+				throw new ArgumentIsNotValidException(c.Line);
 			}
-
-			var t = c.CommandType;
-			if (t == CommandType.Halt)
+		}
+		else if (t == CommandType.Read || t == CommandType.Store)
+		{
+			if (c.ArgumentType != ArgumentType.DirectAddress && c.ArgumentType != ArgumentType.IndirectAddress)
 			{
-				if (c.ArgumentType != ArgumentType.Null)
-				{
-					throw new ArgumentIsNotValidException(c.Line);
-				}
+				throw new ArgumentIsNotValidException(c.Line);
 			}
-			else if (t == CommandType.Jump || t == CommandType.Jzero || t == CommandType.Jgtz)
+		}
+		else
+		{
+			if (c.ArgumentType == ArgumentType.Label || c.ArgumentType == ArgumentType.Null)
 			{
-				if (c.ArgumentType != ArgumentType.Label)
-				{
-					throw new ArgumentIsNotValidException(c.Line);
-				}
-			}
-			else if (t == CommandType.Read || t == CommandType.Store)
-			{
-				if (c.ArgumentType != ArgumentType.DirectAddress && c.ArgumentType != ArgumentType.IndirectAddress)
-				{
-					throw new ArgumentIsNotValidException(c.Line);
-				}
-			}
-			else
-			{
-				if (c.ArgumentType == ArgumentType.Label || c.ArgumentType == ArgumentType.Null)
-				{
-					throw new ArgumentIsNotValidException(c.Line);
-				}
+				throw new ArgumentIsNotValidException(c.Line);
 			}
 		}
 	}

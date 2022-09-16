@@ -8,162 +8,161 @@ using ProjectRAM.Core.Commands.Abstractions;
 using ProjectRAM.Core.Commands.Models;
 using static ProjectRAM.Core.Utilities;
 
-namespace ProjectRAM.Core
+namespace ProjectRAM.Core;
+
+public class Interpreter
 {
-	public class Interpreter
+	private readonly Dictionary<string, int> _jumpMap;
+	private readonly List<CommandBase> _program;
+	private int _currentPosition = 0;
+	public const string UninitializedValue = "?";
+	public const string AccumulatorAddress = "0";
+
+
+	public event EventHandler<WriteToTapeEventArgs>? WriteToOutputTape;
+	public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
+	public event EventHandler? ProgramFinished;
+
+	public Interpreter(string[] program) : this(CommandFactory.CreateCommandList(program))
 	{
-		private readonly Dictionary<string, int> _jumpMap;
-		private readonly List<CommandBase> _program;
-		private int _currentPosition = 0;
-		public const string UninitializedValue = "?";
-		public const string AccumulatorAddress = "0";
 
+	}
 
-		public event EventHandler<WriteToTapeEventArgs>? WriteToOutputTape;
-		public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
-		public event EventHandler? ProgramFinished;
+	public Interpreter(List<CommandBase> program)
+	{
+		_program = program;
 
-		public Interpreter(string[] program) : this(CommandFactory.CreateCommandList(program))
+		//Validator.ValidateProgram()
+
+		_jumpMap = MapLabels();
+		Memory = new Dictionary<string, string>()
 		{
-
-		}
-
-		public Interpreter(List<CommandBase> program)
+			{AccumulatorAddress, UninitializedValue}
+		};
+		MaxMemory = new Dictionary<string, string>()
 		{
-			_program = program;
+			{AccumulatorAddress, UninitializedValue}
+		};
+		Complexity = new Complexity(this);
+	}
 
-			//Validator.ValidateProgram()
+	public Complexity Complexity { get; }
+	internal Dictionary<string, string> MaxMemory { get; }
+	internal Dictionary<string, string> Memory { get; }
 
-			_jumpMap = MapLabels();
-			Memory = new Dictionary<string, string>()
-			{
-				{AccumulatorAddress, UninitializedValue}
-			};
-			MaxMemory = new Dictionary<string, string>()
-			{
-				{AccumulatorAddress, UninitializedValue}
-			};
-			Complexity = new Complexity(this);
-		}
+	public Dictionary<string, string> RunCommands() 
+		=> RunCommands(CancellationToken.None);
 
-		public Complexity Complexity { get; }
-		internal Dictionary<string, string> MaxMemory { get; }
-		internal Dictionary<string, string> Memory { get; }
-
-		public Dictionary<string, string> RunCommands() 
-			=> RunCommands(CancellationToken.None);
-
-		public Dictionary<string, string> RunCommands(CancellationToken cancellationToken)
+	public Dictionary<string, string> RunCommands(CancellationToken cancellationToken)
+	{
+		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+		// Halt command sets i to -1 when executed
+		_currentPosition = 0;
+		while(_currentPosition < _program.Count && _currentPosition != -1)
 		{
-			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-			// Halt command sets i to -1 when executed
-			_currentPosition = 0;
-			while(_currentPosition < _program.Count && _currentPosition != -1)
+			if (cancellationToken.IsCancellationRequested)
 			{
-				if (cancellationToken.IsCancellationRequested)
-				{
-					ProgramFinished?.Invoke(this, EventArgs.Empty);
-					cancellationToken.ThrowIfCancellationRequested();
-				}
-
-				RunCommand();
-
 				ProgramFinished?.Invoke(this, EventArgs.Empty);
-				return Memory;
+				cancellationToken.ThrowIfCancellationRequested();
 			}
+
+			RunCommand();
+
 			ProgramFinished?.Invoke(this, EventArgs.Empty);
 			return Memory;
 		}
+		ProgramFinished?.Invoke(this, EventArgs.Empty);
+		return Memory;
+	}
 		
-		private Dictionary<string, int> MapLabels()
+	private Dictionary<string, int> MapLabels()
+	{
+		Dictionary<string, int> labels = new();
+		for (var i = 0; i < _program.Count; i++)
 		{
-			Dictionary<string, int> labels = new();
-			for (var i = 0; i < _program.Count; i++)
+			var label = _program[i].Label;
+			if (label != null)
 			{
-				var label = _program[i].Label;
-				if (label != null)
+				labels.Add(label, i);
+			}
+		}
+		return labels;
+	}
+
+	private void RunCommand()
+	{
+		var command = _program[_currentPosition];
+		var line = command.Line;
+		switch (command)
+		{
+			case JumpCommandBase jumpCommand:
+				if (jumpCommand.CanJump(jumpCommand is JumpCommand ? string.Empty : GetMemory(AccumulatorAddress, line)))
 				{
-					labels.Add(label, i);
-				}
-			}
-			return labels;
-		}
-
-		private void RunCommand()
-		{
-			var command = _program[_currentPosition];
-			var line = command.Line;
-			switch (command)
-			{
-				case JumpCommandBase jumpCommand:
-					if (jumpCommand.CanJump(jumpCommand is JumpCommand ? string.Empty : GetMemory(AccumulatorAddress, line)))
-					{
-						MakeJump(jumpCommand.FormattedArgument, out _currentPosition);
-						return;
-					}
-					break;
-				case MathCommandBase mathCommand:
-					mathCommand.Calculate(GetMemory, SetMemory);
-					break;
-
-				case MemoryManagementCommand memoryManagementCommand:
-					memoryManagementCommand.Execute(GetMemory, SetMemory);
-					break;
-
-				case ReadCommand readCommand:
-					readCommand.Execute(GetMemory, SetMemory, ReadFromInputTape);
-					break;
-
-				case WriteCommand writeCommand:
-					writeCommand.Execute(GetMemory, WriteToOutputTape);
-					break;
-
-				case HaltCommand:
-					_currentPosition = -1;
+					MakeJump(jumpCommand.FormattedArgument, out _currentPosition);
 					return;
-			}
+				}
+				break;
+			case MathCommandBase mathCommand:
+				mathCommand.Calculate(GetMemory, SetMemory);
+				break;
 
-			_currentPosition++;
+			case MemoryManagementCommand memoryManagementCommand:
+				memoryManagementCommand.Execute(GetMemory, SetMemory);
+				break;
+
+			case ReadCommand readCommand:
+				readCommand.Execute(GetMemory, SetMemory, ReadFromInputTape);
+				break;
+
+			case WriteCommand writeCommand:
+				writeCommand.Execute(GetMemory, WriteToOutputTape);
+				break;
+
+			case HaltCommand:
+				_currentPosition = -1;
+				return;
 		}
 
-		private void MakeJump(string label, out int i)
+		_currentPosition++;
+	}
+
+	private void MakeJump(string label, out int i)
+	{
+		i = _jumpMap[label];
+	}
+
+	private string GetMemory(string address, long line)
+	{
+		if (!Memory.ContainsKey(address))
 		{
-			i = _jumpMap[label];
+			throw address == AccumulatorAddress
+				? new AccumulatorEmptyException(line)
+				: new UninitializedCellException(line);
 		}
 
-		private string GetMemory(string address, long line)
+		var value = Memory[address];
+		if (value == UninitializedValue)
 		{
-			if (!Memory.ContainsKey(address))
-			{
-				throw address == AccumulatorAddress
-					? new AccumulatorEmptyException(line)
-					: new UninitializedCellException(line);
-			}
-
-			var value = Memory[address];
-			if (value == UninitializedValue)
-			{
-				throw address == AccumulatorAddress
-					? new AccumulatorEmptyException(line)
-					: new UninitializedCellException(line);
-			}
-
-			return value;
+			throw address == AccumulatorAddress
+				? new AccumulatorEmptyException(line)
+				: new UninitializedCellException(line);
 		}
 
-		private void SetMemory(string address, string value)
+		return value;
+	}
+
+	private void SetMemory(string address, string value)
+	{
+		if (!Memory.ContainsKey(address))
 		{
-			if (!Memory.ContainsKey(address))
-			{
-				Memory[address] = value;
-				MaxMemory[address] = value;
-			}
-			else
-			{
-				var oldValue = Memory[address];
-				Memory[address] = value;
-				MaxMemory[address] = oldValue == "?" ? value : Max(MaxMemory[address], value);
-			}
+			Memory[address] = value;
+			MaxMemory[address] = value;
+		}
+		else
+		{
+			var oldValue = Memory[address];
+			Memory[address] = value;
+			MaxMemory[address] = oldValue == "?" ? value : Max(MaxMemory[address], value);
 		}
 	}
 }

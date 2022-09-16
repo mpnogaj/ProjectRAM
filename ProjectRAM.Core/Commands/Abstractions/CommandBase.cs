@@ -3,44 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using ProjectRAM.Core.Models;
 
-namespace ProjectRAM.Core.Commands.Abstractions
+namespace ProjectRAM.Core.Commands.Abstractions;
+
+public abstract class CommandBase
 {
-	public abstract class CommandBase
+	public long Line { get; }
+	public string? Label { get; }
+	public string Argument { get; }
+	public ArgumentType ArgumentType { get; }
+	public string FormattedArgument { get; }
+
+	protected CommandBase(long line, string? label, string argument)
 	{
-		public long Line { get; }
-		public string? Label { get; }
-		public string Argument { get; }
-		public ArgumentType ArgumentType { get; }
-		public string FormattedArgument { get; }
+		Line = line;
+		Label = label;
+		Argument = argument;
+		ArgumentType = argument.GetArgumentType();
+		FormattedArgument = GetFormattedArgument();
+	}
 
-		protected CommandBase(long line, string? label, string argument)
+	public abstract void ValidateArgument();
+
+	public abstract long CalculateComplexity(Func<string, long, string> getMemory);
+
+	public void ValidateLabel()
+	{
+		if (Label != null && !Label.All(char.IsLetterOrDigit))
 		{
-			Line = line;
-			Label = label;
-			Argument = argument;
-			ArgumentType = argument.GetArgumentType();
-			FormattedArgument = GetFormattedArgument();
+			throw new LabelIsNotValidException(Line);
 		}
+	}
 
-		public abstract void ValidateArgument();
-
-		public void ValidateLabel()
+	private string GetFormattedArgument()
+	{
+		return ArgumentType switch
 		{
-			if (Label != null && !Label.All(char.IsLetterOrDigit))
-			{
-				throw new LabelIsNotValidException(Line);
-			}
-		}
-
-		private string GetFormattedArgument()
-		{
-			return ArgumentType switch
-			{
-				ArgumentType.Null => string.Empty,
-				ArgumentType.Label or ArgumentType.DirectAddress => Argument,
-				ArgumentType.IndirectAddress or ArgumentType.Const => Argument[1..],
-				_ => throw new ArgumentOutOfRangeException()
-			};
-		}
+			ArgumentType.Null => string.Empty,
+			ArgumentType.Label or ArgumentType.DirectAddress => Argument,
+			ArgumentType.IndirectAddress or ArgumentType.Const => Argument[1..],
+			_ => throw new ArgumentOutOfRangeException()
+		};
 	}
 }
