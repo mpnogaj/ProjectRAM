@@ -1,11 +1,12 @@
-﻿using ProjectRAM.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Threading;
-using ProjectRAM.Core.Commands;
+﻿using ProjectRAM.Core.Commands;
 using ProjectRAM.Core.Commands.Abstractions;
 using ProjectRAM.Core.Commands.Models;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using ProjectRAM.Core.Models;
 using static ProjectRAM.Core.Utilities;
 
 namespace ProjectRAM.Core;
@@ -41,24 +42,24 @@ public class Interpreter
 		};
 		MaxMemory = new Dictionary<string, string>()
 		{
-			{AccumulatorAddress, UninitializedValue}
+			{ AccumulatorAddress, UninitializedValue }
 		};
-		Complexity = new Complexity(this);
 	}
 
-	public Complexity Complexity { get; }
 	internal Dictionary<string, string> MaxMemory { get; }
 	internal Dictionary<string, string> Memory { get; }
 
-	public Dictionary<string, string> RunCommands() 
+	public InterpreterResult RunCommands()
 		=> RunCommands(CancellationToken.None);
 
-	public Dictionary<string, string> RunCommands(CancellationToken cancellationToken)
+	public InterpreterResult RunCommands(CancellationToken cancellationToken)
 	{
+		ulong uniformTimeCost = 0, logTimeCost = 0;
+
 		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 		// Halt command sets i to -1 when executed
 		_currentPosition = 0;
-		while(_currentPosition < _program.Count && _currentPosition != -1)
+		while (_currentPosition < _program.Count && _currentPosition >= 0)
 		{
 			if (cancellationToken.IsCancellationRequested)
 			{
@@ -66,15 +67,21 @@ public class Interpreter
 				cancellationToken.ThrowIfCancellationRequested();
 			}
 
-			RunCommand();
-
-			ProgramFinished?.Invoke(this, EventArgs.Empty);
-			return Memory;
+			uniformTimeCost++;
+			logTimeCost += RunCommand();
 		}
+
 		ProgramFinished?.Invoke(this, EventArgs.Empty);
-		return Memory;
+
+		return new InterpreterResult(new ReadOnlyDictionary<string, string>(Memory), new ComplexityReport
+		{
+			LogTimeCost = logTimeCost,
+			LogSpaceCost = (ulong)MaxMemory.Select(x => x.Value.LCost()).LongCount(),
+			UniSpaceCost = (ulong)Memory.Select(x => x.Value != UninitializedValue).LongCount(),
+			UniTimeCost = uniformTimeCost
+		});
 	}
-		
+
 	private Dictionary<string, int> MapLabels()
 	{
 		Dictionary<string, int> labels = new();
@@ -89,41 +96,43 @@ public class Interpreter
 		return labels;
 	}
 
-	private void RunCommand()
+	private ulong RunCommand()
 	{
 		var command = _program[_currentPosition];
 		var line = command.Line;
+		ulong cost = 0;
 		switch (command)
 		{
 			case JumpCommandBase jumpCommand:
-				if (jumpCommand.CanJump(jumpCommand is JumpCommand ? string.Empty : GetMemory(AccumulatorAddress, line)))
-				{
-					MakeJump(jumpCommand.FormattedArgument, out _currentPosition);
-					return;
-				}
-				break;
+				return jumpCommand.Execute(
+					jumpCommand is JumpCommand ? string.Empty : GetMemory(AccumulatorAddress, line),
+					(label) =>
+					{
+						MakeJump(label, out _currentPosition);
+					});
 			case MathCommandBase mathCommand:
-				mathCommand.Calculate(GetMemory, SetMemory);
+				cost = mathCommand.Execute(GetMemory, SetMemory);
 				break;
 
 			case MemoryManagementCommand memoryManagementCommand:
-				memoryManagementCommand.Execute(GetMemory, SetMemory);
+				cost = memoryManagementCommand.Execute(GetMemory, SetMemory);
 				break;
 
 			case ReadCommand readCommand:
-				readCommand.Execute(GetMemory, SetMemory, ReadFromInputTape);
+				cost = readCommand.Execute(GetMemory, SetMemory, ReadFromInputTape);
 				break;
 
 			case WriteCommand writeCommand:
-				writeCommand.Execute(GetMemory, WriteToOutputTape);
+				cost = writeCommand.Execute(GetMemory, WriteToOutputTape);
 				break;
 
-			case HaltCommand:
+			case HaltCommand haltCommand:
 				_currentPosition = -1;
-				return;
+				return haltCommand.Execute();
 		}
 
 		_currentPosition++;
+		return cost;
 	}
 
 	private void MakeJump(string label, out int i)

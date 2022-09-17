@@ -10,7 +10,7 @@ internal class LoadCommand : MemoryManagementCommand
 	{
 	}
 
-	public override void Execute(Func<string, long, string> getMemory, Action<string, string> setMemory)
+	public override ulong Execute(Func<string, long, string> getMemory, Action<string, string> setMemory)
 	{
 		var value = ArgumentType switch
 		{
@@ -21,5 +21,7 @@ internal class LoadCommand : MemoryManagementCommand
 		};
 
 		setMemory(Interpreter.AccumulatorAddress, value);
+
+		return this.LCostHelper(getMemory);
 	}
 }

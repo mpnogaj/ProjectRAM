@@ -1,4 +1,5 @@
-﻿using ProjectRAM.Core.Commands.Abstractions;
+﻿using System;
+using ProjectRAM.Core.Commands.Abstractions;
 
 namespace ProjectRAM.Core.Commands.Models;
 
@@ -8,13 +9,13 @@ public class JGTZCommand : JumpCommandBase
 	{
 	}
 
-	public override bool CanJump(string accumulatorValue)
+	public override ulong Execute(string accumulator, Action<string> makeJump)
 	{
-		if (accumulatorValue == Interpreter.UninitializedValue)
+		if (accumulator.IsPositive(Line))
 		{
-			throw new AccumulatorEmptyException(Line);
+			makeJump(FormattedArgument);
 		}
 
-		return accumulatorValue.IsPositive();
+		return accumulator.LCost();
 	}
 }

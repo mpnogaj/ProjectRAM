@@ -10,6 +10,11 @@ internal class HaltCommand : CommandBase
 			
 	}
 
+	public ulong Execute()
+	{
+		return 1;
+	}
+
 	public override void ValidateArgument()
 	{
 		if (ArgumentType != ArgumentType.Null)

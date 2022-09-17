@@ -1,10 +1,7 @@
-﻿using System;
+﻿using ProjectRAM.Core.Models;
+using System;
 using System.Linq;
 using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading;
-using ProjectRAM.Core.Models;
 
 namespace ProjectRAM.Core;
 
@@ -13,16 +10,36 @@ internal static class Extensions
 	public static bool IsNumber(this string s)
 		=> BigInteger.TryParse(s, out _);
 
-	public static bool IsZero(this string s)
-		=> BigInteger.TryParse(s, out var res) && res == BigInteger.Zero;
+	public static bool IsZero(this string s, long line)
+		=> s.ToNumber(line) == BigInteger.Zero;
 
-	public static bool IsPositive(this string s)
-		=> BigInteger.TryParse(s, out var res) && res > BigInteger.Zero;
+	public static bool IsPositive(this string s, long line)
+		=> s.ToNumber(line) > BigInteger.Zero;
 
-	public static long Lcost(this string s)
+	public static BigInteger ToNumber(this string s, long line)
 	{
+		try
+		{
+			if (s == Interpreter.UninitializedValue)
+			{
+				throw new UninitializedCellException(line);
+			}
+			return BigInteger.Parse(s);
+		}
+		catch (FormatException)
+		{
+			throw new ValueIsNaN(line);
+		}
+	}
+
+	public static ulong LCost(this string s)
+	{
+		if (s == Interpreter.UninitializedValue)
+		{
+			return 0;
+		}
 		var bi = BigInteger.Abs(BigInteger.Parse(s));
-		return bi == BigInteger.Zero ? 1 : (long)Math.Floor(BigInteger.Log10(bi)) + 1;
+		return bi == BigInteger.Zero ? 1 : (ulong)Math.Floor(BigInteger.Log10(bi)) + 1;
 	}
 
 	public static ArgumentType GetArgumentType(this string s)

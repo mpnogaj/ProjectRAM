@@ -11,13 +11,14 @@ public class DivCommand : MathCommandBase
 	{
 	}
 
-	public override void Calculate(Func<string, long, string> getMemory, Action<string, string> setMemory)
+	public override ulong Execute(Func<string, long, string> getMemory, Action<string, string> setMemory)
 	{
 		try
 		{
-			base.Calculate(getMemory, setMemory);
+			var complexity = base.Execute(getMemory, setMemory);
 			var res = (BigInteger.Parse(_accumulator) / BigInteger.Parse(_secondValue)).ToString();
 			setMemory(Interpreter.AccumulatorAddress, res);
+			return complexity;
 		}
 		catch (DivideByZeroException)
 		{
@@ -32,7 +33,7 @@ public class DivCommand : MathCommandBase
 	public override void ValidateArgument()
 	{
 		base.ValidateArgument();
-		if (ArgumentType == ArgumentType.Const && FormattedArgument.IsZero())
+		if (ArgumentType == ArgumentType.Const && FormattedArgument.IsZero(Line))
 		{
 			throw new DivByZero(Line);
 		}

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ProjectRAM.Core.Models;
+using System;
 using System.Linq;
-using ProjectRAM.Core.Models;
 
 namespace ProjectRAM.Core.Commands.Abstractions;
 
@@ -24,7 +23,21 @@ public abstract class CommandBase
 
 	public abstract void ValidateArgument();
 
-	public abstract long CalculateComplexity(Func<string, long, string> getMemory);
+	protected ulong LCostHelper(Func<string, long, string> getMemory)
+	{
+		switch (ArgumentType)
+		{
+			case ArgumentType.Const:
+				return FormattedArgument.LCost();
+			case ArgumentType.DirectAddress:
+				return FormattedArgument.LCost() + getMemory(FormattedArgument, Line).LCost();
+			case ArgumentType.IndirectAddress:
+				var res = getMemory(FormattedArgument, Line);
+				return FormattedArgument.LCost() + res.LCost() + getMemory(res, Line).LCost();
+			default:
+				throw new ArgumentIsNotValidException(Line);
+		}
+	}
 
 	public void ValidateLabel()
 	{

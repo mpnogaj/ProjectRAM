@@ -1,4 +1,5 @@
 ﻿using ProjectRAM.Core.Commands.Abstractions;
+using System;
 
 namespace ProjectRAM.Core.Commands.Models;
 
@@ -8,13 +9,13 @@ internal class JZeroCommand : JumpCommandBase
 	{
 	}
 
-	public override bool CanJump(string accumulatorValue)
+	public override ulong Execute(string accumulator, Action<string> makeJump)
 	{
-		if (accumulatorValue == Interpreter.UninitializedValue)
+		if (accumulator.IsZero(Line))
 		{
-			throw new AccumulatorEmptyException(Line);
+			makeJump(FormattedArgument);
 		}
 
-		return accumulatorValue.IsZero();
+		return accumulator.LCost();
 	}
 }

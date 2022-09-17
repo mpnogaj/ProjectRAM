@@ -10,13 +10,14 @@ internal class MultCommand : MathCommandBase
 	{
 	}
 
-	public override void Calculate(Func<string, long, string> getMemory, Action<string, string> setMemory)
+	public override ulong Execute(Func<string, long, string> getMemory, Action<string, string> setMemory)
 	{
-		base.Calculate(getMemory, setMemory);
 		try
 		{
+			var complexity = base.Execute(getMemory, setMemory);
 			var res = (BigInteger.Parse(_accumulator) * BigInteger.Parse(_secondValue)).ToString();
 			setMemory(Interpreter.AccumulatorAddress, res);
+			return complexity;
 		}
 		catch (FormatException)
 		{

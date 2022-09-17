@@ -18,7 +18,7 @@ internal class ReadCommand : CommandBase
 		}
 	}
 
-	public void Execute(Func<string, long, string> getMemory, Action<string, string> setMemory,
+	public ulong Execute(Func<string, long, string> getMemory, Action<string, string> setMemory,
 		EventHandler<ReadFromTapeEventArgs>? readEventHandler)
 	{
 		var eventArgs = new ReadFromTapeEventArgs();
@@ -37,5 +37,8 @@ internal class ReadCommand : CommandBase
 		};
 
 		setMemory(target, eventArgs.Input ?? throw new InputTapeEmptyException(Line));
+
+		return eventArgs.Input.LCost() + FormattedArgument.LCost() +
+		       (ArgumentType == ArgumentType.IndirectAddress ? target.LCost() : 0);
 	}
 }

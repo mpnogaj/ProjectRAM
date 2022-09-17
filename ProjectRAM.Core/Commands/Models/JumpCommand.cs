@@ -1,4 +1,5 @@
-﻿using ProjectRAM.Core.Commands.Abstractions;
+﻿using System;
+using ProjectRAM.Core.Commands.Abstractions;
 
 namespace ProjectRAM.Core.Commands.Models;
 
@@ -8,8 +9,10 @@ internal class JumpCommand : JumpCommandBase
 	{
 	}
 
-	public override bool CanJump(string accumulatorValue)
+	public override ulong Execute(string accumulator, Action<string> makeJump)
 	{
-		return true;
+		ValidateArgument();
+		makeJump(FormattedArgument);
+		return 1;
 	}
 }

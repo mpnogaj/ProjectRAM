@@ -24,7 +24,7 @@ internal class WriteCommand : CommandBase
 		}
 	}
 
-	public void Execute(Func<string, long, string> getMemory,
+	public ulong Execute(Func<string, long, string> getMemory,
 		EventHandler<WriteToTapeEventArgs>? readEventHandler)
 	{
 		if (readEventHandler == null)
@@ -42,5 +42,6 @@ internal class WriteCommand : CommandBase
 
 		var eventArgs = new WriteToTapeEventArgs(value);
 		readEventHandler.Invoke(this, eventArgs);
+		return this.LCostHelper(getMemory);
 	}
 }

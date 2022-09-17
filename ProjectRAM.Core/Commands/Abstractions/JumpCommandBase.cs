@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ProjectRAM.Core.Models;
+﻿using ProjectRAM.Core.Models;
+using System;
+using System.Collections.Generic;
 
 namespace ProjectRAM.Core.Commands.Abstractions;
 
 public abstract class JumpCommandBase : CommandBase
 {
-	public abstract bool CanJump(string accumulatorValue);
-
 	protected JumpCommandBase(long line, string? label, string argument) : base(line, label, argument)
 	{
 	}
+
+	public abstract ulong Execute(string accumulator, Action<string> makeJump);
 
 	public void ValidateLabel(Dictionary<string, int> jumpMap)
 	{

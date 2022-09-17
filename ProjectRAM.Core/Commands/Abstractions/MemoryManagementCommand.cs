@@ -9,7 +9,7 @@ internal abstract class MemoryManagementCommand : CommandBase
 	{
 	}
 
-	public abstract void Execute(Func<string, long, string> getMemory, Action<string, string> setMemory);
+	public abstract ulong Execute(Func<string, long, string> getMemory, Action<string, string> setMemory);
 
 	public override void ValidateArgument()
 	{

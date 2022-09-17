@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProjectRAM.Core.Commands.Abstractions;
+﻿using ProjectRAM.Core.Commands.Abstractions;
 using ProjectRAM.Core.Models;
+using System;
 
 namespace ProjectRAM.Core.Commands.Models;
 
@@ -24,7 +19,7 @@ internal class StoreCommand : MemoryManagementCommand
 		}
 	}
 
-	public override void Execute(Func<string, long, string> getMemory, Action<string, string> setMemory)
+	public override ulong Execute(Func<string, long, string> getMemory, Action<string, string> setMemory)
 	{
 		var target = ArgumentType switch
 		{
@@ -36,5 +31,14 @@ internal class StoreCommand : MemoryManagementCommand
 		var accumulatorValue = getMemory(Interpreter.AccumulatorAddress, Line);
 
 		setMemory(target, accumulatorValue);
+
+		return ArgumentType switch
+		{
+			ArgumentType.DirectAddress => getMemory(Interpreter.AccumulatorAddress, Line).LCost() +
+			                              FormattedArgument.LCost(),
+			ArgumentType.IndirectAddress => getMemory(Interpreter.AccumulatorAddress, Line).LCost() +
+			                                FormattedArgument.LCost() + getMemory(FormattedArgument, Line).LCost(),
+			_ => throw new ArgumentIsNotValidException(Line),
+		};
 	}
 }
