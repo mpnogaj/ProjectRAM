@@ -3,11 +3,10 @@ using ProjectRAM.Core.Commands.Abstractions;
 using ProjectRAM.Core.Commands.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using ProjectRAM.Core.Models;
-using static ProjectRAM.Core.Utilities;
+using System.Numerics;
 
 namespace ProjectRAM.Core;
 
@@ -72,13 +71,15 @@ public class Interpreter
 		}
 
 		ProgramFinished?.Invoke(this, EventArgs.Empty);
-
-		return new InterpreterResult(new ReadOnlyDictionary<string, string>(Memory), new ComplexityReport
+		var readOnlyMemory = Memory.Select(keyVal => new Cell(keyVal.Key, keyVal.Value))
+			.ToList()
+			.AsReadOnly();
+		return new InterpreterResult(readOnlyMemory, new ComplexityReport
 		{
 			LogTimeCost = logTimeCost,
-			LogSpaceCost = (ulong)MaxMemory.Select(x => x.Value.LCost()).LongCount(),
-			UniSpaceCost = (ulong)Memory.Select(x => x.Value != UninitializedValue).LongCount(),
-			UniTimeCost = uniformTimeCost
+			LogSpaceCost = MaxMemory.Select(x => x.Value.LCost()).Aggregate((cSum, curr) => cSum + curr),
+			UniformSpaceCost = (ulong)Memory.Select(x => x.Value != UninitializedValue).LongCount(),
+			UniformTimeCost = uniformTimeCost
 		});
 	}
 
@@ -173,5 +174,24 @@ public class Interpreter
 			Memory[address] = value;
 			MaxMemory[address] = oldValue == "?" ? value : Max(MaxMemory[address], value);
 		}
+	}
+
+	/// <summary>
+	/// Compares two big integers.
+	/// </summary>
+	/// <param name="v1">First value</param>
+	/// <param name="v2">Second value</param>
+	/// <returns>Bigger integer value</returns>
+	private static string Max(string v1, string v2)
+	{
+		if (string.Empty == v1)
+		{
+			return v2;
+		}
+		if (string.Empty == v2)
+		{
+			return v1;
+		}
+		return BigInteger.Parse(v1) >= BigInteger.Parse(v2) ? v1 : v2;
 	}
 }

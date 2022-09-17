@@ -5,7 +5,7 @@ namespace ProjectRAM.Core;
 
 public static class Validator
 {
-	public static List<RamInterpreterException> ValidateProgram(List<Command> commands)
+	/*public static List<RamInterpreterException> ValidateProgram(List<Command> commands)
 	{
 		List<RamInterpreterException> exceptions = new();
 		List<string> requiredLabels = new();
@@ -109,5 +109,5 @@ public static class Validator
 				throw new ArgumentIsNotValidException(c.Line);
 			}
 		}
-	}
+	}*/
 }

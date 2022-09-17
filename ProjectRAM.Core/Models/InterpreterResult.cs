@@ -2,4 +2,4 @@
 
 namespace ProjectRAM.Core.Models;
 
-public readonly record struct InterpreterResult(ReadOnlyDictionary<string, string> Memory, ComplexityReport ComplexityReport);
+public readonly record struct InterpreterResult(ReadOnlyCollection<Cell> Memory, ComplexityReport ComplexityReport);
