@@ -1,12 +1,11 @@
-﻿using ProjectRAM.Core.Commands;
-using ProjectRAM.Core.Commands.Abstractions;
+﻿using ProjectRAM.Core.Commands.Abstractions;
 using ProjectRAM.Core.Commands.Models;
+using ProjectRAM.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using ProjectRAM.Core.Models;
 using System.Numerics;
+using System.Threading;
 
 namespace ProjectRAM.Core;
 
@@ -14,7 +13,7 @@ public class Interpreter
 {
 	private readonly Dictionary<string, int> _jumpMap;
 	private readonly List<CommandBase> _program;
-	private int _currentPosition = 0;
+	private int _currentPosition;
 	public const string UninitializedValue = "?";
 	public const string AccumulatorAddress = "0";
 
@@ -23,17 +22,9 @@ public class Interpreter
 	public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
 	public event EventHandler? ProgramFinished;
 
-	public Interpreter(string[] program) : this(CommandFactory.CreateCommandList(program))
-	{
-
-	}
-
 	public Interpreter(List<CommandBase> program)
 	{
 		_program = program;
-
-		//Validator.ValidateProgram()
-
 		_jumpMap = MapLabels();
 		Memory = new Dictionary<string, string>()
 		{
@@ -45,8 +36,8 @@ public class Interpreter
 		};
 	}
 
-	internal Dictionary<string, string> MaxMemory { get; }
-	internal Dictionary<string, string> Memory { get; }
+	private Dictionary<string, string> MaxMemory { get; }
+	private Dictionary<string, string> Memory { get; }
 
 	public InterpreterResult RunCommands()
 		=> RunCommands(CancellationToken.None);
@@ -55,8 +46,6 @@ public class Interpreter
 	{
 		ulong uniformTimeCost = 0, logTimeCost = 0;
 
-		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-		// Halt command sets i to -1 when executed
 		_currentPosition = 0;
 		while (_currentPosition < _program.Count && _currentPosition >= 0)
 		{

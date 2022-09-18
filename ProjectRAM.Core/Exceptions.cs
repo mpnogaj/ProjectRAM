@@ -186,6 +186,16 @@ public class ValueIsNaN : RamInterpreterException
 	}
 }
 
+public class LabelAlreadyExists : RamInterpreterException
+{
+	public override string Message { get; }
+
+	public LabelAlreadyExists(long line) : base(line)
+	{
+		Message = "Label already exists";
+	}
+}
+
 /// <summary>
 /// Special type of exception threw by RAM Interpreter
 /// </summary>

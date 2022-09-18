@@ -17,7 +17,7 @@ public abstract class CommandBase
 		Line = line;
 		Label = label;
 		Argument = argument;
-		ArgumentType = argument.GetArgumentType();
+		ArgumentType = GetArgumentType(argument);
 		FormattedArgument = GetFormattedArgument();
 	}
 
@@ -41,7 +41,7 @@ public abstract class CommandBase
 
 	public void ValidateLabel()
 	{
-		if (Label != null && !Label.All(char.IsLetterOrDigit))
+		if (Label != null && Label.IsValidLabel())
 		{
 			throw new LabelIsNotValidException(Line);
 		}
@@ -56,5 +56,30 @@ public abstract class CommandBase
 			ArgumentType.IndirectAddress or ArgumentType.Const => Argument[1..],
 			_ => throw new ArgumentOutOfRangeException()
 		};
+	}
+
+	private ArgumentType GetArgumentType(string argument)
+	{
+		if (string.IsNullOrEmpty(argument))
+		{
+			return ArgumentType.Null;
+		}
+		if (argument.StartsWith('=') && argument.IsNumber())
+		{
+			return ArgumentType.Const;
+		}
+		if (argument.IsNumber())
+		{
+			return ArgumentType.DirectAddress;
+		}
+		if (argument.StartsWith('^') && argument.IsNumber())
+		{
+			return ArgumentType.IndirectAddress;
+		}
+		if (argument.IsValidLabel())
+		{
+			return ArgumentType.Label;
+		}
+		return ArgumentType.Invalid;
 	}
 }

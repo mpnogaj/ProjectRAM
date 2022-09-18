@@ -9,9 +9,10 @@ namespace ProjectRAM.Core.Commands;
 
 internal static class CommandFactory
 {
-	public static List<CommandBase> CreateCommandList(string[] lines)
+	public static List<CommandBase> CreateCommandList(IEnumerable<string> lines)
 	{
-		return lines.Select((line, index) => CreateCommand(index + 1, line))
+		return lines
+			.Select((line, index) => CreateCommand(index + 1, line))
 			.Where(command => command != null)
 			.ToList()!;
 	}
