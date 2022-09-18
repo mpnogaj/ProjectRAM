@@ -1,5 +1,7 @@
-﻿using ProjectRAM.Core.Commands.Abstractions;
-using ProjectRAM.Core.Commands.Models;
+﻿using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Commands.JumpCommands;
+using ProjectRAM.Core.Commands.MathCommands;
+using ProjectRAM.Core.Commands.MemoryManagementCommands;
 using ProjectRAM.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -14,9 +16,6 @@ public class Interpreter
 	private readonly Dictionary<string, int> _jumpMap;
 	private readonly List<CommandBase> _program;
 	private int _currentPosition;
-	public const string UninitializedValue = "?";
-	public const string AccumulatorAddress = "0";
-
 
 	public event EventHandler<WriteToTapeEventArgs>? WriteToOutputTape;
 	public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
@@ -28,11 +27,11 @@ public class Interpreter
 		_jumpMap = MapLabels();
 		Memory = new Dictionary<string, string>()
 		{
-			{AccumulatorAddress, UninitializedValue}
+			{ Constants.AccumulatorAddress, Constants.UninitializedValue}
 		};
 		MaxMemory = new Dictionary<string, string>()
 		{
-			{ AccumulatorAddress, UninitializedValue }
+			{ Constants.AccumulatorAddress, Constants.UninitializedValue }
 		};
 	}
 
@@ -67,7 +66,7 @@ public class Interpreter
 		{
 			LogTimeCost = logTimeCost,
 			LogSpaceCost = MaxMemory.Select(x => x.Value.LCost()).Aggregate((cSum, curr) => cSum + curr),
-			UniformSpaceCost = (ulong)Memory.Select(x => x.Value != UninitializedValue).LongCount(),
+			UniformSpaceCost = (ulong)Memory.Select(x => x.Value != Constants.UninitializedValue).LongCount(),
 			UniformTimeCost = uniformTimeCost
 		});
 	}
@@ -95,7 +94,7 @@ public class Interpreter
 		{
 			case JumpCommandBase jumpCommand:
 				return jumpCommand.Execute(
-					jumpCommand is JumpCommand ? string.Empty : GetMemory(AccumulatorAddress, line),
+					jumpCommand is JumpCommand ? string.Empty : GetMemory(Constants.AccumulatorAddress, line),
 					(label) =>
 					{
 						MakeJump(label, out _currentPosition);
@@ -104,7 +103,7 @@ public class Interpreter
 				cost = mathCommand.Execute(GetMemory, SetMemory);
 				break;
 
-			case MemoryManagementCommand memoryManagementCommand:
+			case MemoryManagementCommandBase memoryManagementCommand:
 				cost = memoryManagementCommand.Execute(GetMemory, SetMemory);
 				break;
 
@@ -134,15 +133,15 @@ public class Interpreter
 	{
 		if (!Memory.ContainsKey(address))
 		{
-			throw address == AccumulatorAddress
+			throw address == Constants.AccumulatorAddress
 				? new AccumulatorEmptyException(line)
 				: new UninitializedCellException(line);
 		}
 
 		var value = Memory[address];
-		if (value == UninitializedValue)
+		if (value == Constants.UninitializedValue)
 		{
-			throw address == AccumulatorAddress
+			throw address == Constants.AccumulatorAddress
 				? new AccumulatorEmptyException(line)
 				: new UninitializedCellException(line);
 		}

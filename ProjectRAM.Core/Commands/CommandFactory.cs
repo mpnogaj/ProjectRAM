@@ -1,6 +1,4 @@
-﻿using ProjectRAM.Core.Commands.Abstractions;
-using ProjectRAM.Core.Commands.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -44,21 +42,15 @@ internal static class CommandFactory
 
 			var command = parts[cmdPos].ToLower();
 
-			return command switch
+			//replace with source code generator asap for better performance
+			//https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview
+			Constants.Commands.TryGetValue(command, out var commandType);
+			if (commandType == null)
 			{
-				"jump" => new JumpCommand(lineNum, label, argument),
-				"jzero" => new JZeroCommand(lineNum, label, argument),
-				"jgtz" => new JGTZCommand(lineNum, label, argument),
-				"add" => new AddCommand(lineNum, label, argument),
-				"sub" => new SubCommand(lineNum, label, argument),
-				"mult" => new MultCommand(lineNum, label, argument),
-				"div" => new DivCommand(lineNum, label, argument),
-				"load" => new LoadCommand(lineNum, label, argument),
-				"store" => new StoreCommand(lineNum, label, argument),
-				"read" => new ReadCommand(lineNum, label, argument),
-				"write" => new WriteCommand(lineNum, label, argument),
-				_ => throw new UnknownCommandTypeException(lineNum)
-			};
+				throw new UnknownCommandTypeException(lineNum);
+			}
+
+			return (CommandBase)Activator.CreateInstance(commandType, lineNum, label, argument)!;
 		}
 		catch (IndexOutOfRangeException)
 		{

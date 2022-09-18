@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProjectRAM.Core.Models;
-using ProjectRAM.Core.Commands.Abstractions;
+﻿using ProjectRAM.Core.Models;
+using System;
 
-namespace ProjectRAM.Core.Commands.Models;
+namespace ProjectRAM.Core.Commands;
 
+[CommandName("write")]
 internal class WriteCommand : CommandBase
 {
 	public WriteCommand(long line, string? label, string argument) : base(line, label, argument)
@@ -16,9 +12,9 @@ internal class WriteCommand : CommandBase
 
 	public override void ValidateArgument()
 	{
-		if (ArgumentType is not ArgumentType.DirectAddress 
-		    and not ArgumentType.IndirectAddress 
-		    and not ArgumentType.Const)
+		if (ArgumentType is not ArgumentType.DirectAddress
+			and not ArgumentType.IndirectAddress
+			and not ArgumentType.Const)
 		{
 			throw new ArgumentIsNotValidException(Line);
 		}
@@ -42,6 +38,6 @@ internal class WriteCommand : CommandBase
 
 		var eventArgs = new WriteToTapeEventArgs(value);
 		readEventHandler.Invoke(this, eventArgs);
-		return this.LCostHelper(getMemory);
+		return LCostHelper(getMemory);
 	}
 }

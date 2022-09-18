@@ -8,7 +8,7 @@ namespace ProjectRAM.Core;
 internal static class Extensions
 {
 	public static bool IsValidLabel(this string s)
-		=> s.All(char.IsLetterOrDigit) && char.IsLetter(s[0]);
+		=> s.All(char.IsLetterOrDigit) && char.IsLetter(s[0]) && !Constants.CommandNames.Contains(s);
 
 	public static bool IsNumber(this string s)
 		=> BigInteger.TryParse(s, out _);
@@ -23,7 +23,7 @@ internal static class Extensions
 	{
 		try
 		{
-			if (s == Interpreter.UninitializedValue)
+			if (s == Constants.UninitializedValue)
 			{
 				throw new UninitializedCellException(line);
 			}
@@ -37,7 +37,7 @@ internal static class Extensions
 
 	public static ulong LCost(this string s)
 	{
-		if (s == Interpreter.UninitializedValue)
+		if (s == Constants.UninitializedValue)
 		{
 			return 0;
 		}

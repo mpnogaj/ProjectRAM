@@ -1,5 +1,5 @@
 ﻿using ProjectRAM.Core.Commands;
-using ProjectRAM.Core.Commands.Abstractions;
+using ProjectRAM.Core.Commands.JumpCommands;
 using System.Collections.Generic;
 
 namespace ProjectRAM.Core;
