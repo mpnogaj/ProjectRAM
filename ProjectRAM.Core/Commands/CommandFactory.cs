@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace ProjectRAM.Core.Commands;
 
-internal static class CommandFactory
+public static class CommandFactory
 {
 	public static List<CommandBase> CreateCommandList(IEnumerable<string> lines)
 	{
@@ -15,13 +15,17 @@ internal static class CommandFactory
 			.ToList()!;
 	}
 
-	public static CommandBase? CreateCommand(long lineNum, string line)
+	internal static CommandBase? CreateCommand(long lineNum, string line)
 	{
 		try
 		{
 			line = Regex.Replace(
 				Regex.Replace(line, @"#.*", ""),
-				@"\s+", "").Trim();
+				@"\s+", " ").Trim();
+			if (string.IsNullOrWhiteSpace(line))
+			{
+				return null;
+			}
 			var parts = line.Split(' ');
 			if (parts.Length == 0)
 			{

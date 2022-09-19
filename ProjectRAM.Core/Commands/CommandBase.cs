@@ -40,7 +40,7 @@ public abstract class CommandBase
 
     public void ValidateLabel()
     {
-        if (Label != null && Label.IsValidLabel())
+        if (Label != null && !Label.IsValidLabel())
         {
             throw new LabelIsNotValidException(Line);
         }
@@ -63,7 +63,7 @@ public abstract class CommandBase
         {
             return ArgumentType.Null;
         }
-        if (argument.StartsWith('=') && argument.IsNumber())
+        if (argument.StartsWith('=') && argument[1..].IsNumber())
         {
             return ArgumentType.Const;
         }
@@ -71,7 +71,7 @@ public abstract class CommandBase
         {
             return ArgumentType.DirectAddress;
         }
-        if (argument.StartsWith('^') && argument.IsNumber())
+        if (argument.StartsWith('^') && argument[1..].IsNumber())
         {
             return ArgumentType.IndirectAddress;
         }

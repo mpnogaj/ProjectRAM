@@ -10,8 +10,9 @@ internal class HaltCommand : CommandBase
 
     }
 
-    public ulong Execute()
+    public ulong Execute(out int position)
     {
+	    position = -1;
         return 1;
     }
 

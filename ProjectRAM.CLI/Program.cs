@@ -1,11 +1,17 @@
 ﻿using CommandLine;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
+using CommandLine.Text;
 using ProjectRAM.CLI.Properties;
 using ProjectRAM.Core;
+using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Converters;
+using ProjectRAM.Core.Models;
 
 namespace ProjectRAM.CLI
 {
@@ -19,6 +25,12 @@ namespace ProjectRAM.CLI
 
 		[Option('t', "timeout", HelpText = "Timeout in seconds after which program stops. Everything <= 0 will set timeout to infinity", Required = false)]
 		public int Timeout { get; set; }
+
+		[Option('m', "memory", HelpText = "Show memory after successful execution")]
+		public bool ShowMemoryReport { get; set; }
+
+		[Option('c', "complexity", HelpText="Show complexity report after successful execution")]
+		public bool ShowComplexityReport { get; set; }
 	}
 
 	internal static class Program
@@ -41,20 +53,36 @@ namespace ProjectRAM.CLI
 		{
 			try
 			{
+				string[] fileContent;
+				using (var sr = new StreamReader(options.CodePath))
+				{
+					fileContent = sr.ReadToEnd().Split(Environment.NewLine);
+				}
+
+				var exceptions = Validator.ValidateProgram(fileContent);
+				if (exceptions.Count > 0)
+				{
+					PrintValidatorExceptions(exceptions);
+					return -1;
+				}
+
 				Queue<string>? inputTape = null;
 				if (options.InputTapePath != null)
 				{
-					inputTape = Factory.CreateInputTapeFromFile(options.InputTapePath);
+					inputTape = FileToTapeConverter.ConvertFileToInputTape(options.InputTapePath);
 				}
 
 				var cts = options.Timeout <= 0
 					? new CancellationTokenSource()
 					: new CancellationTokenSource(TimeSpan.FromSeconds(options.Timeout));
-				var interpreter = new Interpreter(Factory.CreateCommandList(options.CodePath));
+
+				var interpreter = new Interpreter(CommandFactory.CreateCommandList(fileContent));
+
 				interpreter.WriteToOutputTape += (sender, args) =>
 				{
 					Console.WriteLine($@"<<< {args.Output}");
 				};
+
 				interpreter.ReadFromInputTape += (sender, args) =>
 				{
 					if (inputTape is { Count: > 0 })
@@ -78,8 +106,20 @@ namespace ProjectRAM.CLI
 						args.Input = input;
 					}
 				};
-				var mem = interpreter.RunCommands(cts.Token);
+				var result = interpreter.RunCommands(cts.Token);
+				if (options.ShowMemoryReport)
+				{
+					PrintMemory(result.Memory);
+				}
 
+				if (options.ShowComplexityReport)
+				{
+					Console.WriteLine(@"Complexity report: ");
+					Console.WriteLine(@"Time complexity:");
+					Console.WriteLine($@"Logarithmic: {result.ComplexityReport.LogTimeCost}, Uniform: {result.ComplexityReport.UniformTimeCost}");
+					Console.WriteLine(@"Space complexity:");
+					Console.WriteLine($@"Logarithmic: {result.ComplexityReport.LogSpaceCost}, Uniform: {result.ComplexityReport.UniformSpaceCost}");
+				}
 				return 0;
 			}
 			catch (RamInterpreterException exception)
@@ -99,16 +139,32 @@ namespace ProjectRAM.CLI
 			}
 		}
 
+		private static void PrintValidatorExceptions(List<RamInterpreterException> exceptions)
+		{
+			foreach (var exception in exceptions)
+			{
+				Console.WriteLine($@"{exception.Line}: {exception.Message}");
+			}
+		}
+
+		private static void PrintMemory(ReadOnlyCollection<Cell> memory)
+		{
+			Console.WriteLine(@"MEMORY: ");
+			foreach (var memoryCell in memory)
+			{
+				Console.WriteLine($@"[{memoryCell.Index}]: {memoryCell.Value}");
+			}
+			Console.WriteLine();
+		}
+
 		private static int HandleErrors(IEnumerable<Error> errors)
 		{
-			//check if can cast, if not use slower extension methods
 			var enumerable = errors as Error[] ?? errors.ToArray();
-			Console.WriteLine(Resources.Errors, enumerable.Length);
+			Console.WriteLine(Resources.Errors, enumerable.Count());
 			if (enumerable.Any(x => x is HelpRequestedError or VersionRequestedError))
 			{
 				return -1;
 			}
-
 			return 0;
 		}
 	}

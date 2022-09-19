@@ -55,11 +55,17 @@ public class Interpreter
 			}
 
 			uniformTimeCost++;
+			var prevPos = _currentPosition;
 			logTimeCost += RunCommand();
+			if (prevPos == _currentPosition)
+			{
+				_currentPosition++;
+			}
 		}
 
 		ProgramFinished?.Invoke(this, EventArgs.Empty);
 		var readOnlyMemory = Memory.Select(keyVal => new Cell(keyVal.Key, keyVal.Value))
+			.OrderBy(x => x)
 			.ToList()
 			.AsReadOnly();
 		return new InterpreterResult(readOnlyMemory, new ComplexityReport
@@ -89,39 +95,22 @@ public class Interpreter
 	{
 		var command = _program[_currentPosition];
 		var line = command.Line;
-		ulong cost = 0;
-		switch (command)
+		return command switch
 		{
-			case JumpCommandBase jumpCommand:
-				return jumpCommand.Execute(
-					jumpCommand is JumpCommand ? string.Empty : GetMemory(Constants.AccumulatorAddress, line),
-					(label) =>
-					{
-						MakeJump(label, out _currentPosition);
-					});
-			case MathCommandBase mathCommand:
-				cost = mathCommand.Execute(GetMemory, SetMemory);
-				break;
-
-			case MemoryManagementCommandBase memoryManagementCommand:
-				cost = memoryManagementCommand.Execute(GetMemory, SetMemory);
-				break;
-
-			case ReadCommand readCommand:
-				cost = readCommand.Execute(GetMemory, SetMemory, ReadFromInputTape);
-				break;
-
-			case WriteCommand writeCommand:
-				cost = writeCommand.Execute(GetMemory, WriteToOutputTape);
-				break;
-
-			case HaltCommand haltCommand:
-				_currentPosition = -1;
-				return haltCommand.Execute();
-		}
-
-		_currentPosition++;
-		return cost;
+			JumpCommandBase jumpCommand => jumpCommand.Execute(
+				jumpCommand is JumpCommand ? string.Empty : GetMemory(Constants.AccumulatorAddress, line),
+				(label) =>
+				{
+					MakeJump(label, out _currentPosition);
+				}),
+			MathCommandBase mathCommand => mathCommand.Execute(GetMemory, SetMemory),
+			MemoryManagementCommandBase memoryManagementCommand =>
+				memoryManagementCommand.Execute(GetMemory, SetMemory),
+			ReadCommand readCommand => readCommand.Execute(GetMemory, SetMemory, ReadFromInputTape),
+			WriteCommand writeCommand => writeCommand.Execute(GetMemory, WriteToOutputTape),
+			HaltCommand haltCommand => haltCommand.Execute(out _currentPosition),
+			_ => throw new UnknownCommandTypeException(line)
+		};
 	}
 
 	private void MakeJump(string label, out int i)

@@ -13,7 +13,8 @@ internal static class Constants
 		.GetTypes()
 		.Where(type => type.IsClass &&
 					   !type.IsAbstract &&
-					   type.Namespace!.StartsWith(CommandsNamespace))
+					   type.Namespace!.StartsWith(CommandsNamespace) &&
+					   type.GetCustomAttribute<CommandNameAttribute>() != null)
 		.ToDictionary(type => type.GetCustomAttribute<CommandNameAttribute>()!.Name);
 	private static HashSet<string> _commandNames = _commands.Keys.ToHashSet();
 

@@ -8,14 +8,14 @@ namespace ProjectRAM.Core.Models;
 /// </summary>
 public class Cell : IComparable<Cell>
 {
-	public Cell(string v, string i)
+	public Cell(string index, string value)
 	{
-		Value = v;
-		Index = i;
+		Index = index;
+		Value = value;
 	}
 
 	public string Index { get; }
-	public string Value { get; set; }
+	public string Value { get; }
 
 	public int CompareTo(Cell? other) =>
 		other == null
