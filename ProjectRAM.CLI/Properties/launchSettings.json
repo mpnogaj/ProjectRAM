@@ -2,7 +2,7 @@
   "profiles": {
     "ProjectRAM.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "test2.RAMCode tape.txt -m"
+      "commandLineArgs": "test.RAMCode tape.txt -m"
     }
   }
 }

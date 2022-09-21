@@ -1,6 +1,7 @@
 ﻿using System;
 using ProjectRAM.Core.Models;
 using System.Numerics;
+using ProjectRAM.Core.Commands;
 
 namespace ProjectRAM.Core.Commands.MathCommands;
 

@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Commands.MathCommands;
 
 namespace ProjectRAM.Core;
 
 internal static class Constants
 {
 	private static readonly string CommandsNamespace = typeof(CommandBase).Namespace!;
-	private static Dictionary<string, Type> _commands = Assembly.GetCallingAssembly()
-		.GetTypes()
-		.Where(type => type.IsClass &&
-					   !type.IsAbstract &&
-					   type.Namespace!.StartsWith(CommandsNamespace) &&
-					   type.GetCustomAttribute<CommandNameAttribute>() != null)
-		.ToDictionary(type => type.GetCustomAttribute<CommandNameAttribute>()!.Name);
+
+	private static Dictionary<string, Type> _commands = new()
+	{
+		{"add", typeof(AddCommand)},
+	};
 	private static HashSet<string> _commandNames = _commands.Keys.ToHashSet();
 
 	internal static Dictionary<string, Type> Commands => _commands;

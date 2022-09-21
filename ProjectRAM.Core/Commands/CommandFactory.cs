@@ -45,16 +45,8 @@ public static class CommandFactory
 			}
 
 			var command = parts[cmdPos].ToLower();
-
-			//replace with source code generator asap for better performance
-			//https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview
-			Constants.Commands.TryGetValue(command, out var commandType);
-			if (commandType == null)
-			{
-				throw new UnknownCommandTypeException(lineNum);
-			}
-
-			return (CommandBase)Activator.CreateInstance(commandType, lineNum, label, argument)!;
+			
+			return CommandHelper.CreateCommandInstance(command, lineNum, label, argument);
 		}
 		catch (IndexOutOfRangeException)
 		{
