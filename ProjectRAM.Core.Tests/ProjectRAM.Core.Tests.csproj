@@ -24,13 +24,4 @@
       <ProjectReference Include="..\ProjectRAM.Core\ProjectRAM.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="TestsData\RAMCode\*.RAMCode">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="TestsData\InputTape\*.txt">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>
