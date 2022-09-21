@@ -18,7 +18,7 @@ public class DivCommand : MathCommandBase
         {
             var complexity = base.Execute(getMemory, setMemory);
             var res = (BigInteger.Parse(_accumulator) / BigInteger.Parse(_secondValue)).ToString();
-            setMemory(Constants.AccumulatorAddress, res);
+            setMemory(Interpreter.AccumulatorAddress, res);
             return complexity;
         }
         catch (DivideByZeroException)

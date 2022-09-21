@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
+using Microsoft.VisualBasic;
 
 namespace ProjectRAM.Core;
 
@@ -21,17 +22,20 @@ public class Interpreter
 	public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
 	public event EventHandler? ProgramFinished;
 
+	internal const string UninitializedValue = "?";
+	internal const string AccumulatorAddress = "0";
+
 	public Interpreter(List<CommandBase> program)
 	{
 		_program = program;
 		_jumpMap = MapLabels();
 		Memory = new Dictionary<string, string>()
 		{
-			{ Constants.AccumulatorAddress, Constants.UninitializedValue}
+			{ AccumulatorAddress, UninitializedValue}
 		};
 		MaxMemory = new Dictionary<string, string>()
 		{
-			{ Constants.AccumulatorAddress, Constants.UninitializedValue }
+			{ AccumulatorAddress, UninitializedValue }
 		};
 	}
 
@@ -72,7 +76,7 @@ public class Interpreter
 		{
 			LogTimeCost = logTimeCost,
 			LogSpaceCost = MaxMemory.Select(x => x.Value.LCost()).Aggregate((cSum, curr) => cSum + curr),
-			UniformSpaceCost = (ulong)Memory.Select(x => x.Value != Constants.UninitializedValue).LongCount(),
+			UniformSpaceCost = (ulong)Memory.Select(x => x.Value != UninitializedValue).LongCount(),
 			UniformTimeCost = uniformTimeCost
 		});
 	}
@@ -98,7 +102,7 @@ public class Interpreter
 		return command switch
 		{
 			JumpCommandBase jumpCommand => jumpCommand.Execute(
-				jumpCommand is JumpCommand ? string.Empty : GetMemory(Constants.AccumulatorAddress, line),
+				jumpCommand is JumpCommand ? string.Empty : GetMemory(AccumulatorAddress, line),
 				(label) =>
 				{
 					MakeJump(label, out _currentPosition);
@@ -122,15 +126,15 @@ public class Interpreter
 	{
 		if (!Memory.ContainsKey(address))
 		{
-			throw address == Constants.AccumulatorAddress
+			throw address == AccumulatorAddress
 				? new AccumulatorEmptyException(line)
 				: new UninitializedCellException(line);
 		}
 
 		var value = Memory[address];
-		if (value == Constants.UninitializedValue)
+		if (value == UninitializedValue)
 		{
-			throw address == Constants.AccumulatorAddress
+			throw address == AccumulatorAddress
 				? new AccumulatorEmptyException(line)
 				: new UninitializedCellException(line);
 		}

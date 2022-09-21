@@ -29,15 +29,15 @@ internal class StoreCommand : MemoryManagementCommandBase
             _ => throw new ArgumentIsNotValidException(Line),
         };
 
-        var accumulatorValue = getMemory(Constants.AccumulatorAddress, Line);
+        var accumulatorValue = getMemory(Interpreter.AccumulatorAddress, Line);
 
         setMemory(target, accumulatorValue);
 
         return ArgumentType switch
         {
-            ArgumentType.DirectAddress => getMemory(Constants.AccumulatorAddress, Line).LCost() +
+            ArgumentType.DirectAddress => getMemory(Interpreter.AccumulatorAddress, Line).LCost() +
                                           FormattedArgument.LCost(),
-            ArgumentType.IndirectAddress => getMemory(Constants.AccumulatorAddress, Line).LCost() +
+            ArgumentType.IndirectAddress => getMemory(Interpreter.AccumulatorAddress, Line).LCost() +
                                             FormattedArgument.LCost() + getMemory(FormattedArgument, Line).LCost(),
             _ => throw new ArgumentIsNotValidException(Line),
         };

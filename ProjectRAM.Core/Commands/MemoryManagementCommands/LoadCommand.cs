@@ -21,7 +21,7 @@ internal class LoadCommand : MemoryManagementCommandBase
             _ => throw new ArgumentIsNotValidException(Line)
         };
 
-        setMemory(Constants.AccumulatorAddress, value);
+        setMemory(Interpreter.AccumulatorAddress, value);
 
         return LCostHelper(getMemory);
     }
