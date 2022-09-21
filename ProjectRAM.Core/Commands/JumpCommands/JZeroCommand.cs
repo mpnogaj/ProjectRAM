@@ -12,7 +12,7 @@ internal class JZeroCommand : JumpCommandBase
 
     public override ulong Execute(string accumulator, Action<string> makeJump)
     {
-        if (accumulator.IsZero(Line))
+        if (accumulator.IsZero())
         {
             makeJump(FormattedArgument);
         }

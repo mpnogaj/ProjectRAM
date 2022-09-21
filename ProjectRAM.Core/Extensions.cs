@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using ProjectRAM.Core.Commands;
 
 namespace ProjectRAM.Core;
@@ -9,31 +10,15 @@ internal static class Extensions
 {
 	public static bool IsValidLabel(this string s)
 		=> s.All(char.IsLetterOrDigit) && char.IsLetter(s[0]) && !CommandHelper.CommandNames.Contains(s);
-	
+
 	public static bool IsNumber(this string s)
-		=> BigInteger.TryParse(s, out _);
+		=> !s.Any(char.IsWhiteSpace) && Regex.IsMatch(s, @"^-?(0|[1-9][0-9]*)$") && s != "-0";
 
-	public static bool IsZero(this string s, long line)
-		=> s.ToNumber(line) == BigInteger.Zero;
+	public static bool IsZero(this string s)
+		=> s.IsNumber() && BigInteger.Parse(s) == BigInteger.Zero;
 
-	public static bool IsPositive(this string s, long line)
-		=> s.ToNumber(line) > BigInteger.Zero;
-
-	public static BigInteger ToNumber(this string s, long line)
-	{
-		try
-		{
-			if (s == Interpreter.UninitializedValue)
-			{
-				throw new UninitializedCellException(line);
-			}
-			return BigInteger.Parse(s);
-		}
-		catch (FormatException)
-		{
-			throw new ValueIsNaN(line);
-		}
-	}
+	public static bool IsPositive(this string s)
+		=> s.IsNumber() && BigInteger.Parse(s) > BigInteger.Zero;
 
 	public static ulong LCost(this string s)
 	{
@@ -41,6 +26,14 @@ internal static class Extensions
 		{
 			return 0;
 		}
+
+		// Shouldn't happen during user code execution because memory doesn't allow NaN values
+		// Keep for safety
+		if (!s.IsNumber())
+		{
+			throw new FormatException();
+		}
+		
 		var bi = BigInteger.Abs(BigInteger.Parse(s));
 		return bi == BigInteger.Zero ? 1 : (ulong)Math.Floor(BigInteger.Log10(bi)) + 1;
 	}

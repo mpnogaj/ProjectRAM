@@ -34,7 +34,7 @@ public class DivCommand : MathCommandBase
     public override void ValidateArgument()
     {
         base.ValidateArgument();
-        if (ArgumentType == ArgumentType.Const && FormattedArgument.IsZero(Line))
+        if (ArgumentType == ArgumentType.Const && FormattedArgument.IsZero())
         {
             throw new DivByZero(Line);
         }

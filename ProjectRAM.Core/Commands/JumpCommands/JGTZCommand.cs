@@ -12,7 +12,7 @@ public class JGTZCommand : JumpCommandBase
 
     public override ulong Execute(string accumulator, Action<string> makeJump)
     {
-        if (accumulator.IsPositive(Line))
+        if (accumulator.IsPositive())
         {
             makeJump(FormattedArgument);
         }

@@ -1,4 +1,11 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">C:\Users\Marcin\AppData\Local\JetBrains\Rider2022.2\resharper-host\temp\Rider\vAny\CoverageData\_ProjectRAM.-1113116293\Snapshot\snapshot.utdcvr</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=82d33ce2_002Dccd7_002D41ed_002Db4e1_002Dac3f2210c397/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=9c7b407e_002Dcc62_002D40da_002D8e8b_002D33570ae79046/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=ProjectRAM_002ECLI_002FProperties_002FResources/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=ProjectRAM_002EConsole_002FProperties_002FResources/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=ProjectRAM_002ECore_002FProperties_002FResources/@EntryIndexedValue">False</s:Boolean>
@@ -9,4 +16,8 @@
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=RAMEditorMultiplatform_002FResources_002FStrings/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/ResxEditorPersonal/DisabledLanguages/@EntryValue">pl-pl</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/ResxEditorPersonal/ShowOnlyStringResources/@EntryValue">False</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/ShowOnlyStringResources/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=06fae8f8_002Dfe35_002D493c_002D854a_002Dee33d22747e9_0023ProjectRAM_002EWebsite/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=24380f1f_002D200c_002D4c42_002D956a_002D50e50c70b9a2_0023ProjectRAM_002EEditor/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=37b42f69_002D1ae2_002D481b_002D9cde_002D172cf3bde21e_0023ProjectRAM_002EEditor_002ETests/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=f3314275_002Da933_002D475f_002D8980_002D802cfbd8c70a_0023ProjectRAM_002ECLI/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
