@@ -196,6 +196,16 @@ public class LabelAlreadyExists : RamInterpreterException
 	}
 }
 
+public class EmptyLineDoesNotTakeArgumentException : RamInterpreterException
+{
+	public override string Message { get; }
+
+	public EmptyLineDoesNotTakeArgumentException(long line) : base(line)
+	{
+		Message = "Empty line doesn't take any argument";
+	}
+}
+
 /// <summary>
 /// Special type of exception threw by RAM Interpreter
 /// </summary>

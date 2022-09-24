@@ -17,40 +17,14 @@ public static class CommandFactory
 
 	internal static CommandBase? CreateCommand(long lineNum, string line)
 	{
-		try
+		var parsedLine = Parser.ParseCodeLine(line);
+		string command = parsedLine.Item2.ToLower();
+		string? label = parsedLine.Item1 == string.Empty ? parsedLine.Item1 : null;
+		string argument = parsedLine.Item3;
+		if (string.IsNullOrEmpty(label) && string.IsNullOrEmpty(command) && string.IsNullOrEmpty(argument))
 		{
-			line = Regex.Replace(
-				Regex.Replace(line, @"#.*", ""),
-				@"\s+", " ").Trim();
-			if (string.IsNullOrWhiteSpace(line))
-			{
-				return null;
-			}
-			var parts = line.Split(' ');
-			if (parts.Length == 0)
-			{
-				return null;
-			}
-			string? label = null;
-			var argument = string.Empty;
-			var cmdPos = 0;
-			if (parts[0].EndsWith(':'))
-			{
-				cmdPos++;
-				label = parts[0][..^1];
-			}
-			if (cmdPos + 1 < parts.Length)
-			{
-				argument = parts[cmdPos + 1];
-			}
-
-			var command = parts[cmdPos].ToLower();
-			
-			return CommandHelper.CreateCommandInstance(command, lineNum, label, argument);
+			return null;
 		}
-		catch (IndexOutOfRangeException)
-		{
-			throw new LineIsInvalidException(lineNum);
-		}
+		return CommandHelper.CreateCommandInstance(command, lineNum, label, argument);
 	}
 }
