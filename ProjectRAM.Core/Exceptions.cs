@@ -206,6 +206,16 @@ public class EmptyLineDoesNotTakeArgumentException : RamInterpreterException
 	}
 }
 
+public class CallStackIsEmptyException : RamInterpreterException
+{
+	public override string Message { get; }
+
+	public CallStackIsEmptyException(long line) : base(line)
+	{
+		Message = "Call stack is empty.";
+	}
+}
+
 /// <summary>
 /// Special type of exception threw by RAM Interpreter
 /// </summary>

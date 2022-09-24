@@ -11,11 +11,12 @@ using System.Threading;
 
 namespace ProjectRAM.Core;
 
-public class Interpreter
+public class Interpreter : IInterpreter
 {
 	private readonly Dictionary<string, int> _jumpMap;
 	private readonly List<CommandBase> _program;
 	private int _currentPosition;
+	private Stack<int> _callStack;
 
 	public event EventHandler<WriteToTapeEventArgs>? WriteToOutputTape;
 	public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
@@ -28,6 +29,7 @@ public class Interpreter
 	{
 		_program = program;
 		_jumpMap = MapLabels();
+		_callStack = new Stack<int>();
 		Memory = new Dictionary<string, string>()
 		{
 			{ AccumulatorAddress, UninitializedValue}
@@ -116,32 +118,48 @@ public class Interpreter
 		};
 	}
 
-	private void MakeJump(string label, out int i)
+	public void MakeJump(string label)
 	{
-		i = _jumpMap[label];
+		_currentPosition = _jumpMap[label];
 	}
 
-	private string GetMemory(string address, long line)
+	public void MakeStackJump(string label)
+	{
+		_callStack.Push(_currentPosition);
+		_currentPosition = _jumpMap[label];
+	}
+
+	public void PopStack()
+	{
+		if (_callStack.Count == 0)
+		{
+			throw new CallStackIsEmptyException(_currentPosition);
+		}
+
+		_currentPosition = _callStack.Pop();
+	}
+
+	public string GetMemory(string address)
 	{
 		if (!Memory.ContainsKey(address))
 		{
 			throw address == AccumulatorAddress
-				? new AccumulatorEmptyException(line)
-				: new UninitializedCellException(line);
+				? new AccumulatorEmptyException(_currentPosition)
+				: new UninitializedCellException(_currentPosition);
 		}
 
 		var value = Memory[address];
 		if (value == UninitializedValue)
 		{
 			throw address == AccumulatorAddress
-				? new AccumulatorEmptyException(line)
-				: new UninitializedCellException(line);
+				? new AccumulatorEmptyException(_currentPosition)
+				: new UninitializedCellException(_currentPosition);
 		}
 
 		return value;
 	}
 
-	private void SetMemory(string address, string value)
+	public void SetMemory(string address, string value)
 	{
 		if (!Memory.ContainsKey(address))
 		{
