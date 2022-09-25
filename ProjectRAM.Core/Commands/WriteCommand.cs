@@ -1,6 +1,5 @@
-﻿using ProjectRAM.Core.Models;
-using System;
-
+﻿using System.Collections.Generic;
+using ProjectRAM.Core.Models;
 namespace ProjectRAM.Core.Commands;
 
 [CommandName("write")]
@@ -10,34 +9,29 @@ internal class WriteCommand : CommandBase
 	{
 	}
 
-	public override void ValidateArgument()
+	protected override HashSet<ArgumentType> AllowedArgumentTypes => new()
 	{
-		if (ArgumentType is not ArgumentType.DirectAddress
-			and not ArgumentType.IndirectAddress
-			and not ArgumentType.Const)
-		{
-			throw new ArgumentIsNotValidException(Line);
-		}
-	}
+		ArgumentType.Const,
+		ArgumentType.DirectAddress,
+		ArgumentType.IndirectAddress
+	};
 
-	public ulong Execute(Func<string, long, string> getMemory,
-		EventHandler<WriteToTapeEventArgs>? readEventHandler)
+	public override void Execute(IInterpreter interpreter)
 	{
-		if (readEventHandler == null)
-		{
-			throw new InputTapeEmptyException(Line);
-		}
-
 		var value = ArgumentType switch
 		{
-			ArgumentType.DirectAddress => getMemory(FormattedArgument, Line),
-			ArgumentType.IndirectAddress => getMemory(getMemory(FormattedArgument, Line), Line),
+			ArgumentType.DirectAddress => interpreter.GetMemory(FormattedArgument),
+			ArgumentType.IndirectAddress => interpreter.GetMemory(interpreter.GetMemory(FormattedArgument)),
 			ArgumentType.Const => FormattedArgument,
 			_ => throw new ArgumentIsNotValidException(Line)
 		};
+		interpreter.WriteToTape(value);
+		UpdateComplexity(interpreter);
+		interpreter.IncreaseExecutionCounter();
+	}
 
-		var eventArgs = new WriteToTapeEventArgs(value);
-		readEventHandler.Invoke(this, eventArgs);
-		return LCostHelper(getMemory);
+	protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
+	{
+		return LCostHelper(interpreter);
 	}
 }

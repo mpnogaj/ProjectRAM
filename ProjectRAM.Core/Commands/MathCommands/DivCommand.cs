@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using ProjectRAM.Core.Models;
 using System.Numerics;
 using ProjectRAM.Core.Commands;
@@ -6,20 +7,20 @@ using ProjectRAM.Core.Commands;
 namespace ProjectRAM.Core.Commands.MathCommands;
 
 [CommandName("div")]
-public class DivCommand : MathCommandBase
+internal class DivCommand : MathCommandBase
 {
     public DivCommand(long line, string? label, string argument) : base(line, label, argument)
     {
     }
 
-    public override ulong Execute(Func<string, long, string> getMemory, Action<string, string> setMemory)
+    public override void Execute(IInterpreter interpreter)
     {
         try
         {
-            var complexity = base.Execute(getMemory, setMemory);
-            var res = (BigInteger.Parse(_accumulator) / BigInteger.Parse(_secondValue)).ToString();
-            setMemory(Interpreter.AccumulatorAddress, res);
-            return complexity;
+            base.Execute(interpreter);
+            Debug.Assert(Accumulator != null && SecondValue != null);
+            var res = (BigInteger.Parse(Accumulator) / BigInteger.Parse(SecondValue)).ToString();
+            interpreter.SetMemory(interpreter.AccumulatorAddress, res);
         }
         catch (DivideByZeroException)
         {

@@ -1,28 +1,33 @@
 ﻿using ProjectRAM.Core.Models;
-using System;
+using System.Collections.Generic;
 using ProjectRAM.Core.Commands;
 
 namespace ProjectRAM.Core.Commands.MemoryManagementCommands;
 
 [CommandName("load")]
-internal class LoadCommand : MemoryManagementCommandBase
+internal class LoadCommand : CommandBase
 {
     public LoadCommand(long line, string? label, string argument) : base(line, label, argument)
     {
     }
-
-    public override ulong Execute(Func<string, long, string> getMemory, Action<string, string> setMemory)
+    
+    protected override HashSet<ArgumentType> AllowedArgumentTypes => new()
     {
-        var value = ArgumentType switch
-        {
-            ArgumentType.DirectAddress => getMemory(FormattedArgument, Line),
-            ArgumentType.IndirectAddress => getMemory(getMemory(FormattedArgument, Line), Line),
-            ArgumentType.Const => FormattedArgument,
-            _ => throw new ArgumentIsNotValidException(Line)
-        };
+        ArgumentType.Const,
+        ArgumentType.DirectAddress,
+        ArgumentType.IndirectAddress
+    };
+    
+    public override void Execute(IInterpreter interpreter)
+    {
+        string value = GetValue(interpreter);
+        interpreter.SetMemory(interpreter.AccumulatorAddress, value);
+        UpdateComplexity(interpreter);
+        interpreter.IncreaseExecutionCounter();
+    }
 
-        setMemory(Interpreter.AccumulatorAddress, value);
-
-        return LCostHelper(getMemory);
+    protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
+    {
+        return LCostHelper(interpreter);
     }
 }

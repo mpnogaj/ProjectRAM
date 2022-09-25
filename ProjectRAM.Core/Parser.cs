@@ -23,6 +23,7 @@ public static class Parser
 			label = line[..argumentEndIndex];
 			line = argumentEndIndex + 1 < line.Length ? line[(argumentEndIndex + 1)..] : string.Empty;
 		}
+		line = line.TrimStart();
 
 		string[] words = line.Split(' ');
 		string command = words.Length > 0 ? words[0] : string.Empty;

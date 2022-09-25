@@ -1,5 +1,6 @@
 ﻿using ProjectRAM.Core.Models;
 using System;
+using System.Collections.Generic;
 
 namespace ProjectRAM.Core.Commands;
 
@@ -10,8 +11,10 @@ public abstract class CommandBase
     public string Argument { get; }
     public ArgumentType ArgumentType { get; }
     public string FormattedArgument { get; }
+    
+    protected abstract HashSet<ArgumentType> AllowedArgumentTypes { get; }
 
-    protected CommandBase(long line, string? label, string argument)
+    protected internal CommandBase(long line, string? label, string argument)
     {
         Line = line;
         Label = label;
@@ -19,22 +22,47 @@ public abstract class CommandBase
         ArgumentType = GetArgumentType(argument);
         FormattedArgument = GetFormattedArgument();
     }
+    
+    public abstract void Execute(IInterpreter interpreter);
 
-    public abstract void ValidateArgument();
+    protected void UpdateComplexity(IInterpreter interpreter)
+    {
+        interpreter.UpdateLogarithmicTimeComplexity(CalculateLogarithmicTimeComplexity(interpreter));
+        interpreter.UpdateUniformTimeComplexity(1);
+    }
+    
+    protected abstract ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter);
 
-    protected ulong LCostHelper(Func<string, long, string> getMemory)
+    internal string GetValue(IInterpreter interpreter)
+        => ArgumentType switch
+        {
+            ArgumentType.Const => FormattedArgument,
+            ArgumentType.DirectAddress => interpreter.GetMemory(FormattedArgument),
+            ArgumentType.IndirectAddress => interpreter.GetMemory(interpreter.GetMemory(FormattedArgument)),
+            _ => throw new InvalidOperationException()
+        };
+
+    internal string GetAddress(IInterpreter interpreter) 
+        => ArgumentType switch
+        {
+            ArgumentType.DirectAddress => FormattedArgument,
+            ArgumentType.IndirectAddress => interpreter.GetMemory(FormattedArgument),
+            _ => throw new InvalidOperationException()
+        };
+
+    internal ulong LCostHelper(IInterpreter interpreter)
     {
         switch (ArgumentType)
         {
             case ArgumentType.Const:
                 return FormattedArgument.LCost();
             case ArgumentType.DirectAddress:
-                return FormattedArgument.LCost() + getMemory(FormattedArgument, Line).LCost();
+                return FormattedArgument.LCost() + interpreter.GetMemory(FormattedArgument).LCost();
             case ArgumentType.IndirectAddress:
-                var res = getMemory(FormattedArgument, Line);
-                return FormattedArgument.LCost() + res.LCost() + getMemory(res, Line).LCost();
+                var res = interpreter.GetMemory(FormattedArgument);
+                return FormattedArgument.LCost() + res.LCost() + interpreter.GetMemory(res).LCost();
             default:
-                throw new ArgumentIsNotValidException(Line);
+                throw new InvalidOperationException();
         }
     }
 
@@ -43,6 +71,14 @@ public abstract class CommandBase
         if (Label != null && !Label.IsValidLabel())
         {
             throw new LabelIsNotValidException(Line);
+        }
+    }
+
+    public virtual void ValidateArgument()
+    {
+        if (!AllowedArgumentTypes.Contains(ArgumentType))
+        {
+            throw new ArgumentIsNotValidException(Line);
         }
     }
 
@@ -57,7 +93,7 @@ public abstract class CommandBase
         };
     }
 
-    private ArgumentType GetArgumentType(string argument)
+    private static ArgumentType GetArgumentType(string argument)
     {
         if (string.IsNullOrEmpty(argument))
         {

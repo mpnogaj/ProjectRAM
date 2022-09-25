@@ -1,40 +1,35 @@
 ﻿using ProjectRAM.Core.Models;
 using System;
+using System.Collections.Generic;
 
 namespace ProjectRAM.Core.Commands.MathCommands;
 
-public abstract class MathCommandBase : CommandBase
+internal abstract class MathCommandBase : CommandBase
 {
-    private protected string _accumulator = Interpreter.UninitializedValue,
-        _secondValue = Interpreter.UninitializedValue;
+    private protected string? Accumulator, SecondValue;
+
+    protected override HashSet<ArgumentType> AllowedArgumentTypes => new()
+    {
+        ArgumentType.Const,
+        ArgumentType.DirectAddress,
+        ArgumentType.IndirectAddress
+    };
 
     protected MathCommandBase(long line, string? label, string argument) : base(line, label, argument)
     {
     }
 
-    public virtual ulong Execute(Func<string, long, string> getMemory, Action<string, string> setMemory)
+    public override void Execute(IInterpreter interpreter)
     {
-        _accumulator = getMemory(Interpreter.AccumulatorAddress, Line);
-        _secondValue = ArgumentType switch
-        {
-            ArgumentType.DirectAddress => getMemory(FormattedArgument, Line),
-            ArgumentType.IndirectAddress => getMemory(getMemory(FormattedArgument, Line), Line),
-            ArgumentType.Const => FormattedArgument,
-            _ => throw new ArgumentIsNotValidException(Line)
-        };
-        return Complexity(getMemory);
+        Accumulator = interpreter.GetMemory(interpreter.AccumulatorAddress);
+        SecondValue = GetValue(interpreter);
+        UpdateComplexity(interpreter);
+        interpreter.IncreaseExecutionCounter();
     }
-
-    protected ulong Complexity(Func<string, long, string> getMemory)
-        => getMemory(Interpreter.AccumulatorAddress, Line).LCost() + LCostHelper(getMemory);
-
-    public override void ValidateArgument()
+    
+    
+    protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
     {
-        if (ArgumentType != ArgumentType.Const &&
-            ArgumentType != ArgumentType.DirectAddress &&
-            ArgumentType != ArgumentType.IndirectAddress)
-        {
-            throw new ArgumentIsNotValidException(Line);
-        }
+        return interpreter.GetMemory(interpreter.AccumulatorAddress).LCost() + LCostHelper(interpreter);
     }
 }

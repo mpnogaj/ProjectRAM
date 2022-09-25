@@ -1,4 +1,5 @@
-﻿using ProjectRAM.Core.Models;
+﻿using System.Collections.Generic;
+using ProjectRAM.Core.Models;
 
 namespace ProjectRAM.Core.Commands;
 
@@ -7,20 +8,22 @@ internal class HaltCommand : CommandBase
 {
 	public HaltCommand(long line, string? label, string argument) : base(line, label, argument)
 	{
-
+		
 	}
 
-	public ulong Execute(out int position)
+	protected override HashSet<ArgumentType> AllowedArgumentTypes => new()
 	{
-		position = -1;
+		ArgumentType.Null
+	};
+
+	public override void Execute(IInterpreter interpreter)
+	{
+		UpdateComplexity(interpreter);
+		interpreter.StopProgram();
+	}
+
+	protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
+	{
 		return 1;
-	}
-
-	public override void ValidateArgument()
-	{
-		if (ArgumentType != ArgumentType.Null)
-		{
-			throw new ArgumentIsNotValidException(Line);
-		}
 	}
 }

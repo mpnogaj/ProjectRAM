@@ -1,5 +1,5 @@
-﻿using ProjectRAM.Core.Models;
-using System;
+﻿using System.Collections.Generic;
+using ProjectRAM.Core.Models;
 
 namespace ProjectRAM.Core.Commands;
 
@@ -10,35 +10,24 @@ internal class ReadCommand : CommandBase
     {
     }
 
-    public override void ValidateArgument()
+    protected override HashSet<ArgumentType> AllowedArgumentTypes => new()
     {
-        if (ArgumentType != ArgumentType.DirectAddress && ArgumentType != ArgumentType.IndirectAddress)
-        {
-            throw new ArgumentIsNotValidException(Line);
-        }
+        ArgumentType.DirectAddress,
+        ArgumentType.IndirectAddress
+    };
+    
+    public override void Execute(IInterpreter interpreter)
+    {
+        string input = interpreter.ReadFromTape();
+        string address = GetAddress(interpreter);
+        interpreter.SetMemory(address, input);
+        UpdateComplexity(interpreter);
+        interpreter.IncreaseExecutionCounter();
     }
 
-    public ulong Execute(Func<string, long, string> getMemory, Action<string, string> setMemory,
-        EventHandler<ReadFromTapeEventArgs>? readEventHandler)
+    protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
     {
-        var eventArgs = new ReadFromTapeEventArgs();
-
-        if (readEventHandler == null)
-        {
-            throw new InputTapeEmptyException(Line);
-        }
-        readEventHandler.Invoke(this, eventArgs);
-
-        var target = ArgumentType switch
-        {
-            ArgumentType.DirectAddress => FormattedArgument,
-            ArgumentType.IndirectAddress => getMemory(FormattedArgument, Line),
-            _ => throw new ArgumentIsNotValidException(Line)
-        };
-
-        setMemory(target, eventArgs.Input ?? throw new InputTapeEmptyException(Line));
-
-        return eventArgs.Input.LCost() + FormattedArgument.LCost() +
-               (ArgumentType == ArgumentType.IndirectAddress ? target.LCost() : 0);
+        return interpreter.GetMemory(GetAddress(interpreter)).LCost() + FormattedArgument.LCost() +
+               (ArgumentType == ArgumentType.IndirectAddress ? interpreter.GetMemory(FormattedArgument).LCost() : 0);
     }
 }

@@ -8,11 +8,14 @@ namespace ProjectRAM.Core;
 
 internal static class Extensions
 {
+	private const string NumberRegexPattern = @"^-?(0|[1-9][0-9]*)$";
+	private const string MinusZero = "-0";
+	
 	public static bool IsValidLabel(this string s)
 		=> s.All(char.IsLetterOrDigit) && char.IsLetter(s[0]) && !CommandHelper.CommandNames.Contains(s);
 
 	public static bool IsNumber(this string s)
-		=> !s.Any(char.IsWhiteSpace) && Regex.IsMatch(s, @"^-?(0|[1-9][0-9]*)$") && s != "-0";
+		=> !s.Any(char.IsWhiteSpace) && Regex.IsMatch(s, NumberRegexPattern) && s != MinusZero;
 
 	public static bool IsZero(this string s)
 		=> s.IsNumber() && BigInteger.Parse(s) == BigInteger.Zero;

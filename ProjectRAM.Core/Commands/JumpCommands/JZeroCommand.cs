@@ -10,13 +10,22 @@ internal class JZeroCommand : JumpCommandBase
     {
     }
 
-    public override ulong Execute(string accumulator, Action<string> makeJump)
+    public override void Execute(IInterpreter interpreter)
     {
+        UpdateComplexity(interpreter);
+        string accumulator = interpreter.GetMemory(interpreter.AccumulatorAddress);
         if (accumulator.IsZero())
         {
-            makeJump(FormattedArgument);
+            interpreter.MakeJump(FormattedArgument);
         }
+        else
+        {
+            interpreter.IncreaseExecutionCounter();
+        }
+    }
 
-        return accumulator.LCost();
+    protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
+    {
+        return interpreter.GetMemory(interpreter.AccumulatorAddress).LCost();
     }
 }

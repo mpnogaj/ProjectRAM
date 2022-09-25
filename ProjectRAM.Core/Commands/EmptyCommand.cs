@@ -1,21 +1,26 @@
-﻿namespace ProjectRAM.Core.Commands;
+﻿using System.Collections.Generic;
+using ProjectRAM.Core.Models;
 
-public class EmptyCommand : CommandBase
+namespace ProjectRAM.Core.Commands;
+
+internal class EmptyCommand : CommandBase
 {
 	public EmptyCommand(long line, string? label, string argument) : base(line, label, argument)
 	{
 	}
 
-	public void Execute()
+	protected override HashSet<ArgumentType> AllowedArgumentTypes => new()
 	{
-		
+		ArgumentType.Null
+	};
+
+	public override void Execute(IInterpreter interpreter)
+	{
+		interpreter.IncreaseExecutionCounter();
 	}
 
-	public override void ValidateArgument()
+	protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
 	{
-		if (!string.IsNullOrEmpty(Argument))
-		{
-			throw new EmptyLineDoesNotTakeArgumentException(Line);
-		}
+		return 0ul;
 	}
 }

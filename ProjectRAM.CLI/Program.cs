@@ -38,7 +38,7 @@ namespace ProjectRAM.CLI
 		private static int Main(string[] args)
 		{
 			int result = 0;
-			Parser.Default.ParseArguments<Options>(args).WithParsed(o =>
+			CommandLine.Parser.Default.ParseArguments<Options>(args).WithParsed(o =>
 			{
 				result = HandleSuccess(o);
 			}).WithNotParsed(errors =>

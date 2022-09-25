@@ -1,7 +1,4 @@
 ﻿using ProjectRAM.Core.Commands;
-using ProjectRAM.Core.Commands.JumpCommands;
-using ProjectRAM.Core.Commands.MathCommands;
-using ProjectRAM.Core.Commands.MemoryManagementCommands;
 using ProjectRAM.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -13,18 +10,23 @@ namespace ProjectRAM.Core;
 
 public class Interpreter : IInterpreter
 {
+	internal const string UninitializedValue = "?";
+	public string AccumulatorAddress => "0";
+	string IInterpreter.UninitializedValue => UninitializedValue;
+
 	private readonly Dictionary<string, int> _jumpMap;
 	private readonly List<CommandBase> _program;
+	private readonly Stack<int> _callStack;
 	private int _currentPosition;
-	private Stack<int> _callStack;
+	private ulong _uniformTimeCost = 0, _logTimeCost = 0;
 
+	
 	public event EventHandler<WriteToTapeEventArgs>? WriteToOutputTape;
 	public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
 	public event EventHandler? ProgramFinished;
-
-	internal const string UninitializedValue = "?";
-	internal const string AccumulatorAddress = "0";
-
+	private Dictionary<string, string> MaxMemory { get; }
+	private Dictionary<string, string> Memory { get; }
+	
 	public Interpreter(List<CommandBase> program)
 	{
 		_program = program;
@@ -39,49 +41,7 @@ public class Interpreter : IInterpreter
 			{ AccumulatorAddress, UninitializedValue }
 		};
 	}
-
-	private Dictionary<string, string> MaxMemory { get; }
-	private Dictionary<string, string> Memory { get; }
-
-	public InterpreterResult RunCommands()
-		=> RunCommands(CancellationToken.None);
-
-	public InterpreterResult RunCommands(CancellationToken cancellationToken)
-	{
-		ulong uniformTimeCost = 0, logTimeCost = 0;
-
-		_currentPosition = 0;
-		while (_currentPosition < _program.Count && _currentPosition >= 0)
-		{
-			if (cancellationToken.IsCancellationRequested)
-			{
-				ProgramFinished?.Invoke(this, EventArgs.Empty);
-				cancellationToken.ThrowIfCancellationRequested();
-			}
-
-			uniformTimeCost++;
-			var prevPos = _currentPosition;
-			logTimeCost += RunCommand();
-			if (prevPos == _currentPosition)
-			{
-				_currentPosition++;
-			}
-		}
-
-		ProgramFinished?.Invoke(this, EventArgs.Empty);
-		var readOnlyMemory = Memory.Select(keyVal => new Cell(keyVal.Key, keyVal.Value))
-			.OrderBy(x => x)
-			.ToList()
-			.AsReadOnly();
-		return new InterpreterResult(readOnlyMemory, new ComplexityReport
-		{
-			LogTimeCost = logTimeCost,
-			LogSpaceCost = MaxMemory.Select(x => x.Value.LCost()).Aggregate((cSum, curr) => cSum + curr),
-			UniformSpaceCost = (ulong)Memory.Select(x => x.Value != UninitializedValue).LongCount(),
-			UniformTimeCost = uniformTimeCost
-		});
-	}
-
+	
 	private Dictionary<string, int> MapLabels()
 	{
 		Dictionary<string, int> labels = new();
@@ -96,28 +56,43 @@ public class Interpreter : IInterpreter
 		return labels;
 	}
 
-	private ulong RunCommand()
-	{
-		var command = _program[_currentPosition];
-		var line = command.Line;
-		return command switch
-		{
-			JumpCommandBase jumpCommand => jumpCommand.Execute(
-				jumpCommand is JumpCommand ? string.Empty : GetMemory(AccumulatorAddress, line),
-				(label) =>
-				{
-					MakeJump(label, out _currentPosition);
-				}),
-			MathCommandBase mathCommand => mathCommand.Execute(GetMemory, SetMemory),
-			MemoryManagementCommandBase memoryManagementCommand =>
-				memoryManagementCommand.Execute(GetMemory, SetMemory),
-			ReadCommand readCommand => readCommand.Execute(GetMemory, SetMemory, ReadFromInputTape),
-			WriteCommand writeCommand => writeCommand.Execute(GetMemory, WriteToOutputTape),
-			HaltCommand haltCommand => haltCommand.Execute(out _currentPosition),
-			_ => throw new UnknownCommandTypeException(line)
-		};
-	}
+	public InterpreterResult RunCommands()
+		=> RunCommands(CancellationToken.None);
 
+	public InterpreterResult RunCommands(CancellationToken cancellationToken)
+	{
+		_currentPosition = 0;
+		while (_currentPosition < _program.Count && _currentPosition >= 0)
+		{
+			if (cancellationToken.IsCancellationRequested)
+			{
+				ProgramFinished?.Invoke(this, EventArgs.Empty);
+				cancellationToken.ThrowIfCancellationRequested();
+			}
+
+
+			int p = _currentPosition;
+			_program[_currentPosition].Execute(this);
+			if (p == _currentPosition)
+			{
+				int a = 0;
+			}
+		}
+
+		ProgramFinished?.Invoke(this, EventArgs.Empty);
+		var readOnlyMemory = Memory.Select(keyVal => new Cell(keyVal.Key, keyVal.Value))
+			.OrderBy(x => x)
+			.ToList()
+			.AsReadOnly();
+		
+		return new InterpreterResult(readOnlyMemory, new ComplexityReport
+		{
+			LogTimeCost = _logTimeCost,
+			LogSpaceCost = MaxMemory.Select(x => x.Value.LCost()).Aggregate((cSum, curr) => cSum + curr),
+			UniformSpaceCost = (ulong)Memory.Select(x => x.Value != UninitializedValue).LongCount(),
+			UniformTimeCost = _uniformTimeCost
+		});
+	}
 	public void MakeJump(string label)
 	{
 		_currentPosition = _jumpMap[label];
@@ -141,19 +116,20 @@ public class Interpreter : IInterpreter
 
 	public string GetMemory(string address)
 	{
+		long currentLine = _program[_currentPosition].Line;
 		if (!Memory.ContainsKey(address))
 		{
 			throw address == AccumulatorAddress
-				? new AccumulatorEmptyException(_currentPosition)
-				: new UninitializedCellException(_currentPosition);
+				? new AccumulatorEmptyException(currentLine)
+				: new UninitializedCellException(currentLine);
 		}
 
-		var value = Memory[address];
+		string value = Memory[address];
 		if (value == UninitializedValue)
 		{
 			throw address == AccumulatorAddress
-				? new AccumulatorEmptyException(_currentPosition)
-				: new UninitializedCellException(_currentPosition);
+				? new AccumulatorEmptyException(currentLine)
+				: new UninitializedCellException(currentLine);
 		}
 
 		return value;
@@ -168,10 +144,49 @@ public class Interpreter : IInterpreter
 		}
 		else
 		{
-			var oldValue = Memory[address];
+			string oldValue = Memory[address];
 			Memory[address] = value;
 			MaxMemory[address] = oldValue == "?" ? value : Max(MaxMemory[address], value);
 		}
+	}
+
+	public void StopProgram()
+	{
+		_callStack.Clear();
+		_currentPosition = -1;
+	}
+
+	public string ReadFromTape()
+	{
+		var eventArgs = new ReadFromTapeEventArgs();
+		ReadFromInputTape?.Invoke(this, eventArgs);
+		if (eventArgs.Input == null) // will be triggered when event is null
+		{
+			throw new InputTapeEmptyException(_currentPosition);
+		}
+
+		return eventArgs.Input;
+	}
+
+	public void WriteToTape(string value)
+	{
+		var eventArgs = new WriteToTapeEventArgs(value);
+		WriteToOutputTape?.Invoke(this, eventArgs);
+	}
+
+	public void IncreaseExecutionCounter()
+	{
+		_currentPosition++;
+	}
+
+	public void UpdateLogarithmicTimeComplexity(ulong value)
+	{
+		_logTimeCost += value;
+	}
+
+	public void UpdateUniformTimeComplexity(ulong value)
+	{
+		_uniformTimeCost += value;
 	}
 
 	/// <summary>

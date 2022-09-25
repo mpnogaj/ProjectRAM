@@ -4,19 +4,28 @@ using ProjectRAM.Core.Commands;
 namespace ProjectRAM.Core.Commands.JumpCommands;
 
 [CommandName("jgtz")]
-public class JGTZCommand : JumpCommandBase
+internal class JGTZCommand : JumpCommandBase
 {
     public JGTZCommand(long line, string? label, string argument) : base(line, label, argument)
     {
     }
-
-    public override ulong Execute(string accumulator, Action<string> makeJump)
+    
+    public override void Execute(IInterpreter interpreter)
     {
+        UpdateComplexity(interpreter);
+        string accumulator = interpreter.GetMemory(interpreter.AccumulatorAddress);
         if (accumulator.IsPositive())
         {
-            makeJump(FormattedArgument);
+            interpreter.MakeJump(FormattedArgument);
         }
+        else
+        {
+            interpreter.IncreaseExecutionCounter();
+        }
+    }
 
-        return accumulator.LCost();
+    protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
+    {
+        return interpreter.GetMemory(interpreter.AccumulatorAddress).LCost();
     }
 }

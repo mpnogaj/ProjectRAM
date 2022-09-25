@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Models;
 
 namespace ProjectRAM.Core.Commands.JumpCommands;
 
@@ -9,11 +11,15 @@ internal class JumpCommand : JumpCommandBase
     public JumpCommand(long line, string? label, string argument) : base(line, label, argument)
     {
     }
-
-    public override ulong Execute(string accumulator, Action<string> makeJump)
+    
+    public override void Execute(IInterpreter interpreter)
     {
-        ValidateArgument();
-        makeJump(FormattedArgument);
+        UpdateComplexity(interpreter);
+        interpreter.MakeJump(FormattedArgument);
+    }
+
+    protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
+    {
         return 1;
     }
 }

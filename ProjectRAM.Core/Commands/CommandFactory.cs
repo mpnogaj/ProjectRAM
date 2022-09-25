@@ -19,7 +19,7 @@ public static class CommandFactory
 	{
 		var parsedLine = Parser.ParseCodeLine(line);
 		string command = parsedLine.Item2.ToLower();
-		string? label = parsedLine.Item1 == string.Empty ? parsedLine.Item1 : null;
+		string? label = parsedLine.Item1 != string.Empty ? parsedLine.Item1 : null;
 		string argument = parsedLine.Item3;
 		if (string.IsNullOrEmpty(label) && string.IsNullOrEmpty(command) && string.IsNullOrEmpty(argument))
 		{
