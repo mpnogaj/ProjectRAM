@@ -1,12 +1,10 @@
-﻿namespace ProjectRAM.Core;
+﻿using System.Numerics;
+
+namespace ProjectRAM.Core;
 
 public interface IInterpreter
 {
-	public string AccumulatorAddress { get; }
-	public string UninitializedValue { get; }
-
-	public string GetMemory(string address);
-	public void SetMemory(string address, string value);
+	public IMemory Memory { get; }
 	public void MakeJump(string label);
 	public void MakeStackJump(string label);
 	public void PopStack();

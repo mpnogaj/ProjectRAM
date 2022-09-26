@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using ProjectRAM.Core.Commands;
 
 namespace ProjectRAM.Core.Commands.JumpCommands;
@@ -13,8 +14,8 @@ internal class JZeroCommand : JumpCommandBase
     public override void Execute(IInterpreter interpreter)
     {
         UpdateComplexity(interpreter);
-        string accumulator = interpreter.GetMemory(interpreter.AccumulatorAddress);
-        if (accumulator.IsZero())
+        var accumulator = interpreter.Memory.GetAccumulator(Line);
+        if (accumulator == BigInteger.Zero)
         {
             interpreter.MakeJump(FormattedArgument);
         }
@@ -26,6 +27,6 @@ internal class JZeroCommand : JumpCommandBase
 
     protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
     {
-        return interpreter.GetMemory(interpreter.AccumulatorAddress).LCost();
+        return interpreter.Memory.GetAccumulator(Line).LCost();
     }
 }

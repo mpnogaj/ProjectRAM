@@ -10,10 +10,6 @@ namespace ProjectRAM.Core;
 
 public class Interpreter : IInterpreter
 {
-	internal const string UninitializedValue = "?";
-	public string AccumulatorAddress => "0";
-	string IInterpreter.UninitializedValue => UninitializedValue;
-
 	private readonly Dictionary<string, int> _jumpMap;
 	private readonly List<CommandBase> _program;
 	private readonly Stack<int> _callStack;
@@ -24,22 +20,14 @@ public class Interpreter : IInterpreter
 	public event EventHandler<WriteToTapeEventArgs>? WriteToOutputTape;
 	public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
 	public event EventHandler? ProgramFinished;
-	private Dictionary<string, string> MaxMemory { get; }
-	private Dictionary<string, string> Memory { get; }
+	public IMemory Memory { get; init; }
 	
 	public Interpreter(List<CommandBase> program)
 	{
 		_program = program;
 		_jumpMap = MapLabels();
 		_callStack = new Stack<int>();
-		Memory = new Dictionary<string, string>()
-		{
-			{ AccumulatorAddress, UninitializedValue}
-		};
-		MaxMemory = new Dictionary<string, string>()
-		{
-			{ AccumulatorAddress, UninitializedValue }
-		};
+		Memory = new Memory();
 	}
 	
 	private Dictionary<string, int> MapLabels()
@@ -69,27 +57,19 @@ public class Interpreter : IInterpreter
 				ProgramFinished?.Invoke(this, EventArgs.Empty);
 				cancellationToken.ThrowIfCancellationRequested();
 			}
-
-
-			int p = _currentPosition;
+			
 			_program[_currentPosition].Execute(this);
-			if (p == _currentPosition)
-			{
-				int a = 0;
-			}
 		}
 
+		var readOnlyMemory = Memory.GetHumanReadableData();
+
 		ProgramFinished?.Invoke(this, EventArgs.Empty);
-		var readOnlyMemory = Memory.Select(keyVal => new Cell(keyVal.Key, keyVal.Value))
-			.OrderBy(x => x)
-			.ToList()
-			.AsReadOnly();
 		
 		return new InterpreterResult(readOnlyMemory, new ComplexityReport
 		{
 			LogTimeCost = _logTimeCost,
-			LogSpaceCost = MaxMemory.Select(x => x.Value.LCost()).Aggregate((cSum, curr) => cSum + curr),
-			UniformSpaceCost = (ulong)Memory.Select(x => x.Value != UninitializedValue).LongCount(),
+			LogSpaceCost = Memory.CalculateLogarithmicComplexity(),
+			UniformSpaceCost = Memory.CalculateUniformComplexity(),
 			UniformTimeCost = _uniformTimeCost
 		});
 	}
@@ -114,40 +94,15 @@ public class Interpreter : IInterpreter
 		_currentPosition = _callStack.Pop();
 	}
 
-	public string GetMemory(string address)
+	public BigInteger GetMemory(BigInteger address)
 	{
 		long currentLine = _program[_currentPosition].Line;
-		if (!Memory.ContainsKey(address))
-		{
-			throw address == AccumulatorAddress
-				? new AccumulatorEmptyException(currentLine)
-				: new UninitializedCellException(currentLine);
-		}
-
-		string value = Memory[address];
-		if (value == UninitializedValue)
-		{
-			throw address == AccumulatorAddress
-				? new AccumulatorEmptyException(currentLine)
-				: new UninitializedCellException(currentLine);
-		}
-
-		return value;
+		return Memory.GetMemory(address, currentLine);
 	}
 
-	public void SetMemory(string address, string value)
+	public void SetMemory(BigInteger address, BigInteger value)
 	{
-		if (!Memory.ContainsKey(address))
-		{
-			Memory[address] = value;
-			MaxMemory[address] = value;
-		}
-		else
-		{
-			string oldValue = Memory[address];
-			Memory[address] = value;
-			MaxMemory[address] = oldValue == "?" ? value : Max(MaxMemory[address], value);
-		}
+		Memory.SetMemory(address, value);
 	}
 
 	public void StopProgram()

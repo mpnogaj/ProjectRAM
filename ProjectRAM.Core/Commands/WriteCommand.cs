@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using ProjectRAM.Core.Models;
+
 namespace ProjectRAM.Core.Commands;
 
 [CommandName("write")]
-internal class WriteCommand : CommandBase
+internal class WriteCommand : NumberArgumentCommandBase
 {
 	public WriteCommand(long line, string? label, string argument) : base(line, label, argument)
 	{
@@ -20,12 +21,13 @@ internal class WriteCommand : CommandBase
 	{
 		var value = ArgumentType switch
 		{
-			ArgumentType.DirectAddress => interpreter.GetMemory(FormattedArgument),
-			ArgumentType.IndirectAddress => interpreter.GetMemory(interpreter.GetMemory(FormattedArgument)),
-			ArgumentType.Const => FormattedArgument,
+			ArgumentType.DirectAddress => interpreter.Memory.GetMemory(NumberArgument, Line),
+			ArgumentType.IndirectAddress => interpreter.Memory.GetMemory(
+				interpreter.Memory.GetMemory(NumberArgument, Line), Line),
+			ArgumentType.Const => NumberArgument,
 			_ => throw new ArgumentIsNotValidException(Line)
 		};
-		interpreter.WriteToTape(value);
+		interpreter.WriteToTape(value.ToString());
 		UpdateComplexity(interpreter);
 		interpreter.IncreaseExecutionCounter();
 	}

@@ -1,6 +1,8 @@
 ﻿using ProjectRAM.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 
 namespace ProjectRAM.Core.Commands;
 
@@ -11,6 +13,7 @@ public abstract class CommandBase
     public string Argument { get; }
     public ArgumentType ArgumentType { get; }
     public string FormattedArgument { get; }
+    
     
     protected abstract HashSet<ArgumentType> AllowedArgumentTypes { get; }
 
@@ -32,40 +35,7 @@ public abstract class CommandBase
     }
     
     protected abstract ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter);
-
-    internal string GetValue(IInterpreter interpreter)
-        => ArgumentType switch
-        {
-            ArgumentType.Const => FormattedArgument,
-            ArgumentType.DirectAddress => interpreter.GetMemory(FormattedArgument),
-            ArgumentType.IndirectAddress => interpreter.GetMemory(interpreter.GetMemory(FormattedArgument)),
-            _ => throw new InvalidOperationException()
-        };
-
-    internal string GetAddress(IInterpreter interpreter) 
-        => ArgumentType switch
-        {
-            ArgumentType.DirectAddress => FormattedArgument,
-            ArgumentType.IndirectAddress => interpreter.GetMemory(FormattedArgument),
-            _ => throw new InvalidOperationException()
-        };
-
-    internal ulong LCostHelper(IInterpreter interpreter)
-    {
-        switch (ArgumentType)
-        {
-            case ArgumentType.Const:
-                return FormattedArgument.LCost();
-            case ArgumentType.DirectAddress:
-                return FormattedArgument.LCost() + interpreter.GetMemory(FormattedArgument).LCost();
-            case ArgumentType.IndirectAddress:
-                var res = interpreter.GetMemory(FormattedArgument);
-                return FormattedArgument.LCost() + res.LCost() + interpreter.GetMemory(res).LCost();
-            default:
-                throw new InvalidOperationException();
-        }
-    }
-
+    
     public void ValidateLabel()
     {
         if (Label != null && !Label.IsValidLabel())

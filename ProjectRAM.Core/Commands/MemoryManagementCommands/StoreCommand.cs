@@ -5,7 +5,7 @@ using ProjectRAM.Core.Commands;
 namespace ProjectRAM.Core.Commands.MemoryManagementCommands;
 
 [CommandName("store")]
-internal class StoreCommand : CommandBase
+internal class StoreCommand : NumberArgumentCommandBase
 {
     public StoreCommand(long line, string? label, string argument) : base(line, label, argument)
     {
@@ -19,9 +19,9 @@ internal class StoreCommand : CommandBase
 
     public override void Execute(IInterpreter interpreter)
     {
-        string target = GetAddress(interpreter);
-        string accumulatorValue = interpreter.GetMemory(interpreter.AccumulatorAddress);
-        interpreter.SetMemory(target, accumulatorValue);
+        var target = GetAddress(interpreter);
+        var accumulatorValue = interpreter.Memory.GetAccumulator(Line);
+        interpreter.Memory.SetMemory(target, accumulatorValue);
         UpdateComplexity(interpreter);
         interpreter.IncreaseExecutionCounter();
     }
@@ -30,10 +30,11 @@ internal class StoreCommand : CommandBase
     {
         return ArgumentType switch
         {
-            ArgumentType.DirectAddress => interpreter.GetMemory(interpreter.AccumulatorAddress).LCost() +
-                                          FormattedArgument.LCost(),
-            ArgumentType.IndirectAddress => interpreter.GetMemory(interpreter.AccumulatorAddress).LCost() +
-                                            FormattedArgument.LCost() + interpreter.GetMemory(FormattedArgument).LCost(),
+            ArgumentType.DirectAddress => interpreter.Memory.GetAccumulator(Line).LCost() +
+                                          NumberArgument.LCost(),
+            ArgumentType.IndirectAddress => interpreter.Memory.GetAccumulator(Line).LCost() +
+                                            NumberArgument.LCost() + interpreter.Memory.GetMemory(NumberArgument, Line)
+                                                .LCost(),
             _ => throw new ArgumentIsNotValidException(Line),
         };
     }

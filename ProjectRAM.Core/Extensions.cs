@@ -22,10 +22,10 @@ internal static class Extensions
 
 	public static bool IsPositive(this string s)
 		=> s.IsNumber() && BigInteger.Parse(s) > BigInteger.Zero;
-
+	
 	public static ulong LCost(this string s)
 	{
-		if (s == Interpreter.UninitializedValue)
+		if (s == IMemory.UninitializedValue)
 		{
 			return 0;
 		}
@@ -40,4 +40,7 @@ internal static class Extensions
 		var bi = BigInteger.Abs(BigInteger.Parse(s));
 		return bi == BigInteger.Zero ? 1 : (ulong)Math.Floor(BigInteger.Log10(bi)) + 1;
 	}
+	
+	public static ulong LCost(this BigInteger bigInteger)
+		=> bigInteger == BigInteger.Zero ? 1 : (ulong)Math.Floor(BigInteger.Log10(bigInteger)) + 1;
 }

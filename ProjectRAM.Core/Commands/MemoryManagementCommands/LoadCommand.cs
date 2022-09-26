@@ -5,7 +5,7 @@ using ProjectRAM.Core.Commands;
 namespace ProjectRAM.Core.Commands.MemoryManagementCommands;
 
 [CommandName("load")]
-internal class LoadCommand : CommandBase
+internal class LoadCommand : NumberArgumentCommandBase
 {
     public LoadCommand(long line, string? label, string argument) : base(line, label, argument)
     {
@@ -20,8 +20,8 @@ internal class LoadCommand : CommandBase
     
     public override void Execute(IInterpreter interpreter)
     {
-        string value = GetValue(interpreter);
-        interpreter.SetMemory(interpreter.AccumulatorAddress, value);
+        var value = GetValue(interpreter);
+        interpreter.Memory.SetAccumulator(value);
         UpdateComplexity(interpreter);
         interpreter.IncreaseExecutionCounter();
     }

@@ -1,12 +1,12 @@
 ﻿using ProjectRAM.Core.Models;
-using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace ProjectRAM.Core.Commands.MathCommands;
 
-internal abstract class MathCommandBase : CommandBase
+internal abstract class MathCommandBase : NumberArgumentCommandBase
 {
-    private protected string? Accumulator, SecondValue;
+    private protected BigInteger? Accumulator, SecondValue;
 
     protected override HashSet<ArgumentType> AllowedArgumentTypes => new()
     {
@@ -21,7 +21,7 @@ internal abstract class MathCommandBase : CommandBase
 
     public override void Execute(IInterpreter interpreter)
     {
-        Accumulator = interpreter.GetMemory(interpreter.AccumulatorAddress);
+        Accumulator = interpreter.Memory.GetAccumulator(Line);
         SecondValue = GetValue(interpreter);
         UpdateComplexity(interpreter);
         interpreter.IncreaseExecutionCounter();
@@ -30,6 +30,6 @@ internal abstract class MathCommandBase : CommandBase
     
     protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
     {
-        return interpreter.GetMemory(interpreter.AccumulatorAddress).LCost() + LCostHelper(interpreter);
+        return interpreter.Memory.GetAccumulator(Line).LCost() + LCostHelper(interpreter);
     }
 }

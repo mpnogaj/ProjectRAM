@@ -18,8 +18,8 @@ internal class MultCommand : MathCommandBase
         {
             base.Execute(interpreter);
             Debug.Assert(Accumulator != null && SecondValue != null);
-            var res = (BigInteger.Parse(Accumulator) * BigInteger.Parse(SecondValue)).ToString();
-            interpreter.SetMemory(interpreter.AccumulatorAddress, res);
+            var res = Accumulator.Value * SecondValue.Value;
+            interpreter.Memory.SetAccumulator(res);
         }
         catch (FormatException)
         {

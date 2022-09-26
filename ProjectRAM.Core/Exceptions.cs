@@ -171,7 +171,7 @@ public class DivByZero : RamInterpreterException
 
 	public DivByZero(long line) : base(line)
 	{
-		Message = "Attempted to divide by 0";
+		Message = $"Attempted to divide by 0 in line: {line}";
 	}
 }
 

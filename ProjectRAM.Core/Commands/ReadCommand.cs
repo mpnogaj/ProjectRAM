@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 using ProjectRAM.Core.Models;
 
 namespace ProjectRAM.Core.Commands;
 
 [CommandName("read")]
-internal class ReadCommand : CommandBase
+internal class ReadCommand : NumberArgumentCommandBase
 {
     public ReadCommand(long line, string? label, string argument) : base(line, label, argument)
     {
@@ -19,15 +20,16 @@ internal class ReadCommand : CommandBase
     public override void Execute(IInterpreter interpreter)
     {
         string input = interpreter.ReadFromTape();
-        string address = GetAddress(interpreter);
-        interpreter.SetMemory(address, input);
+        var numberInput = input.IsNumber() ? BigInteger.Parse(input) : throw new ValueIsNaN(Line);
+        var address = GetAddress(interpreter);
+        interpreter.Memory.SetMemory(address, numberInput);
         UpdateComplexity(interpreter);
         interpreter.IncreaseExecutionCounter();
     }
 
     protected override ulong CalculateLogarithmicTimeComplexity(IInterpreter interpreter)
     {
-        return interpreter.GetMemory(GetAddress(interpreter)).LCost() + FormattedArgument.LCost() +
-               (ArgumentType == ArgumentType.IndirectAddress ? interpreter.GetMemory(FormattedArgument).LCost() : 0);
+        return interpreter.Memory.GetMemory(GetAddress(interpreter), Line).LCost() + NumberArgument.LCost() +
+               (ArgumentType == ArgumentType.IndirectAddress ? interpreter.Memory.GetMemory(NumberArgument, Line).LCost() : 0);
     }
 }
