@@ -31,7 +31,7 @@ public abstract class NumberArgumentCommandBase : CommandBase
 		=> ArgumentType switch
 		{
 			ArgumentType.DirectAddress => NumberArgument,
-			ArgumentType.IndirectAddress => interpreter.Memory.GetIndirectMemory(NumberArgument, Line),
+			ArgumentType.IndirectAddress => interpreter.Memory.GetMemory(NumberArgument, Line),
 			_ => throw new InvalidOperationException()
 		};
 	

@@ -10,6 +10,7 @@ using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.ViewModels.Commands;
 using ProjectRAM.Editor.Views;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -18,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ProjectRAM.Core.Commands;
 using Essentials = ProjectRAM.Editor.Helpers.Essentials;
 using Settings = ProjectRAM.Editor.Properties.Settings;
 
@@ -61,7 +63,7 @@ namespace ProjectRAM.Editor.ViewModels
 				}
 				else
 				{
-					Essentials.WriteToFile(Page!.Path, Page!.GetProgramString());
+					Essentials.WriteToFile(Page!.Path, string.Join(" ", Page!.GetProgramString()));
 				}
 			}, IsFileOpened);
 			CloseProgram = new RelayCommand(Essentials.Exit, () => true);
@@ -331,9 +333,7 @@ namespace ProjectRAM.Editor.ViewModels
 		private static async Task<IEnumerable<RamInterpreterException>> GetAllErrors(HostViewModel page)
 		{
 			var programString = page.GetProgramString();
-			var stringCollection = Factory.CreateStringCollection(programString, Environment.NewLine);
-			var program = Factory.StringCollectionToCommandList(stringCollection);
-			return await Task.Run(() => Validator.ValidateProgram(program));
+			return await Task.Run(() => Validator.ValidateProgram(programString));
 		}
 
 		private async Task SaveCodeFileAs(HostViewModel? page)
@@ -350,7 +350,7 @@ namespace ProjectRAM.Editor.ViewModels
 			if (!string.IsNullOrEmpty(res))
 			{
 				file.Path = res;
-				Essentials.WriteToFile(res, file.GetProgramString());
+				Essentials.WriteToFile(res, string.Join(Environment.NewLine, file.GetProgramString()));
 			}
 
 			file.Header = Path.GetFileNameWithoutExtension(res)!;
@@ -358,46 +358,29 @@ namespace ProjectRAM.Editor.ViewModels
 
 		private void CreateAndRunProgram(CancellationToken token)
 		{
-			string input = Page!.InputTapeString;
-			string program = Page!.TextEditorProgram;
-			List<Command> commands;
-			if (Page!.SimpleEditorUsage)
-			{
-				commands = ProgramLineToCommandConverter.ProgramLinesToCommands(Page!.SimpleEditorProgram.ToList());
-			}
-			else
-			{
-				var sc = new StringCollection();
-				sc.AddRange(program.Split(Environment.NewLine));
-				commands = Factory.StringCollectionToCommandList(sc);
-			}
-
-			var inputTape = Factory.CreateInputTapeFromString(input);
+			var commands = CommandFactory.CreateCommandList(_page.GetProgramString());
 			var interpreter = new Interpreter(commands);
+			var inputTape = new Queue<string>(_page.InputTapeString.Split(' '));
 			var sb = new StringBuilder();
-			interpreter.ReadFromInputTape += (_, eventArgs) =>
+			interpreter.ReadFromInputTape += (sender, args) =>
 			{
-				eventArgs.Input = inputTape.Count > 0
-					? inputTape.Dequeue()
-					: null;
+				args.Input = inputTape.Dequeue();
 			};
-			interpreter.WriteToOutputTape += (_, eventArgs) =>
+			interpreter.WriteToOutputTape += (sender, args) =>
 			{
-				sb.Append($" {eventArgs.Output}");
-				if(sb.Length >= StringBuilderMaxCapacity)
+				sb.Append($" {args.Output}");
+				if (sb.Length >= StringBuilderMaxCapacity)
 				{
-					throw new OutOfMemoryException(Strings.outputTapeOverflow);
+					throw new OutOfMemoryException("Output tape is too large aborting");
 				}
 			};
-			interpreter.ProgramFinished += (_, _) =>
+			var result = interpreter.RunCommands();
+			_page.OutputTapeString = sb.ToString().TrimStart();
+			_page.Memory = new ObservableCollection<MemoryRow>(result.Memory.Select(x => new MemoryRow
 			{
-				Page!.ProgramRunning = false;
-			};
-			token.ThrowIfCancellationRequested();
-			var memory = interpreter.RunCommands(token);
-			token.ThrowIfCancellationRequested();
-			Page!.OutputTapeString = sb.ToString().TrimStart();
-			Page!.Memory = MemoryDictionaryToMemoryRowConverter.MemoryDictionaryToMemoryRows(memory);
+				Address = x.Index,
+				Value = x.Value
+			}));
 		}
 
 		private void TogglePageStatus()

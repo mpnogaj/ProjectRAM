@@ -1,5 +1,6 @@
 ﻿using ProjectRAM.Editor.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProjectRAM.Editor.Converters
 {
@@ -20,15 +21,9 @@ namespace ProjectRAM.Editor.Converters
 			return output;
 		}
 
-		public static string ProgramLinesToString(List<ProgramLine> input)
+		public static string[] ProgramLinesToString(List<ProgramLine> input)
 		{
-			string output = "";
-			foreach (var programLine in input)
-			{
-				output += programLine.ToString() + '\n';
-			}
-			//Skip last '\n'
-			return output.Substring(0, output.Length - 1);
+			return input.Select(x => x.ToString()).ToArray();
 		}
 	}
 }

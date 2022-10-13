@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using System.Numerics;
 using Xunit;
 
 namespace ProjectRAM.Core.Tests;
@@ -59,11 +60,7 @@ public class ExtensionsTests
 		Assert.Equal(expected, value.IsPositive());
 	}
 
-	[Theory]
-	[InlineData(Interpreter.UninitializedValue, 0)]
-	[InlineData("0", 1)]
-	[InlineData("100", 3)]
-	[InlineData("-100", 3)]
+	[Theory, MemberData(nameof(LCostTestValidFormatData))]
 	public void LCostTestValidFormat(string value, ulong expected)
 	{
 		Assert.Equal(expected, value.LCost());
@@ -79,4 +76,28 @@ public class ExtensionsTests
 	{
 		Assert.Throws<FormatException>(() => invalidNumber.LCost());
 	}
+
+	[Theory, MemberData(nameof(LcostBigIntegerData))]
+	public void LcostBigInteger(BigInteger bigInt, ulong expected)
+	{
+		Assert.Equal(expected, bigInt.LCost());
+	}
+
+	public static IEnumerable<object[]> LCostTestValidFormatData =>
+		new[]
+		{
+			new object[] { IMemory.UninitializedValue, 0 },
+			new object[] { "0", 1 },
+			new object[] { "100", 3 },
+			new object[] { "-100", 3 }
+		};
+
+	public static IEnumerable<object[]> LcostBigIntegerData =>
+		new[]
+		{
+			new object[] { BigInteger.Zero, 1 },
+			new object[] { BigInteger.One, 1 },
+			new object[] { BigInteger.MinusOne, 1 },
+			new object[] { BigInteger.Parse("125634"), 6 },
+		};
 }

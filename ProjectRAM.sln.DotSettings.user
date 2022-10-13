@@ -16,6 +16,6 @@
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/ShowOnlyStringResources/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=06fae8f8_002Dfe35_002D493c_002D854a_002Dee33d22747e9_0023ProjectRAM_002EWebsite/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=24380f1f_002D200c_002D4c42_002D956a_002D50e50c70b9a2_0023ProjectRAM_002EEditor/@EntryIndexedValue">True</s:Boolean>
+	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=37b42f69_002D1ae2_002D481b_002D9cde_002D172cf3bde21e_0023ProjectRAM_002EEditor_002ETests/@EntryIndexedValue">True</s:Boolean>
 	</wpf:ResourceDictionary>

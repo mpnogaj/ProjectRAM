@@ -240,7 +240,8 @@ namespace ProjectRAM.Editor.ViewModels
 		{
 			if (SimpleEditorUsage)
 			{
-				TextEditorProgram = ProgramLineToStringConverter.ProgramLinesToString(SimpleEditorProgram.ToList());
+				var programList = ProgramLineToStringConverter.ProgramLinesToString(SimpleEditorProgram.ToList()); 
+				TextEditorProgram = string.Join(Environment.NewLine, programList);
 			}
 			else
 			{
@@ -276,16 +277,11 @@ namespace ProjectRAM.Editor.ViewModels
 			}
 		}
 
-		public string GetProgramString()
+		public string[] GetProgramString()
 		{
-			if (SimpleEditorUsage)
-			{
-				return ProgramLineToStringConverter.ProgramLinesToString(SimpleEditorProgram.ToList());
-			}
-			else
-			{
-				return TextEditorProgram;
-			}
+			return SimpleEditorUsage
+				? ProgramLineToStringConverter.ProgramLinesToString(SimpleEditorProgram.ToList())
+				: TextEditorProgram.Replace("\r", string.Empty).Split('\n');
 		}
 
 		public void UpdateLabels()
