@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 
 namespace ProjectRAM.Editor.Helpers
 {
@@ -20,28 +20,22 @@ namespace ProjectRAM.Editor.Helpers
 			"jgtz",
 			"halt"
 		};
-
-		public static readonly List<FileDialogFilter> RamcodeFilter = new List<FileDialogFilter>
+		public static IReadOnlyList<FilePickerFileType> RamCodeFilter => new[]
 		{
-			new()
+			new FilePickerFileType("RAM Code")
 			{
-				Name = "RAMCode file",
-				Extensions = new List<string>
-				{
-					"RAMCode"
-				}
+				Patterns = new[] { $"*{RamExtension}" },
+				AppleUniformTypeIdentifiers = new[] { "public.source-code" }
 			}
-		};
-
-		public static readonly List<FileDialogFilter> TextFileFilter = new List<FileDialogFilter>
+		};	
+		
+		public static IReadOnlyList<FilePickerFileType> TextFileFilter => new[]
 		{
-			new()
+			new FilePickerFileType("Text file")
 			{
-				Name = "Text file",
-				Extensions = new List<string>
-				{
-					"txt"
-				}
+				Patterns = new[] { "*.txt" },
+				MimeTypes = new [] {"text/plain"},
+				AppleUniformTypeIdentifiers = new[] { "public.plain-text" }
 			}
 		};
 

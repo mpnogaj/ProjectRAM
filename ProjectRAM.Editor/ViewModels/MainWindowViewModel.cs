@@ -13,11 +13,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Platform.Storage;
 using Essentials = ProjectRAM.Editor.Helpers.Essentials;
 using Settings = ProjectRAM.Editor.Properties.Settings;
 
@@ -25,6 +27,7 @@ namespace ProjectRAM.Editor.ViewModels
 {
 	public class MainWindowViewModel : ViewModelBase
 	{
+		private const string ObsoletePath = @"!@#";
 		private const string TargetMemory = "memory";
 		private const string TargetInputTape = "inputTape";
 		private const string TargetOutputTape = "outputTape";
@@ -41,27 +44,36 @@ namespace ProjectRAM.Editor.ViewModels
 			AddPageCommand = new RelayCommand(() => CreateEmptyPage());
 			OpenFile = new AsyncRelayCommand(async () =>
 			{
-				var ofd = new OpenFileDialog
+				var files = await Essentials.GetStorageProvider().OpenFilePickerAsync(new FilePickerOpenOptions
 				{
 					Title = Strings.openFile,
 					AllowMultiple = true,
-					Filters = Constant.RamcodeFilter
-				};
-				var files = await ofd.ShowAsync(Essentials.GetAppDesktopLifetime().MainWindow);
-				if (files == null) return;
-
-				CreateCodePagesFromFiles(files);
+					FileTypeFilter = Constant.RamCodeFilter
+				});
+				await CreateCodePagesFromFiles(files);
 			});
-			SaveFileAs = new AsyncRelayCommand(async () => await SaveCodeFileAs(Page!), IsFileOpened);
+			SaveFileAs = new AsyncRelayCommand(async () =>
+			{
+				await SaveCodeFileAs(Page);
+			}, IsFileOpened);
 			SaveFile = new AsyncRelayCommand(async () =>
 			{
-				if (string.IsNullOrEmpty(Page!.Path))
+				Debug.Assert(Page != null);
+				if (Page.File == null)
 				{
-					await SaveCodeFileAs(Page!);
+					await SaveCodeFileAs(Page);
 				}
 				else
 				{
-					Essentials.WriteToFile(Page!.Path, Page!.GetProgramString());
+					if (Page.File.StartsWith(ObsoletePath))
+					{
+						await Essentials.WriteToFile(Page.File.Substring(ObsoletePath.Length), Page.GetProgramString());
+					}
+					else
+					{
+						var file = await Essentials.GetStorageProvider().OpenFileBookmarkAsync(Page.File);
+						await Essentials.WriteToFile(file, Page.GetProgramString());
+					}
 				}
 			}, IsFileOpened);
 			CloseProgram = new RelayCommand(Essentials.Exit, () => true);
@@ -165,49 +177,44 @@ namespace ProjectRAM.Editor.ViewModels
 
 			Import = new AsyncRelayCommand(async () =>
 			{
-				OpenFileDialog ofd = new()
+				Debug.Assert(Page != null);
+				var res = await Essentials.GetStorageProvider().OpenFilePickerAsync(new FilePickerOpenOptions
 				{
 					AllowMultiple = false,
-					Title = Strings.importInputTape,
-					Filters = Constant.TextFileFilter
-				};
+					FileTypeFilter = Constant.TextFileFilter,
+					Title = Strings.importInputTape
+				});
 
-				var res = await ofd.ShowAsync(Essentials.GetAppDesktopLifetime().MainWindow);
-				if (res == null) return;
-				if (res.Length > 0)
+				if (res.Count > 0)
 				{
-					string content = Essentials.ReadFromFile(res[0]);
-					Page!.InputTapeString = content.Replace(",", string.Empty);
+					string? content = await Essentials.ReadFromFile(res[0]);
+					if (content != null)
+					{
+						Page.InputTapeString = content.Replace(",", string.Empty);	
+					}
 				}
 			}, () => IsFileOpened() && !IsProgramRunning());
 
 			Export = new AsyncRelayCommand<string>(async target =>
 			{
-				string content;
-				switch (target)
+				Debug.Assert(Page != null);
+				string content = target switch
 				{
-					case TargetMemory:
-						content = MemoryRowToStringConverter.MemoryRowsToString(new List<MemoryRow>(Page!.Memory));
-						break;
-					case TargetInputTape:
-						content = Page!.InputTapeString.Replace(" ", ", ");
-						break;
-					case TargetOutputTape:
-						content = Page!.OutputTapeString.Replace(" ", ", ");
-						break;
-					default:
-						return;
-				}
-
-				SaveFileDialog sfd = new()
-				{
-					Title = Strings.exportToFile,
-					InitialFileName = $"{Page!.Header}_{target}",
-					Filters = Constant.TextFileFilter
+					TargetMemory => MemoryRowToStringConverter.MemoryRowsToString(new List<MemoryRow>(Page.Memory)),
+					TargetInputTape => Page.InputTapeString.Replace(" ", ", "),
+					TargetOutputTape => Page.OutputTapeString.Replace(" ", ", "),
+					_ => throw new InvalidOperationException()
 				};
 
-				var res = await sfd.ShowAsync(Essentials.GetAppDesktopLifetime().MainWindow);
-				if (!string.IsNullOrEmpty(res)) Essentials.WriteToFile(res, content);
+				var res = await Essentials.GetStorageProvider().SaveFilePickerAsync(new FilePickerSaveOptions
+				{
+					DefaultExtension = ".txt",
+					SuggestedFileName = $"{Page.Header}_{target}",
+					FileTypeChoices = Constant.TextFileFilter,
+					ShowOverwritePrompt = true
+				});
+				
+				await Essentials.WriteToFile(res, content);
 			}, () => IsFileOpened() && !IsProgramRunning());
 
 			OpenSettings = new RelayCommand(() =>
@@ -296,6 +303,10 @@ namespace ProjectRAM.Editor.ViewModels
 
 		public void FileDropped(object? sender, DragEventArgs e)
 		{
+			if (!OperatingSystem.IsLinux() && !OperatingSystem.IsWindows() && !OperatingSystem.IsMacOS())
+			{
+				throw new PlatformNotSupportedException();
+			}
 			string[] files = e.Data.GetFileNames()!
 				.Where(fileName => Path.GetExtension(fileName) == Constant.RamExtension)
 				.ToArray();
@@ -313,19 +324,56 @@ namespace ProjectRAM.Editor.ViewModels
 			Pages.Add(new HostViewModel(header, ClosePage));
 		}
 
-		private void CreatePageWithCode(string code, string path, string header = Constant.DefaultHeader)
+		private async Task CreatePageWithCode(string code, IStorageItem file)
 		{
+			string header = file.Name;
+			var ind = header.LastIndexOf('.');
+			if (ind != -1)
+			{
+				header = header[..ind];
+			} 
 			Pages.Add(new HostViewModel(header, code, ClosePage)
 			{
-				Path = path
+				File = await file.SaveBookmarkAsync()	
 			});
 		}
 
-		private void CreateCodePagesFromFiles(IEnumerable<string> files)
+		private void CreatePageWithCode(string code, string file)
 		{
-			foreach (string file in files)
-				if (!string.IsNullOrWhiteSpace(file))
-					CreatePageWithCode(Essentials.ReadFromFile(file), file, Path.GetFileNameWithoutExtension(file));
+			Pages.Add(new HostViewModel(
+				Path.GetFileNameWithoutExtension(file), code, ClosePage)
+			{
+				File = @$"{ObsoletePath}{file}"
+			});
+		}
+
+		private async Task CreateCodePagesFromFiles(IEnumerable<IStorageFile> files)
+		{
+			foreach (var file in files)
+			{
+				var fileContent = await Essentials.ReadFromFile(file);
+				if (string.IsNullOrEmpty(fileContent))
+				{
+					continue;
+				}
+
+				await CreatePageWithCode(fileContent, file);
+			}
+		}
+		
+		[Obsolete]
+		private async Task CreateCodePagesFromFiles(string[] files)
+		{
+			foreach (var file in files)
+			{
+				var fileContent = await Essentials.ReadFromFile(file);
+				if (string.IsNullOrEmpty(fileContent))
+				{
+					continue;
+				}
+
+				CreatePageWithCode(fileContent, file);
+			}
 		}
 
 		private static async Task<IEnumerable<RamInterpreterException>> GetAllErrors(HostViewModel page)
@@ -338,22 +386,24 @@ namespace ProjectRAM.Editor.ViewModels
 
 		private async Task SaveCodeFileAs(HostViewModel? page)
 		{
-			var file = page ?? Page!;
-			var sfd = new SaveFileDialog
+			var targetFile = page ?? Page!;
+			var file = await Essentials.GetStorageProvider().SaveFilePickerAsync(new FilePickerSaveOptions
 			{
-				InitialFileName = file.Header,
-				Title = Strings.saveFile,
-				Filters = Constant.RamcodeFilter
-			};
-
-			var res = await sfd.ShowAsync(Essentials.GetAppDesktopLifetime().MainWindow);
-			if (!string.IsNullOrEmpty(res))
+				Title = Strings.saveFileAs,
+				DefaultExtension = ".RAMCode",
+				FileTypeChoices = Constant.RamCodeFilter,
+				ShowOverwritePrompt = true,
+				SuggestedFileName = targetFile.Header
+			});
+			
+			if (file == null)
 			{
-				file.Path = res;
-				Essentials.WriteToFile(res, file.GetProgramString());
+				return;
 			}
 
-			file.Header = Path.GetFileNameWithoutExtension(res)!;
+			await Essentials.WriteToFile(file, targetFile.GetProgramString());
+			targetFile.File = await file.SaveBookmarkAsync();
+			targetFile.Header = file.Name;
 		}
 
 		private void CreateAndRunProgram(CancellationToken token)

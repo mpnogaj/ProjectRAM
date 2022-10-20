@@ -1,5 +1,7 @@
-﻿using ProjectRAM.Editor.Models;
+﻿using System;
+using ProjectRAM.Editor.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProjectRAM.Editor.Converters
 {
@@ -7,28 +9,14 @@ namespace ProjectRAM.Editor.Converters
 	{
 		public static List<ProgramLine> StringToProgramLines(string input)
 		{
-			List<ProgramLine> output = new();
-			var inputArr = input.Split('\n');
-			int i = 1;
-			foreach (var line in inputArr)
+			var i = 1;
+			return input.Split(Environment.NewLine).Select(x => new ProgramLine(x)
 			{
-				output.Add(new ProgramLine(line)
-				{
-					Line = i++
-				});
-			}
-			return output;
+				Line = i++
+			}).ToList();
 		}
 
-		public static string ProgramLinesToString(List<ProgramLine> input)
-		{
-			string output = "";
-			foreach (var programLine in input)
-			{
-				output += programLine.ToString() + '\n';
-			}
-			//Skip last '\n'
-			return output.Substring(0, output.Length - 1);
-		}
+		public static string ProgramLinesToString(List<ProgramLine> input) =>
+			input.Aggregate("", (current, programLine) => current + (programLine + Environment.NewLine)).TrimEnd();
 	}
 }
