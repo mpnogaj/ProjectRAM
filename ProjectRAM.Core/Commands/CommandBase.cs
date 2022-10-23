@@ -11,17 +11,19 @@ public abstract class CommandBase
     public long Line { get; }
     public string? Label { get; }
     public string Argument { get; }
+	public bool HasBreakpoint { get; }
     public ArgumentType ArgumentType { get; }
     public string FormattedArgument { get; }
     
     
     protected abstract HashSet<ArgumentType> AllowedArgumentTypes { get; }
 
-    protected internal CommandBase(long line, string? label, string argument)
+    protected internal CommandBase(long line, string? label, string argument, bool breakpoint)
     {
         Line = line;
         Label = label;
         Argument = argument;
+        HasBreakpoint = breakpoint;
         ArgumentType = GetArgumentType(argument);
         FormattedArgument = GetFormattedArgument();
     }

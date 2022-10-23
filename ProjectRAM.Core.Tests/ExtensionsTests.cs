@@ -60,25 +60,8 @@ public class ExtensionsTests
 		Assert.Equal(expected, value.IsPositive());
 	}
 
-	[Theory, MemberData(nameof(LCostTestValidFormatData))]
-	public void LCostTestValidFormat(string value, ulong expected)
-	{
-		Assert.Equal(expected, value.LCost());
-	}
-
-	[Theory]
-	[InlineData("b01")]
-	[InlineData("-0")]
-	[InlineData("!")]
-	[InlineData("1 000")]
-	[InlineData("001")]
-	public void LCostTestInvalidFormat(string invalidNumber)
-	{
-		Assert.Throws<FormatException>(() => invalidNumber.LCost());
-	}
-
 	[Theory, MemberData(nameof(LcostBigIntegerData))]
-	public void LcostBigInteger(BigInteger bigInt, ulong expected)
+	public void LCostBigInteger(BigInteger bigInt, ulong expected)
 	{
 		Assert.Equal(expected, bigInt.LCost());
 	}

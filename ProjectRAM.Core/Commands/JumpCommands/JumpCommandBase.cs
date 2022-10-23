@@ -6,7 +6,7 @@ namespace ProjectRAM.Core.Commands.JumpCommands;
 
 public abstract class JumpCommandBase : CommandBase
 {
-    protected JumpCommandBase(long line, string? label, string argument) : base(line, label, argument)
+    protected JumpCommandBase(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
     {
     }
     

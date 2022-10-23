@@ -2,13 +2,12 @@
 using ProjectRAM.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ProjectRAM.Core;
 
-public class Interpreter : IInterpreter
+public sealed class Interpreter : IInterpreter
 {
 	private readonly Dictionary<string, int> _jumpMap;
 	private readonly List<CommandBase> _program;
@@ -19,7 +18,7 @@ public class Interpreter : IInterpreter
 	
 	public event EventHandler<WriteToTapeEventArgs>? WriteToOutputTape;
 	public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
-	public event EventHandler? ProgramFinished;
+	public event EventHandler<ProgramFinishedEventArgs>? ProgramFinished;
 	public IMemory Memory { get; init; }
 	
 	public Interpreter(List<CommandBase> program)
@@ -44,28 +43,29 @@ public class Interpreter : IInterpreter
 		return labels;
 	}
 
-	public InterpreterResult RunCommands()
-		=> RunCommands(CancellationToken.None);
+	public Task RunCommandsAtFullSpeed()
+		=> RunCommandsAtFullSpeed(CancellationToken.None);
 
-	public InterpreterResult RunCommands(CancellationToken cancellationToken)
+	public Task RunCommandsAtFullSpeed(CancellationToken cancellationToken)
 	{
 		_currentPosition = 0;
 		while (_currentPosition < _program.Count && _currentPosition >= 0)
 		{
 			if (cancellationToken.IsCancellationRequested)
 			{
-				ProgramFinished?.Invoke(this, EventArgs.Empty);
+				ProgramFinished?.Invoke(this, new ProgramFinishedEventArgs(CreateSnapshot()));
 				cancellationToken.ThrowIfCancellationRequested();
 			}
 			
 			_program[_currentPosition].Execute(this);
 		}
+		ProgramFinished?.Invoke(this, new ProgramFinishedEventArgs(CreateSnapshot()));
+		return Task.CompletedTask;
+	}
 
-		var readOnlyMemory = Memory.GetHumanReadableData();
-
-		ProgramFinished?.Invoke(this, EventArgs.Empty);
-		
-		return new InterpreterResult(readOnlyMemory, new ComplexityReport
+	private InterpreterSnapshot CreateSnapshot()
+	{
+		return new InterpreterSnapshot(Memory.GetHumanReadableData(), new ComplexityReport
 		{
 			LogTimeCost = _logTimeCost,
 			LogSpaceCost = Memory.CalculateLogarithmicComplexity(),
@@ -73,6 +73,7 @@ public class Interpreter : IInterpreter
 			UniformTimeCost = _uniformTimeCost
 		});
 	}
+
 	public void MakeJump(string label)
 	{
 		_currentPosition = _jumpMap[label];
@@ -92,17 +93,6 @@ public class Interpreter : IInterpreter
 		}
 
 		_currentPosition = _callStack.Pop();
-	}
-
-	public BigInteger GetMemory(BigInteger address)
-	{
-		long currentLine = _program[_currentPosition].Line;
-		return Memory.GetMemory(address, currentLine);
-	}
-
-	public void SetMemory(BigInteger address, BigInteger value)
-	{
-		Memory.SetMemory(address, value);
 	}
 
 	public void StopProgram()
@@ -142,24 +132,5 @@ public class Interpreter : IInterpreter
 	public void UpdateUniformTimeComplexity(ulong value)
 	{
 		_uniformTimeCost += value;
-	}
-
-	/// <summary>
-	/// Compares two big integers.
-	/// </summary>
-	/// <param name="v1">First value</param>
-	/// <param name="v2">Second value</param>
-	/// <returns>Bigger integer value</returns>
-	private static string Max(string v1, string v2)
-	{
-		if (string.Empty == v1)
-		{
-			return v2;
-		}
-		if (string.Empty == v2)
-		{
-			return v1;
-		}
-		return BigInteger.Parse(v1) >= BigInteger.Parse(v2) ? v1 : v2;
 	}
 }

@@ -60,14 +60,14 @@ internal static class {HelperClassName}
 	internal static Dictionary<string, Type> Commands => _commands;
 	internal static HashSet<string> CommandNames => _commandNames;
 
-	public static CommandBase CreateCommandInstance(string command, long lineNum, string? label, string argument)
+	public static CommandBase CreateCommandInstance(string command, long lineNum, string? label, string argument, bool breakpoint)
 	{
 		return command switch
 		{
 ");
 		foreach (var commandToAdd in commandToAdds)
 		{
-			stringBuilder.AppendLine($"\t\t\t\"{commandToAdd.Name}\" => new {commandToAdd.FullType}(lineNum, label, argument),");
+			stringBuilder.AppendLine($"\t\t\t\"{commandToAdd.Name}\" => new {commandToAdd.FullType}(lineNum, label, argument, breakpoint),");
 		}
 		stringBuilder.AppendLine("\t\t\t_ => throw new UnknownCommandTypeException(lineNum)");
 		stringBuilder.Append(@"
