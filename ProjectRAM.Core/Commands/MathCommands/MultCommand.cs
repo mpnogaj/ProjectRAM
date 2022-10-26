@@ -8,7 +8,7 @@ namespace ProjectRAM.Core.Commands.MathCommands;
 [CommandName("mult")]
 internal class MultCommand : MathCommandBase
 {
-    public MultCommand(long line, string? label, string argument) : base(line, label, argument)
+    public MultCommand(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
     {
     }
 

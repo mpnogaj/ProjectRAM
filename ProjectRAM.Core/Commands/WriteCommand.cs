@@ -6,7 +6,7 @@ namespace ProjectRAM.Core.Commands;
 [CommandName("write")]
 internal class WriteCommand : NumberArgumentCommandBase
 {
-	public WriteCommand(long line, string? label, string argument) : base(line, label, argument)
+	public WriteCommand(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
 	{
 	}
 

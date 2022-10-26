@@ -7,7 +7,7 @@ namespace ProjectRAM.Core.Commands.MemoryManagementCommands;
 [CommandName("store")]
 internal class StoreCommand : NumberArgumentCommandBase
 {
-    public StoreCommand(long line, string? label, string argument) : base(line, label, argument)
+    public StoreCommand(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
     {
     }
 

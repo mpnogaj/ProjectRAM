@@ -6,7 +6,7 @@ namespace ProjectRAM.Core.Commands;
 [CommandName("halt")]
 internal class HaltCommand : CommandBase
 {
-	public HaltCommand(long line, string? label, string argument) : base(line, label, argument)
+	public HaltCommand(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
 	{
 		
 	}

@@ -7,7 +7,7 @@ namespace ProjectRAM.Core.Commands.JumpCommands;
 [CommandName("jzero")]
 internal class JZeroCommand : JumpCommandBase
 {
-    public JZeroCommand(long line, string? label, string argument) : base(line, label, argument)
+    public JZeroCommand(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
     {
     }
 

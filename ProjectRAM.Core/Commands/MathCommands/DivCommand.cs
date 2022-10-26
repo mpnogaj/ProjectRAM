@@ -9,7 +9,7 @@ namespace ProjectRAM.Core.Commands.MathCommands;
 [CommandName("div")]
 internal class DivCommand : MathCommandBase
 {
-    public DivCommand(long line, string? label, string argument) : base(line, label, argument)
+    public DivCommand(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
     {
     }
 

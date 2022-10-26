@@ -15,7 +15,7 @@ internal abstract class MathCommandBase : NumberArgumentCommandBase
         ArgumentType.IndirectAddress
     };
 
-    protected MathCommandBase(long line, string? label, string argument) : base(line, label, argument)
+    protected MathCommandBase(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
     {
     }
 

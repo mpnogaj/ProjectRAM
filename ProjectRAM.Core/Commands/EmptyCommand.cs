@@ -5,7 +5,7 @@ namespace ProjectRAM.Core.Commands;
 
 internal class EmptyCommand : CommandBase
 {
-	public EmptyCommand(long line, string? label, string argument) : base(line, label, argument)
+	public EmptyCommand(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
 	{
 	}
 

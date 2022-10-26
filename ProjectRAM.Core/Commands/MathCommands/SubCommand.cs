@@ -8,7 +8,7 @@ namespace ProjectRAM.Core.Commands.MathCommands;
 [CommandName("sub")]
 internal class SubCommand : MathCommandBase
 {
-    public SubCommand(long line, string? label, string argument) : base(line, label, argument)
+    public SubCommand(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
     {
     }
 

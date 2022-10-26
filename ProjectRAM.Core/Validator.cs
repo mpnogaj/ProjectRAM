@@ -15,7 +15,7 @@ public static class Validator
 		{
 			try
 			{
-				var command = CommandFactory.CreateCommand(i + 1, program[i]);
+				var command = CommandFactory.CreateCommand(i + 1, program[i], false);
 				if (command == null)
 				{
 					continue;

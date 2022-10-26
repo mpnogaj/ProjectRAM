@@ -7,7 +7,7 @@ namespace ProjectRAM.Core.Commands.MemoryManagementCommands;
 [CommandName("load")]
 internal class LoadCommand : NumberArgumentCommandBase
 {
-    public LoadCommand(long line, string? label, string argument) : base(line, label, argument)
+    public LoadCommand(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
     {
     }
     

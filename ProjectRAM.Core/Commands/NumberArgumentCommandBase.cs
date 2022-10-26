@@ -10,7 +10,7 @@ public abstract class NumberArgumentCommandBase : CommandBase
 	//if argument is NaN it will be detected in ValidateArgument method during validation process
 	public BigInteger NumberArgument { get; } = BigInteger.Zero;
 	
-	protected NumberArgumentCommandBase(long line, string? label, string argument) : base(line, label, argument)
+	protected NumberArgumentCommandBase(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
 	{
 		if (BigInteger.TryParse(FormattedArgument, out var res))
 		{

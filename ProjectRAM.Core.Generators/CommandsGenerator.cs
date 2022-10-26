@@ -33,7 +33,7 @@ public class CommandsGenerator : IIncrementalGenerator
 			context.RegisterSourceOutput(compilationAndClasses,
 				static (productionContext, tuple) => Execute(tuple.Item1, tuple.Item2, productionContext));
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
 #if DEBUG
 			if (!Debugger.IsAttached)

@@ -13,12 +13,10 @@ public sealed class Interpreter : IInterpreter
 	private readonly List<CommandBase> _program;
 	private readonly Stack<int> _callStack;
 	private int _currentPosition;
-	private ulong _uniformTimeCost = 0, _logTimeCost = 0;
-
+	private ulong _uniformTimeCost, _logTimeCost;
 	
 	public event EventHandler<WriteToTapeEventArgs>? WriteToOutputTape;
 	public event EventHandler<ReadFromTapeEventArgs>? ReadFromInputTape;
-	public event EventHandler<ProgramFinishedEventArgs>? ProgramFinished;
 	public IMemory Memory { get; init; }
 	
 	public Interpreter(List<CommandBase> program)
@@ -26,6 +24,7 @@ public sealed class Interpreter : IInterpreter
 		_program = program;
 		_jumpMap = MapLabels();
 		_callStack = new Stack<int>();
+		_currentPosition = 0;
 		Memory = new Memory();
 	}
 	
@@ -43,24 +42,46 @@ public sealed class Interpreter : IInterpreter
 		return labels;
 	}
 
-	public Task RunCommandsAtFullSpeed()
+	public Task<InterpreterSnapshot> RunCommandsAtFullSpeed()
 		=> RunCommandsAtFullSpeed(CancellationToken.None);
 
-	public Task RunCommandsAtFullSpeed(CancellationToken cancellationToken)
+	public Task<InterpreterSnapshot> RunCommandsAtFullSpeed(CancellationToken cancellationToken)
 	{
 		_currentPosition = 0;
-		while (_currentPosition < _program.Count && _currentPosition >= 0)
+		while (_currentPosition < _program.Count && 
+		       _currentPosition >= 0 && 
+		       !cancellationToken.IsCancellationRequested)
 		{
-			if (cancellationToken.IsCancellationRequested)
-			{
-				ProgramFinished?.Invoke(this, new ProgramFinishedEventArgs(CreateSnapshot()));
-				cancellationToken.ThrowIfCancellationRequested();
-			}
-			
 			_program[_currentPosition].Execute(this);
 		}
-		ProgramFinished?.Invoke(this, new ProgramFinishedEventArgs(CreateSnapshot()));
-		return Task.CompletedTask;
+
+		return Task.FromResult(CreateSnapshot());
+	}
+
+	public Task<InterpreterSnapshot> RunTillBreakpoint()
+		=> RunTillBreakpoint(CancellationToken.None);
+	
+	public Task<InterpreterSnapshot> RunTillBreakpoint(CancellationToken cancellationToken)
+	{
+		while (_currentPosition < _program.Count && 
+		       _currentPosition >= 0 && 
+		       !cancellationToken.IsCancellationRequested &&
+		       !_program[_currentPosition].HasBreakpoint)
+		{
+			_program[_currentPosition].Execute(this);
+		}
+
+		return Task.FromResult(CreateSnapshot());
+	}
+
+	public InterpreterSnapshot StepForward()
+	{
+		if (_currentPosition >= 0 && _currentPosition < _program.Count)
+		{
+			_program[_currentPosition].Execute(this);
+		}
+
+		return CreateSnapshot();
 	}
 
 	private InterpreterSnapshot CreateSnapshot()

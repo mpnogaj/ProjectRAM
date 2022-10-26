@@ -7,7 +7,7 @@ namespace ProjectRAM.Core.Commands.JumpCommands;
 [CommandName("jgtz")]
 internal class JGTZCommand : JumpCommandBase
 {
-    public JGTZCommand(long line, string? label, string argument) : base(line, label, argument)
+    public JGTZCommand(long line, string? label, string argument, bool breakpoint) : base(line, label, argument, breakpoint)
     {
     }
     
