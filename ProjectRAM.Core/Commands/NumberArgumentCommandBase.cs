@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using ProjectRAM.Core.Machine.Abstraction;
 using ProjectRAM.Core.Models;
 
 namespace ProjectRAM.Core.Commands;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ProjectRAM.Core.Machine.Abstraction;
 using ProjectRAM.Core.Models;
 
 namespace ProjectRAM.Core.Commands;

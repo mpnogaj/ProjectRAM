@@ -2,9 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
+using ProjectRAM.Core.Machine.Abstraction;
 using ProjectRAM.Core.Models;
 
-namespace ProjectRAM.Core;
+namespace ProjectRAM.Core.Machine;
 
 public class Memory : IMemory
 {

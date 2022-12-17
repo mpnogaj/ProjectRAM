@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using System.Threading;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using ProjectRAM.Core.Models;
 
-namespace ProjectRAM.Core;
+namespace ProjectRAM.Core.Machine.Abstraction;
 
 public interface IInterpreter
 {

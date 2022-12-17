@@ -3,6 +3,7 @@ using System.Diagnostics;
 using ProjectRAM.Core.Models;
 using System.Numerics;
 using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Machine.Abstraction;
 
 namespace ProjectRAM.Core.Commands.MathCommands;
 

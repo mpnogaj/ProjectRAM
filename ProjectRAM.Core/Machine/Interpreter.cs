@@ -1,11 +1,12 @@
-﻿using ProjectRAM.Core.Commands;
-using ProjectRAM.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Machine.Abstraction;
+using ProjectRAM.Core.Models;
 
-namespace ProjectRAM.Core;
+namespace ProjectRAM.Core.Machine;
 
 public sealed class Interpreter : IInterpreter
 {

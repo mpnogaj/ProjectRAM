@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Machine.Abstraction;
 
 namespace ProjectRAM.Core.Commands.JumpCommands;
 

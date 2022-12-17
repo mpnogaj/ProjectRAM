@@ -6,38 +6,24 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
-using CommandLine.Text;
+using System.Threading.Tasks;
 using ProjectRAM.CLI.Properties;
 using ProjectRAM.Core;
 using ProjectRAM.Core.Commands;
 using ProjectRAM.Core.Converters;
+using ProjectRAM.Core.Machine;
 using ProjectRAM.Core.Models;
 
 namespace ProjectRAM.CLI
 {
-	internal class Options
-	{
-		[Value(0, HelpText = "Path to RAMCode file.", Required = true)]
-		public string CodePath { get; set; } = string.Empty;
-
-		[Value(1, HelpText = "Path to input tape file.", Required = false)]
-		public string? InputTapePath { get; set; }
-
-		[Option('t', "timeout", HelpText = "Timeout in seconds after which program stops. Everything <= 0 will set timeout to infinity", Required = false)]
-		public int Timeout { get; set; }
-
-		[Option('m', "memory", HelpText = "Show memory after successful execution")]
-		public bool ShowMemoryReport { get; set; }
-
-		[Option('c', "complexity", HelpText="Show complexity report after successful execution")]
-		public bool ShowComplexityReport { get; set; }
-	}
-
 	internal static class Program
 	{
+		private const string CRLF = "\r\n";
+		private const string LF = "\n";
+		
 		private static int Main(string[] args)
 		{
-			int result = 0;
+			var result = 0;
 			CommandLine.Parser.Default.ParseArguments<Options>(args).WithParsed(o =>
 			{
 				result = HandleSuccess(o);
@@ -56,7 +42,7 @@ namespace ProjectRAM.CLI
 				string[] fileContent;
 				using (var sr = new StreamReader(options.CodePath))
 				{
-					fileContent = sr.ReadToEnd().Split(Environment.NewLine);
+					fileContent = sr.ReadToEnd().Split(options.UseCRLF ? CRLF : LF);
 				}
 
 				var exceptions = Validator.ValidateProgram(fileContent);
@@ -76,14 +62,14 @@ namespace ProjectRAM.CLI
 					? new CancellationTokenSource()
 					: new CancellationTokenSource(TimeSpan.FromSeconds(options.Timeout));
 
-				var interpreter = new Interpreter(CommandFactory.CreateCommandList(fileContent));
+				var interpreter = new Interpreter(CommandFactory.CreateCommandList(fileContent, new HashSet<long>()));
 
-				interpreter.WriteToOutputTape += (sender, args) =>
+				interpreter.WriteToOutputTape += (_, args) =>
 				{
 					Console.WriteLine($@"<<< {args.Output}");
 				};
 
-				interpreter.ReadFromInputTape += (sender, args) =>
+				interpreter.ReadFromInputTape += (_, args) =>
 				{
 					if (inputTape is { Count: > 0 })
 					{
@@ -106,19 +92,18 @@ namespace ProjectRAM.CLI
 						args.Input = input;
 					}
 				};
-				var result = interpreter.RunCommands(cts.Token);
+
+				var task = Task.Run(() => interpreter.RunCommandsAtFullSpeed(cts.Token), cts.Token);
+				task.Wait(cts.Token);
+				var result = task.Result;
+				
 				if (options.ShowMemoryReport)
 				{
 					PrintMemory(result.Memory);
 				}
-
 				if (options.ShowComplexityReport)
 				{
-					Console.WriteLine(@"Complexity report: ");
-					Console.WriteLine(@"Time complexity:");
-					Console.WriteLine($@"Logarithmic: {result.ComplexityReport.LogTimeCost}, Uniform: {result.ComplexityReport.UniformTimeCost}");
-					Console.WriteLine(@"Space complexity:");
-					Console.WriteLine($@"Logarithmic: {result.ComplexityReport.LogSpaceCost}, Uniform: {result.ComplexityReport.UniformSpaceCost}");
+					PrintComplexityReport(result.ComplexityReport);
 				}
 				return 0;
 			}
@@ -155,6 +140,15 @@ namespace ProjectRAM.CLI
 				Console.WriteLine($@"[{memoryCell.Index}]: {memoryCell.Value}");
 			}
 			Console.WriteLine();
+		}
+
+		private static void PrintComplexityReport(ComplexityReport complexityReport)
+		{
+			Console.WriteLine(@"Complexity report: ");
+			Console.WriteLine(@"Time complexity:");
+			Console.WriteLine($@"Logarithmic: {complexityReport.LogTimeCost}, Uniform: {complexityReport.UniformTimeCost}");
+			Console.WriteLine(@"Space complexity:");
+			Console.WriteLine($@"Logarithmic: {complexityReport.LogSpaceCost}, Uniform: {complexityReport.UniformSpaceCost}");
 		}
 
 		private static int HandleErrors(IEnumerable<Error> errors)

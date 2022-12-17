@@ -11,6 +11,6 @@ public class CommandFactoryTests
 	[InlineData("lbl1: 4 #lol")]
 	public void CreateCommandThrowsUnknownCommandTypeException(string line)
 	{
-		Assert.Throws<UnknownCommandTypeException>(() => CommandFactory.CreateCommand(1, line));
+		Assert.Throws<UnknownCommandTypeException>(() => CommandFactory.CreateCommand(1, line, false));
 	}
 }

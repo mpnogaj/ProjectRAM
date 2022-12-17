@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using ProjectRAM.Core.Machine.Abstraction;
 using Xunit;
 
 namespace ProjectRAM.Core.Tests;

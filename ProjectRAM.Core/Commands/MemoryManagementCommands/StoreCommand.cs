@@ -1,6 +1,7 @@
 ﻿using ProjectRAM.Core.Models;
 using System.Collections.Generic;
 using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Machine.Abstraction;
 
 namespace ProjectRAM.Core.Commands.MemoryManagementCommands;
 

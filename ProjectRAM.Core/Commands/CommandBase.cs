@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using ProjectRAM.Core.Machine.Abstraction;
 
 namespace ProjectRAM.Core.Commands;
 

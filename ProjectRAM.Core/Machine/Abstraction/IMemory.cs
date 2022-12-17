@@ -2,7 +2,7 @@
 using System.Numerics;
 using ProjectRAM.Core.Models;
 
-namespace ProjectRAM.Core;
+namespace ProjectRAM.Core.Machine.Abstraction;
 
 public interface IMemory
 {

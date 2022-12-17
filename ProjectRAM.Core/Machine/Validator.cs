@@ -1,8 +1,8 @@
-﻿using ProjectRAM.Core.Commands;
+﻿using System.Collections.Generic;
+using ProjectRAM.Core.Commands;
 using ProjectRAM.Core.Commands.JumpCommands;
-using System.Collections.Generic;
 
-namespace ProjectRAM.Core;
+namespace ProjectRAM.Core.Machine;
 
 public static class Validator
 {

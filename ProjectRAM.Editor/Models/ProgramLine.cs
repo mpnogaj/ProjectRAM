@@ -10,6 +10,7 @@ namespace ProjectRAM.Editor.Models
 		public string Command { get; set; } = string.Empty;
 		public string Argument { get; set; } = string.Empty;
 		public string Comment { get; set; } = string.Empty;
+		public bool Breakpoint { get; set; } = false;
 
 		public ProgramLine(string line)
 		{
@@ -22,6 +23,7 @@ namespace ProjectRAM.Editor.Models
 					lineWithoutComment = line.Substring(0, commentPos - 1);
 					Comment = line.Substring(commentPos + 1).Trim();
 				}
+
 				string lineWithoutCommentAndLabel = string.Empty;
 				int labelPos = lineWithoutComment.IndexOf(':');
 				if (labelPos >= 0)
@@ -41,6 +43,7 @@ namespace ProjectRAM.Editor.Models
 				var arr = lineWithoutCommentAndLabel.Trim().Split(' ');
 				Command = arr.Length > 0 ? arr[0] : string.Empty;
 				Argument = arr.Length > 1 ? arr[1] : string.Empty;
+				Breakpoint = line.Contains(";;");
 			}
 			catch
 			{
@@ -48,6 +51,7 @@ namespace ProjectRAM.Editor.Models
 				Command = string.Empty;
 				Argument = string.Empty;
 				Comment = string.Empty;
+				Breakpoint = false;
 			}
 		}
 
@@ -73,7 +77,12 @@ namespace ProjectRAM.Editor.Models
 
 			if (!string.IsNullOrWhiteSpace(Comment))
 			{
-				output += $"#{Comment}";
+				output += $"#{Comment} ";
+			}
+
+			if (Breakpoint)
+			{
+				output += ";;";
 			}
 
 			return output.TrimEnd();

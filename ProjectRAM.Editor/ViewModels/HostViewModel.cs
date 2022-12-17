@@ -284,6 +284,23 @@ namespace ProjectRAM.Editor.ViewModels
 				: TextEditorProgram.Replace("\r", string.Empty).Split('\n');
 		}
 
+		public HashSet<long> GetBreakpoints()
+		{
+			var breakpoints = new HashSet<long>();
+			if (SimpleEditorUsage)
+			{
+				foreach (var programLine in SimpleEditorProgram)
+				{
+					if (programLine.Breakpoint)
+					{
+						breakpoints.Add(programLine.Line);
+					}
+				}
+			}
+
+			return breakpoints;
+		}
+
 		public void UpdateLabels()
 		{
 			Labels.Clear();

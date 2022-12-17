@@ -14,12 +14,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Machine;
+using ProjectRAM.Core.Machine.Abstraction;
 using Essentials = ProjectRAM.Editor.Helpers.Essentials;
 using Settings = ProjectRAM.Editor.Properties.Settings;
 
@@ -111,7 +115,7 @@ namespace ProjectRAM.Editor.ViewModels
 				{
 					Essentials.SetCursor(StandardCursorType.Wait);
 					Page.ProgramRunning = true;
-					await Task.Run(() => { CreateAndRunProgram(Page.Token.Token); });
+					await CreateAndRunProgram(Page!.Token.Token, true);
 				}
 				catch (OperationCanceledException)
 				{
@@ -356,31 +360,41 @@ namespace ProjectRAM.Editor.ViewModels
 			file.Header = Path.GetFileNameWithoutExtension(res)!;
 		}
 
-		private void CreateAndRunProgram(CancellationToken token)
+
+		private async Task CreateAndRunProgram(CancellationToken token, bool fullSpeed)
 		{
-			var commands = CommandFactory.CreateCommandList(_page.GetProgramString());
-			var interpreter = new Interpreter(commands);
-			var inputTape = new Queue<string>(_page.InputTapeString.Split(' '));
-			var sb = new StringBuilder();
-			interpreter.ReadFromInputTape += (sender, args) =>
-			{
-				args.Input = inputTape.Dequeue();
-			};
-			interpreter.WriteToOutputTape += (sender, args) =>
-			{
-				sb.Append($" {args.Output}");
-				if (sb.Length >= StringBuilderMaxCapacity)
-				{
-					throw new OutOfMemoryException("Output tape is too large aborting");
-				}
-			};
-			var result = interpreter.RunCommands();
-			_page.OutputTapeString = sb.ToString().TrimStart();
-			_page.Memory = new ObservableCollection<MemoryRow>(result.Memory.Select(x => new MemoryRow
-			{
-				Address = x.Index,
-				Value = x.Value
-			}));
+			Debug.Assert(_page != null);
+			var commands = CommandFactory.CreateCommandList(_page.GetProgramString(), new HashSet<long>());
+            var interpreter = new Interpreter(commands);
+            var inputTape = new Queue<string>(_page.InputTapeString.Split(' '));
+            var sb = new StringBuilder();
+            interpreter.ReadFromInputTape += (sender, args) =>
+            {
+            	args.Input = inputTape.Dequeue();
+            };
+            interpreter.WriteToOutputTape += (sender, args) =>
+            {
+            	sb.Append($" {args.Output}");
+            	if (sb.Length >= StringBuilderMaxCapacity)
+            	{
+            		throw new OutOfMemoryException("Output tape is too large aborting");
+            	}
+            };
+            InterpreterSnapshot result;
+            if (fullSpeed)
+            {
+	            result = await Task.Run(() => interpreter.RunCommandsAtFullSpeed(token), token);
+            }
+            else
+            {
+	            result = await Task.Run(() => interpreter.RunTillBreakpoint(token), token);
+            }
+            _page.OutputTapeString = sb.ToString().TrimStart();
+            _page.Memory = new ObservableCollection<MemoryRow>(result.Memory.Select(x => new MemoryRow
+            {
+            	Address = x.Index,
+            	Value = x.Value
+            }));
 		}
 
 		private void TogglePageStatus()
