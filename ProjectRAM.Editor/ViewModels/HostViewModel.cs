@@ -6,8 +6,7 @@ using Avalonia.Input;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
-using Avalonia.Controls.Primitives;
-using Avalonia.VisualTree;
+using Avalonia.Platform.Storage;
 using ProjectRAM.Editor.ViewModels.Commands;
 using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.Models;
@@ -91,13 +90,7 @@ namespace ProjectRAM.Editor.ViewModels
 			set => SetProperty(ref _isBlocked, value);
 		}
 
-		private string? _path;
-
-		public string? Path
-		{
-			get => _path;
-			set => SetProperty(ref _path, value);
-		}
+		public string? File { get; set; } = null;
 
 		private int _fontSize;
 

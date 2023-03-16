@@ -1,11 +1,11 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.VisualTree;
 using ProjectRAM.Editor.Dialogs;
-using ProjectRAM.Editor.Models;
 using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.Views;
 using System.Collections.Generic;
@@ -13,41 +13,84 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Resources;
-using System.Text.Json;
+using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
-using Style = ProjectRAM.Editor.Models.Style;
+using Avalonia.Platform.Storage;
 
 namespace ProjectRAM.Editor.Helpers
 {
 	public static class Essentials
 	{
-		public static string TapeToString(Queue<string> tape)
+		public static async Task WriteToFile(IStorageFile? file, string content)
 		{
-			return string.Join(", ", tape.ToArray());
+			if (file is not { CanOpenWrite: true })
+			{
+				return;
+			}
+			
+			var sw = new StreamWriter(await file.OpenWriteAsync());
+			await sw.WriteAsync(content);
+			sw.Close();
+			file.Dispose();
 		}
 
-		public static void WriteToFile(string file, string content)
+		[Obsolete]
+		public static async Task WriteToFile(string file, string content)
 		{
-			using StreamWriter sw = new(file);
-			sw.Write(content);
+			if (!OperatingSystem.IsLinux() && !OperatingSystem.IsWindows() && !OperatingSystem.IsMacOS())
+			{
+				throw new PlatformNotSupportedException();
+			}
+			
+			var sw = new StreamWriter(file);
+			await sw.WriteAsync(content);
+			sw.Close();
 		}
 
-		public static void AppendFile(string file, string content)
+		public static async Task<string?> ReadFromFile(IStorageFile? file)
 		{
-			using StreamWriter sw = new(file, append: true);
-			sw.Write(content);
+			if (file is not { CanOpenRead: true })
+			{
+				return null;
+			}
+
+			var sr = new StreamReader(await file.OpenReadAsync());
+			string res = await sr.ReadToEndAsync();
+			sr.Close();
+			file.Dispose();
+			return res;
 		}
 
-		public static string ReadFromFile(string file)
+		[Obsolete]
+		public static async Task<string?> ReadFromFile(string file)
 		{
-			using StreamReader sr = new(file);
-			return sr.ReadToEnd();
+			if (!OperatingSystem.IsLinux() && !OperatingSystem.IsWindows() && !OperatingSystem.IsMacOS())
+			{
+				throw new PlatformNotSupportedException();
+			}
+			
+			try
+			{
+				var sr = new StreamReader(file);
+				string res = await sr.ReadToEndAsync();
+				sr.Close();
+				return res;
+			}
+			catch
+			{
+				return null;
+			}
 		}
 
 		public static IClassicDesktopStyleApplicationLifetime GetAppDesktopLifetime()
 		{
 			return (IClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!;
+		}
+
+		public static IStorageProvider GetStorageProvider()
+		{
+			return GetMainWindow().StorageProvider;
 		}
 
 		public static App GetAppObject()
@@ -57,7 +100,7 @@ namespace ProjectRAM.Editor.Helpers
 
 		public static void SetCursor(StandardCursorType cursor)
 		{
-			GetAppDesktopLifetime().MainWindow.Cursor = new Cursor(cursor);
+			GetAppDesktopLifetime().MainWindow!.Cursor = new Cursor(cursor);
 		}
 
 		public static void Exit()
@@ -103,6 +146,12 @@ namespace ProjectRAM.Editor.Helpers
 			var window = GetTopWindow();
 			// Don't want to close main window
 			if (window is not MainWindow) window.Close();
+		}
+
+		public static MainWindow GetMainWindow()
+		{
+			var lifetime = GetAppDesktopLifetime();
+			return (MainWindow)lifetime.MainWindow!;
 		}
 
 		public static Window GetTopWindow()
