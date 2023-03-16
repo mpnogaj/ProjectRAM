@@ -16,6 +16,7 @@ using ProjectRAM.Website.Models;
 using ProjectRAM.Website.Helpers;
 using ProjectRAM.Website.Data;
 using System.Threading;
+using ProjectRAM.Core.Machine;
 
 namespace ProjectRAM.Website.Controllers
 {

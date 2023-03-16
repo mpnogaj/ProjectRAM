@@ -1,14 +1,14 @@
-﻿namespace ProjectRAM.Core.Models
+﻿namespace ProjectRAM.Core.Models;
+
+/// <summary>
+/// Typ argumentu
+/// </summary>
+public enum ArgumentType
 {
-	/// <summary>
-	/// Typ argumentu
-	/// </summary>
-	public enum ArgumentType
-	{
-		Null,
-		Label,
-		DirectAddress,
-		IndirectAddress,
-		Const
-	}
+	Null,
+	Invalid,
+	Label,
+	DirectAddress,
+	IndirectAddress,
+	Const
 }

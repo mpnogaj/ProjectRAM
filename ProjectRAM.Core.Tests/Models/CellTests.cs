@@ -1,35 +1,32 @@
-﻿using Xunit;
+﻿using System;
 using System.Collections.Generic;
 using ProjectRAM.Core.Models;
+using Xunit;
 
-namespace ProjectRAM.Core.Tests.Models
+namespace ProjectRAM.Core.Tests.Models;
+
+public class CellTests
 {
-	public class CellTests
+	[Theory, MemberData(nameof(ConstructorTestData))]
+	public void ConstructorTestValidFormat(string index, string value, Cell expected)
 	{
-		[Theory]
-		[MemberData(nameof(Data))]
-		public void CompareToTest(Cell cellA, Cell cellB, int expected)
-		{
-			if (expected < 0)
-			{
-				Assert.True(cellA.CompareTo(cellB) < 0);
-			}
-			else if (expected > 0)
-			{
-				Assert.True(cellA.CompareTo(cellB) > 0);
-			}
-			else
-			{
-				Assert.True(cellA.CompareTo(cellB) == 0);
-			}
-		}
-
-
-		public static IEnumerable<object[]> Data => new List<object[]>()
-		{
-			new object[] { new Cell("11", "2013"), new Cell("1111", "2013"), 0 },
-			new object[] { new Cell("0", "31231829031890"), new Cell("3802948", "809380918230918301280"), -1 },
-			new object[] { new Cell("0", "-218"), new Cell("48309483", "-581"), 1 },
-		};
+		var actual = new Cell(index, value);
+		Assert.Equal(expected, actual);
 	}
+
+	[Theory]
+	[InlineData("abc", "db")]
+	[InlineData("d", "5")]
+	[InlineData("12", " 32")]
+	public void ConstructorTestInvalidFormat(string index, string value)
+	{
+		Assert.Throws<FormatException>(() => new Cell(index, value));
+	}
+
+	public static IEnumerable<object[]> ConstructorTestData =>
+		new[]
+		{
+			new object[] { "1", "12", new Cell("1", "12") },
+			new object[] { "21", "21", new Cell("21", "21") }
+		};
 }

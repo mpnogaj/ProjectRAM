@@ -2,27 +2,26 @@
 using System.Globalization;
 using System.Threading;
 
-namespace ProjectRAM.Core.Properties
-{
-	/// <summary>
-	/// Storage class for all Validator and Interpreter settings
-	/// </summary>
-	[ExcludeFromCodeCoverage]
-	public static class Settings
-	{
-		private static CultureInfo _currentCulture = Thread.CurrentThread.CurrentCulture;
+namespace ProjectRAM.Core.Properties;
 
-		/// <summary>
-		/// Get or set current language
-		/// </summary>
-		public static CultureInfo CurrentCulture
+/// <summary>
+/// Storage class for all Validator and Interpreter settings
+/// </summary>
+[ExcludeFromCodeCoverage]
+public static class Settings
+{
+	private static CultureInfo _currentCulture = Thread.CurrentThread.CurrentCulture;
+
+	/// <summary>
+	/// Get or set current language
+	/// </summary>
+	public static CultureInfo CurrentCulture
+	{
+		get => _currentCulture;
+		set
 		{
-			get => _currentCulture;
-			set
-			{
-				_currentCulture = value;
-				Resources.Culture = value;
-			}
+			_currentCulture = value;
+			Resources.Culture = value;
 		}
 	}
 }

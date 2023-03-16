@@ -233,7 +233,8 @@ namespace ProjectRAM.Editor.ViewModels
 		{
 			if (SimpleEditorUsage)
 			{
-				TextEditorProgram = ProgramLineToStringConverter.ProgramLinesToString(SimpleEditorProgram.ToList());
+				var programList = ProgramLineToStringConverter.ProgramLinesToString(SimpleEditorProgram.ToList()); 
+				TextEditorProgram = string.Join(Environment.NewLine, programList);
 			}
 			else
 			{
@@ -269,16 +270,28 @@ namespace ProjectRAM.Editor.ViewModels
 			}
 		}
 
-		public string GetProgramString()
+		public string[] GetProgramString()
 		{
+			return SimpleEditorUsage
+				? ProgramLineToStringConverter.ProgramLinesToString(SimpleEditorProgram.ToList())
+				: TextEditorProgram.Replace("\r", string.Empty).Split('\n');
+		}
+
+		public HashSet<long> GetBreakpoints()
+		{
+			var breakpoints = new HashSet<long>();
 			if (SimpleEditorUsage)
 			{
-				return ProgramLineToStringConverter.ProgramLinesToString(SimpleEditorProgram.ToList());
+				foreach (var programLine in SimpleEditorProgram)
+				{
+					if (programLine.Breakpoint)
+					{
+						breakpoints.Add(programLine.Line);
+					}
+				}
 			}
-			else
-			{
-				return TextEditorProgram;
-			}
+
+			return breakpoints;
 		}
 
 		public void UpdateLabels()

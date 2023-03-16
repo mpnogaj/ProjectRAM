@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ProjectRAM.Editor.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,9 @@ namespace ProjectRAM.Editor.Converters
 			}).ToList();
 		}
 
-		public static string ProgramLinesToString(List<ProgramLine> input) =>
-			input.Aggregate("", (current, programLine) => current + (programLine + Environment.NewLine)).TrimEnd();
+		public static string[] ProgramLinesToString(List<ProgramLine> input)
+		{
+			return input.Select(x => x.ToString()).ToArray();
+		}
 	}
 }

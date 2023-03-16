@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using ProjectRAM.Core;
@@ -10,6 +10,7 @@ using ProjectRAM.Editor.Properties;
 using ProjectRAM.Editor.ViewModels.Commands;
 using ProjectRAM.Editor.Views;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -19,7 +20,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Platform.Storage;
+using JetBrains.Annotations;
+using ProjectRAM.Core.Commands;
+using ProjectRAM.Core.Machine;
+using ProjectRAM.Core.Machine.Abstraction;
 using Essentials = ProjectRAM.Editor.Helpers.Essentials;
 using Settings = ProjectRAM.Editor.Properties.Settings;
 
@@ -65,15 +69,7 @@ namespace ProjectRAM.Editor.ViewModels
 				}
 				else
 				{
-					if (Page.File.StartsWith(ObsoletePath))
-					{
-						await Essentials.WriteToFile(Page.File.Substring(ObsoletePath.Length), Page.GetProgramString());
-					}
-					else
-					{
-						var file = await Essentials.GetStorageProvider().OpenFileBookmarkAsync(Page.File);
-						await Essentials.WriteToFile(file, Page.GetProgramString());
-					}
+					Essentials.WriteToFile(Page!.Path, string.Join(" ", Page!.GetProgramString()));
 				}
 			}, IsFileOpened);
 			CloseProgram = new RelayCommand(Essentials.Exit, () => true);
@@ -121,7 +117,7 @@ namespace ProjectRAM.Editor.ViewModels
 				{
 					Essentials.SetCursor(StandardCursorType.Wait);
 					Page.ProgramRunning = true;
-					await Task.Run(() => { CreateAndRunProgram(Page.Token.Token); });
+					await CreateAndRunProgram(Page!.Token.Token, true);
 				}
 				catch (OperationCanceledException)
 				{
@@ -379,9 +375,7 @@ namespace ProjectRAM.Editor.ViewModels
 		private static async Task<IEnumerable<RamInterpreterException>> GetAllErrors(HostViewModel page)
 		{
 			var programString = page.GetProgramString();
-			var stringCollection = Factory.CreateStringCollection(programString, Environment.NewLine);
-			var program = Factory.StringCollectionToCommandList(stringCollection);
-			return await Task.Run(() => Validator.ValidateProgram(program));
+			return await Task.Run(() => Validator.ValidateProgram(programString));
 		}
 
 		private async Task SaveCodeFileAs(HostViewModel? page)
@@ -398,7 +392,8 @@ namespace ProjectRAM.Editor.ViewModels
 			
 			if (file == null)
 			{
-				return;
+				file.Path = res;
+				Essentials.WriteToFile(res, string.Join(Environment.NewLine, file.GetProgramString()));
 			}
 
 			await Essentials.WriteToFile(file, targetFile.GetProgramString());
@@ -406,48 +401,41 @@ namespace ProjectRAM.Editor.ViewModels
 			targetFile.Header = file.Name;
 		}
 
-		private void CreateAndRunProgram(CancellationToken token)
-		{
-			string input = Page!.InputTapeString;
-			string program = Page!.TextEditorProgram;
-			List<Command> commands;
-			if (Page!.SimpleEditorUsage)
-			{
-				commands = ProgramLineToCommandConverter.ProgramLinesToCommands(Page!.SimpleEditorProgram.ToList());
-			}
-			else
-			{
-				var sc = new StringCollection();
-				sc.AddRange(program.Split(Environment.NewLine));
-				commands = Factory.StringCollectionToCommandList(sc);
-			}
 
-			var inputTape = Factory.CreateInputTapeFromString(input);
-			var interpreter = new Interpreter(commands);
-			var sb = new StringBuilder();
-			interpreter.ReadFromInputTape += (_, eventArgs) =>
-			{
-				eventArgs.Input = inputTape.Count > 0
-					? inputTape.Dequeue()
-					: null;
-			};
-			interpreter.WriteToOutputTape += (_, eventArgs) =>
-			{
-				sb.Append($" {eventArgs.Output}");
-				if(sb.Length >= StringBuilderMaxCapacity)
-				{
-					throw new OutOfMemoryException(Strings.outputTapeOverflow);
-				}
-			};
-			interpreter.ProgramFinished += (_, _) =>
-			{
-				Page!.ProgramRunning = false;
-			};
-			token.ThrowIfCancellationRequested();
-			var memory = interpreter.RunCommands(token);
-			token.ThrowIfCancellationRequested();
-			Page!.OutputTapeString = sb.ToString().TrimStart();
-			Page!.Memory = MemoryDictionaryToMemoryRowConverter.MemoryDictionaryToMemoryRows(memory);
+		private async Task CreateAndRunProgram(CancellationToken token, bool fullSpeed)
+		{
+			Debug.Assert(_page != null);
+			var commands = CommandFactory.CreateCommandList(_page.GetProgramString(), new HashSet<long>());
+            var interpreter = new Interpreter(commands);
+            var inputTape = new Queue<string>(_page.InputTapeString.Split(' '));
+            var sb = new StringBuilder();
+            interpreter.ReadFromInputTape += (sender, args) =>
+            {
+            	args.Input = inputTape.Dequeue();
+            };
+            interpreter.WriteToOutputTape += (sender, args) =>
+            {
+            	sb.Append($" {args.Output}");
+            	if (sb.Length >= StringBuilderMaxCapacity)
+            	{
+            		throw new OutOfMemoryException("Output tape is too large aborting");
+            	}
+            };
+            InterpreterSnapshot result;
+            if (fullSpeed)
+            {
+	            result = await Task.Run(() => interpreter.RunCommandsAtFullSpeed(token), token);
+            }
+            else
+            {
+	            result = await Task.Run(() => interpreter.RunTillBreakpoint(token), token);
+            }
+            _page.OutputTapeString = sb.ToString().TrimStart();
+            _page.Memory = new ObservableCollection<MemoryRow>(result.Memory.Select(x => new MemoryRow
+            {
+            	Address = x.Index,
+            	Value = x.Value
+            }));
 		}
 
 		private void TogglePageStatus()

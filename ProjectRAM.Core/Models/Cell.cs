@@ -1,25 +1,51 @@
 ﻿using System;
 using System.Numerics;
 
-namespace ProjectRAM.Core.Models
+namespace ProjectRAM.Core.Models;
+
+/// <summary>
+/// Klasa reprezentującą komórkę pamięci
+/// </summary>
+public class Cell : IComparable<Cell>
 {
-	/// <summary>
-	/// Klasa reprezentującą komórkę pamięci
-	/// </summary>
-	public class Cell : IComparable<Cell>
+	public Cell(string index, string value)
 	{
-		public Cell(string v, string i)
+		if (!index.IsNumber() || !value.IsNumber())
 		{
-			Value = v;
-			Index = i;
+			throw new FormatException();
 		}
 
-		public string Index { get; }
-		public string Value { get; set; }
+		Index = index;
+		Value = value;
+	}
 
-		public int CompareTo(Cell? other) =>
-			other == null
-				? 1
-				: BigInteger.Compare(BigInteger.Parse(Index), BigInteger.Parse(other.Index));
+	public string Index { get; }
+	public string Value { get; }
+
+	public int CompareTo(Cell? other)
+	{
+		if (other == null)
+		{
+			return 1;
+		}
+
+		var v1 = BigInteger.Parse(this.Index);
+		var v2 = BigInteger.Parse(other.Index);
+		return v1.CompareTo(v2);
+	}
+
+	public override bool Equals(object? obj)
+	{
+		return obj is Cell lhs && Equals(lhs);
+	}
+
+	private bool Equals(Cell other)
+	{
+		return Index == other.Index && Value == other.Value;
+	}
+
+	public override int GetHashCode()
+	{
+		return HashCode.Combine(Index, Value);
 	}
 }
